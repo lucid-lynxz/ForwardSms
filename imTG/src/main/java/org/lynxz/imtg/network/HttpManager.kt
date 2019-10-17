@@ -1,15 +1,15 @@
-package org.lynxz.imtglib.network
+package org.lynxz.imtg.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.lynxz.imtglib.bean.TgGetUpdateResponseBean
-import org.lynxz.imtglib.bean.TgSendMessageReqBean
-import org.lynxz.imtglib.bean.TgSendMessageRespBean
-import org.lynxz.imtglib.para.ConstantsPara
-import org.lynxz.imtglib.para.TGKeyNames
+import org.lynxz.imtg.bean.TgGetUpdateResponseBean
+import org.lynxz.imtg.bean.TgSendMessageReqBean
+import org.lynxz.imtg.bean.TgSendMessageRespBean
+import org.lynxz.imtg.para.ConstantsPara
+import org.lynxz.imtg.para.TGKeyNames
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

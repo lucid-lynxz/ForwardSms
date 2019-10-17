@@ -6,7 +6,6 @@ import android.content.IntentFilter
 import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
-import android.os.Handler
 import android.provider.Telephony
 import androidx.core.database.*
 import androidx.lifecycle.LiveData
@@ -27,8 +26,8 @@ import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.widget.SmsHandler
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imdingding.para.DDKeyNames
-import org.lynxz.imtglib.TGActionImpl
-import org.lynxz.imtglib.para.TGKeyNames
+import org.lynxz.imtg.TGActionImpl
+import org.lynxz.imtg.para.TGKeyNames
 
 /**
  * sms接收监听及短信列表读取

@@ -1,4 +1,4 @@
-package org.lynxz.imtglib.bean
+package org.lynxz.imtg.bean
 
 /**
  * tg 获取 bot新消息列表的响应

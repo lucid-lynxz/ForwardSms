@@ -1,4 +1,4 @@
-package org.lynxz.imtglib.bean
+package org.lynxz.imtg.bean
 
 /** 调用tg sendmessage接口的返回结果
  * <pre>

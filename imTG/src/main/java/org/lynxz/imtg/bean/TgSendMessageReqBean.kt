@@ -1,4 +1,4 @@
-package org.lynxz.imtglib.bean
+package org.lynxz.imtg.bean
 
 /**
  * telegram sendMessage body

@@ -1,9 +1,9 @@
-package org.lynxz.imtglib.network
+package org.lynxz.imtg.network
 
 import kotlinx.coroutines.Deferred
-import org.lynxz.imtglib.bean.TgGetUpdateResponseBean
-import org.lynxz.imtglib.bean.TgSendMessageReqBean
-import org.lynxz.imtglib.bean.TgSendMessageRespBean
+import org.lynxz.imtg.bean.TgGetUpdateResponseBean
+import org.lynxz.imtg.bean.TgSendMessageReqBean
+import org.lynxz.imtg.bean.TgSendMessageRespBean
 import retrofit2.Call
 import retrofit2.http.*
 

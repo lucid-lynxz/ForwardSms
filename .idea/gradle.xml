@@ -11,7 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/baseImLib" />
             <option value="$PROJECT_DIR$/imDingDing" />
-            <option value="$PROJECT_DIR$/imTGLib" />
+            <option value="$PROJECT_DIR$/imTG" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

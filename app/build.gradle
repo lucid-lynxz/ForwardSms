@@ -42,7 +42,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 //    api project(path: ':baseImLib')
     api project(path: ':imDingDing')
-    api project(path: ':imTGLib')
+    api project(path: ':imTG')
 
     testImplementation(test.junit)
     testImplementation(test.testRunnerX)

@@ -1,4 +1,4 @@
-package org.lynxz.imtglib.para
+package org.lynxz.imtg.para
 
 
 /**

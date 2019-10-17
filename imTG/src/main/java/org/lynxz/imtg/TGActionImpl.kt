@@ -1,4 +1,4 @@
-package org.lynxz.imtglib
+package org.lynxz.imtg
 
 import kotlinx.coroutines.*
 import org.lynxz.baseimlib.actions.IIMAction
@@ -9,11 +9,11 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Obj
 import org.lynxz.baseimlib.requestScope
 import org.lynxz.baseimlib.retrofit
-import org.lynxz.imtglib.bean.TgSendMessageReqBean
-import org.lynxz.imtglib.bean.TgSendMessageRespBean
-import org.lynxz.imtglib.network.HttpManager
-import org.lynxz.imtglib.para.ConstantsPara
-import org.lynxz.imtglib.para.TGKeyNames
+import org.lynxz.imtg.bean.TgSendMessageReqBean
+import org.lynxz.imtg.bean.TgSendMessageRespBean
+import org.lynxz.imtg.network.HttpManager
+import org.lynxz.imtg.para.ConstantsPara
+import org.lynxz.imtg.para.TGKeyNames
 import java.lang.Exception
 
 /**
