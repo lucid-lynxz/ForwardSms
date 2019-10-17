@@ -1,0 +1,51 @@
+android {
+    def debugKeyStore = "config/debug.keystore"
+    def keyStoreFilePath = "${rootDir.absolutePath}${File.separator}${getLocalProperties("keyStoreFile", debugKeyStore)}"
+
+    signingConfigs {
+        release {
+            storeFile file(keyStoreFilePath)
+            storePassword getLocalProperties("storePassword", "andoird")
+            keyAlias getLocalProperties("keyAlias", "androiddebugkey")
+            keyPassword getLocalProperties("keyPassword", "android")
+        }
+    }
+}
+
+/**
+ * 从指定的配置文件中读取属性值,若存在且类型与默认值匹配,则返回,否则返回默认值
+ * @param propertyName 属性名
+ * @param defaultValue 默认值
+ * @param propertiesFileName 文件名,默认为: local.properteis
+ */
+def getLocalProperties(String propertyName, Object defaultValue,
+                       String propertiesFileName = "local.properties") {
+    File file = rootProject.file(propertiesFileName)
+    if (!file.exists() || propertyName == null || propertyName.isEmpty()) {
+        return defaultValue // 文件不存在或者属性名为空,则返回默认值
+    }
+
+    Properties properties = new Properties()
+    properties.load(file.newInputStream())
+
+    def localKeys = properties.keys()
+    for (keyName in localKeys) {
+        if (keyName != propertyName) continue
+        def localValue = properties.getProperty(keyName)
+
+        // 根据默认值类型进行类型转换
+        if (defaultValue instanceof Integer) {
+            return Integer.parseInt(localValue)
+        } else if (defaultValue instanceof Boolean) {
+            return Boolean.parseBoolean(localValue)
+        } else if (defaultValue instanceof Double) {
+            return Double.parseDouble(localValue)
+        } else if (defaultValue instanceof Float) {
+            return Float.parseFloat(localValue)
+        } else if (defaultValue instanceof String || defaultValue instanceof GString) {
+            return localValue
+        }
+    }
+    // 类型不匹配,返回默认值
+    return defaultValue
+}

@@ -1,0 +1,13 @@
+package org.lynxz.imtglib.para
+
+/**
+ * 钉钉相关操作常量名
+ * */
+object TGKeyNames {
+    const val botToken = "botToken"
+    const val defaultUserName = "defaultUserName"
+
+    const val chatIdMap = "chatIdMap" // bot聊天id列表
+
+    const val HEADER_KEY_CONTENT_TYPE = "Content-Type"
+}
