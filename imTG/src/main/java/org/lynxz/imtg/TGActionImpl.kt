@@ -30,7 +30,7 @@ object TGActionImpl : IIMAction, CoroutineScope by requestScope {
 
         propertyUtil = para.propertyUtil
 
-        val cacheStr = propertyUtil?.get(TGKeyNames.chatIdMap, "") as String
+        val cacheStr = propertyUtil?.get(TGKeyNames.chatIdMap, "") as? String?
         val cacheMap = convert2Obj(cacheStr, MutableMap::class.java)
         cacheMap?.forEach {
             if (it.value is Number) {

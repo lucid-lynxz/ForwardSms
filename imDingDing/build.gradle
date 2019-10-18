@@ -14,8 +14,8 @@ publish {
     groupId = 'org.lynxz.imdingding' // 填包名就好
     artifactId = 'imlib-dingding'  // bintray中对应的packagename,大小写敏感
     uploadName = 'imlib-dingding' // bintray中对应的maven product名称,默认为artifactId, 大小写敏感
-    publishVersion = '1.0.0' // 发布版本号
-    desc = '钉钉im封装库,支持普通文本消息'
+    publishVersion =  properties.getProperty('publishVersion') // 发布版本号
+    desc =  properties.getProperty('publishDesc')
     website = 'https://github.com/lucid-lynxz/ForwardSms.git'
 }
 
