@@ -12,8 +12,8 @@ import kotlin.coroutines.CoroutineContext
  * https://juejin.im/post/5cfb38f96fb9a07eeb139a00
  * */
 fun <ResultType> CoroutineScope.retrofit(dsl: RetrofitCoroutineDsl<ResultType>.() -> Unit) {
-//    launch(Dispatchers.Default) {
-    launch(Dispatchers.Main) {
+//    launch(Dispatchers.Main) {
+    launch {
         println("currentThread: ${Thread.currentThread().name}")
         val retrofitCoroutine = RetrofitCoroutineDsl<ResultType>()
         retrofitCoroutine.dsl()

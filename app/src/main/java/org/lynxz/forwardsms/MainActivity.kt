@@ -5,6 +5,7 @@ import android.Manifest
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
@@ -20,7 +21,8 @@ import org.lynxz.forwardsms.viewmodel.SmsViewModel
 /**
  * 测试及设置页面
  * */
-class MainActivity : BaseActivity() {
+@UseExperimental(ExperimentalCoroutinesApi::class)
+class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private val TAG = "MainActivity"
 
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
@@ -98,6 +100,10 @@ class MainActivity : BaseActivity() {
             IMManager.sendTextMessage(ImType.TG, body.apply {
                 name = SmsConstantParas.tgUserNme
             }) {
+                launch(Dispatchers.Main) {
+                    tv_info.text = "send msg from tg result ${it.ok}"
+                }
+
                 println("send msg from tg result ${it.ok}")
                 if (!it.ok) {
                     IMManager.sendTextMessage(ImType.DingDing, body.apply {
