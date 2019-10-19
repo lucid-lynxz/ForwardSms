@@ -7,6 +7,7 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 
 /**
  * 管理所有的IM 模块,统一用于发送消息接口
+ * 备注: doOnComplete() 目前均在io线程回调
  * */
 object IMManager {
 

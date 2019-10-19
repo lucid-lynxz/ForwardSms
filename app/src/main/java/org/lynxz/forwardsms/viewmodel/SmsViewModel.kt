@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import org.lynxz.baseimlib.IMManager
+import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
-import org.lynxz.baseimlib.bean.InitPara
 import org.lynxz.forwardsms.BuildConfig
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.isSameAs
@@ -25,9 +25,7 @@ import org.lynxz.forwardsms.util.ConfigUtil
 import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.widget.SmsHandler
 import org.lynxz.imdingding.DingDingActionImpl
-import org.lynxz.imdingding.para.DDKeyNames
 import org.lynxz.imtg.TGActionImpl
-import org.lynxz.imtg.para.TGKeyNames
 
 /**
  * sms接收监听及短信列表读取
@@ -178,24 +176,25 @@ object SmsViewModel : ViewModel() {
      * 启用支持的im中断
      * */
     fun activeIm() {
-        var initResult = DingDingActionImpl.init(InitPara().apply {
-            paraMap = mapOf(
-                DDKeyNames.corpid to BuildConfig.dd_corpid,
-                DDKeyNames.corpsecret to BuildConfig.dd_corpsecret,
-                DDKeyNames.agentId to BuildConfig.dd_agent
-            )
-            propertyUtil = ConfigUtil(app!!, "sp_dd")
-        })
+
+        var initResult = DingDingActionImpl.init(
+            ImInitPara.DDInitPara(
+                BuildConfig.dd_corpid,
+                BuildConfig.dd_corpsecret,
+                BuildConfig.dd_agent
+            ).apply {
+                propertyUtil = ConfigUtil(app!!, "sp_dd")
+            })
         Logger.d(TAG, "activeImDD result $initResult")
 
 
-        initResult = TGActionImpl.init(InitPara().apply {
-            paraMap = mapOf(
-                TGKeyNames.botToken to BuildConfig.tg_bottoken,
-                TGKeyNames.defaultUserName to BuildConfig.tg_default_userName
-            )
-            propertyUtil = ConfigUtil(app!!, "sp_tg")
-        })
+        initResult = TGActionImpl.init(
+            ImInitPara.TGInitPara(
+                BuildConfig.tg_bottoken,
+                BuildConfig.tg_default_userName
+            ).apply {
+                propertyUtil = ConfigUtil(app!!, "sp_tg")
+            })
         Logger.d(TAG, "activeImTg result $initResult")
 
         viewModelScope.launch {

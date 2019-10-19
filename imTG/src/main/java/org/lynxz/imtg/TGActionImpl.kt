@@ -4,7 +4,7 @@ import kotlinx.coroutines.*
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.actions.IPropertyAction
 import org.lynxz.baseimlib.bean.CommonResult
-import org.lynxz.baseimlib.bean.InitPara
+import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Obj
 import org.lynxz.baseimlib.requestScope
@@ -21,15 +21,28 @@ import java.lang.Exception
  * */
 object TGActionImpl : IIMAction, CoroutineScope by requestScope {
 
-    var propertyUtil: IPropertyAction? = null // 数据持久化工具类
+    private var propertyUtil: IPropertyAction? = null // 数据持久化工具类
 
-    override fun init(para: InitPara): CommonResult {
-        val result = CommonResult()
-        ConstantsPara.botToken = para.getProperty(TGKeyNames.botToken, "")!!
-        ConstantsPara.defaultUserName = para.getProperty(TGKeyNames.defaultUserName, "")!!
+    override fun <T : ImInitPara> init(para: T): CommonResult {
 
+        val valid: Boolean
+        val detail: String
+        when (para) {
+            is ImInitPara.TGInitPara -> {
+                ConstantsPara.botToken = para.botToken
+                ConstantsPara.defaultUserName = para.defaultUserName
+
+                valid = para.botToken.isNotBlank()
+                detail = if (valid) "ok: 数据有效" else "fail:botToken数据异常"
+            }
+            else -> {
+                valid = false
+                detail = "fail: initPara not instanceOf TGInitPara"
+            }
+        }
+
+        // 尝试从文件缓存中提取聊天chat_id列表
         propertyUtil = para.propertyUtil
-
         val cacheStr = propertyUtil?.get(TGKeyNames.chatIdMap, "") as? String?
         val cacheMap = convert2Obj(cacheStr, MutableMap::class.java)
         cacheMap?.forEach {
@@ -39,12 +52,7 @@ object TGActionImpl : IIMAction, CoroutineScope by requestScope {
             }
         }
 
-        return result.apply {
-            if (ConstantsPara.botToken.isBlank()) {
-                ok = false
-                detail = "init fail: botToken is empty"
-            }
-        }
+        return CommonResult(valid, detail)
     }
 
     override fun refresh(doOnComplete: (CommonResult) -> Unit) {

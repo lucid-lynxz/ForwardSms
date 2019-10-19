@@ -1,7 +1,6 @@
 package org.lynxz.baseimlib
 
 import kotlinx.coroutines.*
-import org.lynxz.baseimlib.actions.IIMAction
 import retrofit2.Call
 import java.io.Closeable
 import java.io.IOException
@@ -12,17 +11,10 @@ import kotlin.coroutines.CoroutineContext
  * https://juejin.im/post/5cfb38f96fb9a07eeb139a00
  * */
 fun <ResultType> CoroutineScope.retrofit(dsl: RetrofitCoroutineDsl<ResultType>.() -> Unit) {
-//    launch(Dispatchers.Default) {
     launch(Dispatchers.Main) {
-        println("currentThread: ${Thread.currentThread().name}")
         val retrofitCoroutine = RetrofitCoroutineDsl<ResultType>()
         retrofitCoroutine.dsl()
         val api = retrofitCoroutine.api
-//        if (api == null) {
-//            retrofitCoroutine.onFailed?.invoke("api不存在", -101)
-//
-//        } else {
-//        retrofitCoroutine.api?.let { api ->
         val work = async(Dispatchers.IO) {
             try {
                 api?.execute()
@@ -64,7 +56,6 @@ fun <ResultType> CoroutineScope.retrofit(dsl: RetrofitCoroutineDsl<ResultType>.(
 
         retrofitCoroutine.onComplete?.invoke(false)
     }
-//    }
 }
 
 class RetrofitCoroutineDsl<ResultType> {

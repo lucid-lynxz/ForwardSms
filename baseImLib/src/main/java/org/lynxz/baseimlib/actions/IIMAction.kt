@@ -3,7 +3,7 @@ package org.lynxz.baseimlib.actions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import org.lynxz.baseimlib.bean.CommonResult
-import org.lynxz.baseimlib.bean.InitPara
+import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.requestScope
 
@@ -14,7 +14,7 @@ interface IIMAction {
     /**
      * 初始化操作,用于设置
      * */
-    fun init(para: InitPara): CommonResult
+    fun <T : ImInitPara> init(para: T): CommonResult
 
     /**
      * 刷新IM基础内容信息,如重新读取配置,刷新token,部门列表,或者bot用户列表等

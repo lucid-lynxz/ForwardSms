@@ -4,7 +4,7 @@ import kotlinx.coroutines.*
 import org.lynxz.baseimlib.actions.IPropertyAction
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.CommonResult
-import org.lynxz.baseimlib.bean.InitPara
+import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.requestScope
 import org.lynxz.baseimlib.retrofit
@@ -12,27 +12,38 @@ import org.lynxz.imdingding.bean.DepartmentMemberDetailListBean
 import org.lynxz.imdingding.bean.MessageResponseBean
 import org.lynxz.imdingding.network.HttpManager
 import org.lynxz.imdingding.para.ConstantsPara
-import org.lynxz.imdingding.para.DDKeyNames
 
 /**
  * 钉钉相关操作
  * todo 异常处理, 超时处理, 错误重试机制等
  * */
 object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
-    var propertyUtil: IPropertyAction? = null // 数据持久化工具类
 
-    override fun init(para: InitPara): CommonResult {
-        ConstantsPara.dd_corp_id = para.getProperty(DDKeyNames.corpid, "")!!
-        ConstantsPara.dd_corp_secret = para.getProperty(DDKeyNames.corpsecret, "")!!
-        ConstantsPara.dd_agent_id = para.getProperty(DDKeyNames.agentId, "")!!
 
+    private var propertyUtil: IPropertyAction? = null // 数据持久化工具类
+
+    override fun <T : ImInitPara> init(para: T): CommonResult {
+        val valid: Boolean
+        val detail: String
+        when (para) {
+            is ImInitPara.DDInitPara -> {
+                ConstantsPara.dd_corp_id = para.corpid
+                ConstantsPara.dd_corp_secret = para.corpsecret
+                ConstantsPara.dd_agent_id = para.agentId
+
+                valid = ConstantsPara.dd_corp_id.isNotBlank()
+                        && ConstantsPara.dd_corp_secret.isNotBlank()
+                        && ConstantsPara.dd_agent_id.isNotBlank()
+
+                detail = if (valid) "数据有效" else "数据异常"
+            }
+            else -> {
+                valid = false
+                detail = "fail: initPara not instanceOf DDInitPara"
+            }
+        }
         propertyUtil = para.propertyUtil
-
-        val valid = ConstantsPara.dd_corp_id.isNotBlank()
-                && ConstantsPara.dd_corp_secret.isNotBlank()
-                && ConstantsPara.dd_agent_id.isNotBlank()
-
-        return CommonResult(valid, if (valid) "数据有效" else "数据异常")
+        return CommonResult(valid, detail)
     }
 
     override fun refresh(doOnComplete: (CommonResult) -> Unit) {
