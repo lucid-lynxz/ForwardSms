@@ -1,12 +1,13 @@
 package org.lynxz.forwardsms.bean
 
-import java.lang.StringBuilder
+import org.lynxz.forwardsms.network.SmsConstantParas
 import java.text.SimpleDateFormat
 
 
 data class SmsDetail(
     var ts: Long = System.currentTimeMillis(),// 收到短信的时间戳
     var from: String? = null,// 原始发信人
+    var to: String? = SmsConstantParas.phoneTag, // 短信接收人
     var displayFrom: String? = null,// 显示的发信人信息
     var body: String? = null, // 短信内容
     var status: Int = 0, //  短信状态 -1:接收 0:complete 64:pending 128:failed
@@ -35,7 +36,13 @@ data class SmsDetail(
             ""
         }
 
-        return "$body\n$from$displayFromPlaceHolder\n$date"
+
+        val receiver = if (to.isNullOrBlank()) {
+            ""
+        } else {
+            "\nTo: $to"
+        }
+        return "$body\nFrom: $from$displayFromPlaceHolder$receiver\n$date"
     }
 }
 

@@ -2,6 +2,7 @@ package org.lynxz.forwardsms
 
 import PermissionResultInfo
 import android.Manifest
+import android.os.Build
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +28,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
     private var ddUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyDDUserName, "")
+    private var phoneTag by SpDelegateUtil(this, SmsConstantParas.SpKeyPhoneTag, "")
 
     override fun getLayoutRes() = R.layout.activity_main
     var lastSms = ""
@@ -35,9 +37,15 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 显示tg用户名
         SmsConstantParas.tgUserNme = tgUserName
         SmsConstantParas.ddName = ddUserName
+        if (phoneTag.isNullOrBlank()) {
+            phoneTag = Build.MODEL
+        }
+
+        SmsConstantParas.phoneTag = phoneTag
 
         edt_user_name_tg.setText(tgUserName)
         edt_user_name_dd.setText(ddUserName)
+        edt_phone_tag.setText(phoneTag)
 
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
 
@@ -49,14 +57,22 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
 
-        // 添加测试代码
+        // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {
             tgUserName = edt_user_name_tg.text.toString().trim()
             SmsConstantParas.tgUserNme = tgUserName
         }
+
+        // 设置钉钉接收用户
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
             SmsConstantParas.ddName = ddUserName
+        }
+
+        // 设置本机识别名
+        btn_confirm_phone_tag.setOnClickListener {
+            phoneTag = edt_phone_tag.text.toString().trim()
+            SmsConstantParas.phoneTag = phoneTag
         }
 
 //        smsModel = ViewModelProviders.of(this).get(SmsViewModel::class.java).apply {
