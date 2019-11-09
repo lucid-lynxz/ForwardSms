@@ -109,14 +109,14 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         btn_send_msg.setOnClickListener {
 
             val body = SendMessageReqBean().apply {
-                content = "$lastSms-${msec2date()}"
+                content = "$lastSms\n测试:${msec2date()}"
             }
 
             // tg发送失败则尝试使用钉钉发送
             IMManager.sendTextMessage(ImType.TG, body.apply {
                 name = SmsConstantParas.tgUserNme
             }) {
-                tv_info.text = "send msg from tg result ${it.ok}"
+                tv_info.text = "send msg from tg result ${it.ok}\n${it.detail}"
 
                 println("send msg from tg result ${it.ok}")
                 if (!it.ok) {

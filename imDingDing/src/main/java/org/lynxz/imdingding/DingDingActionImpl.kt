@@ -6,8 +6,8 @@ import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.CommonResult
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
-import org.lynxz.baseimlib.requestScope
-import org.lynxz.baseimlib.retrofit
+import org.lynxz.baseimlib.network.requestScope
+import org.lynxz.baseimlib.network.retrofit
 import org.lynxz.imdingding.bean.DepartmentMemberDetailListBean
 import org.lynxz.imdingding.bean.MessageResponseBean
 import org.lynxz.imdingding.network.HttpManager

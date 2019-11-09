@@ -36,7 +36,7 @@ import org.lynxz.imtg.TGActionImpl
 object SmsViewModel : ViewModel() {
     private const val TAG = "SmsViewModel"
     private var app: Application? = null
-    private val smsContentUri: Uri = Uri.parse("content://sms/")
+    private val smsContentUri: Uri = Uri.parse("content://sms/inbox")
 
     // 最后收到的短信
     private val smsReceivedLiveData by lazy { MutableLiveData<SmsDetail>() }
@@ -94,6 +94,9 @@ object SmsViewModel : ViewModel() {
                 registerReceiver(
                     smsReceiver, IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)
                 )
+//                registerReceiver(
+//                    smsReceiver, IntentFilter(Telephony.Sms.Intents.SMS_DELIVER_ACTION)
+//                )
 
 //                contentResolver.registerContentObserver(
 //                    smsContentUri, true,

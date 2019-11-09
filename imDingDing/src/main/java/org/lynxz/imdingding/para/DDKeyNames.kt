@@ -12,7 +12,6 @@ object DDKeyNames {
 
     // 需要在url中添加query参数: access_token
     const val QUERY_KEY_ACCESS_TOKEN = "access_token"
-    const val HEADER_KEY_CONTENT_TYPE = "Content-Type"
 
     // 本地缓存数据key
     const val KEY_DEPARTMENT_INFO = "departmentInfo" // 部门信息列表

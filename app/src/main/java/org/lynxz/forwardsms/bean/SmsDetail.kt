@@ -1,5 +1,6 @@
 package org.lynxz.forwardsms.bean
 
+import android.telephony.SmsMessage
 import org.lynxz.forwardsms.network.SmsConstantParas
 import java.text.SimpleDateFormat
 
@@ -43,6 +44,28 @@ data class SmsDetail(
             "\nTo: $to"
         }
         return "$body\nFrom: $from$displayFromPlaceHolder$receiver\n$date"
+    }
+
+    fun updateSmsMessage(msg: SmsMessage?) {
+        msg?.apply {
+            if (from.isNullOrBlank() || from == originatingAddress) {
+                from = originatingAddress
+                displayFrom = displayOriginatingAddress
+                body += displayMessageBody
+                ts = timestampMillis
+            }
+        }
+    }
+
+    fun updateSmsMessage(msg: android.telephony.gsm.SmsMessage?) {
+        msg?.apply {
+            if (from.isNullOrBlank() || from == originatingAddress) {
+                from = originatingAddress
+                displayFrom = displayOriginatingAddress
+                body += displayMessageBody
+                ts = timestampMillis
+            }
+        }
     }
 }
 

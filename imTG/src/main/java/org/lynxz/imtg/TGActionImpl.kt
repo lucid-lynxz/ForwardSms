@@ -7,8 +7,8 @@ import org.lynxz.baseimlib.bean.CommonResult
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Obj
-import org.lynxz.baseimlib.requestScope
-import org.lynxz.baseimlib.retrofit
+import org.lynxz.baseimlib.network.requestScope
+import org.lynxz.baseimlib.network.retrofit
 import org.lynxz.imtg.bean.TgSendMessageReqBean
 import org.lynxz.imtg.bean.TgSendMessageRespBean
 import org.lynxz.imtg.network.HttpManager

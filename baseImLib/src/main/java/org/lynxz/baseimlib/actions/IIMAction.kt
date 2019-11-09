@@ -5,7 +5,7 @@ import kotlinx.coroutines.cancel
 import org.lynxz.baseimlib.bean.CommonResult
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.SendMessageReqBean
-import org.lynxz.baseimlib.requestScope
+import org.lynxz.baseimlib.network.requestScope
 
 /**
  * IM库功能接口

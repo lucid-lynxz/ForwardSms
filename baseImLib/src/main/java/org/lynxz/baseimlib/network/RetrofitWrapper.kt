@@ -1,4 +1,4 @@
-package org.lynxz.baseimlib
+package org.lynxz.baseimlib.network
 
 import kotlinx.coroutines.*
 import retrofit2.Call

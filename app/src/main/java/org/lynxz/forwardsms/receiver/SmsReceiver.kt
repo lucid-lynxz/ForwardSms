@@ -26,19 +26,9 @@ class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : Broadcast
             pdus?.forEach { pub ->
                 val bas = pub as ByteArray
                 if (isSdkGE(23)) {
-                    SmsMessage.createFromPdu(bas, format)?.apply {
-                        smsDetail.from = originatingAddress
-                        smsDetail.displayFrom = displayOriginatingAddress
-                        smsDetail.body = displayMessageBody
-                        smsDetail.ts = timestampMillis
-                    }
+                    smsDetail.updateSmsMessage(SmsMessage.createFromPdu(bas, format))
                 } else {
-                    android.telephony.gsm.SmsMessage.createFromPdu(bas)?.apply {
-                        smsDetail.from = originatingAddress
-                        smsDetail.displayFrom = displayOriginatingAddress
-                        smsDetail.body = displayMessageBody
-                        smsDetail.ts = timestampMillis
-                    }
+                    smsDetail.updateSmsMessage(android.telephony.gsm.SmsMessage.createFromPdu(bas))
                 }
             }
 

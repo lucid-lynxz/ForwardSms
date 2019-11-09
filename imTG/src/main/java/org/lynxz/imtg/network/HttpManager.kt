@@ -2,14 +2,11 @@ package org.lynxz.imtg.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.Deferred
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import org.lynxz.baseimlib.network.BaseOkhttpGenerator
 import org.lynxz.imtg.bean.TgGetUpdateResponseBean
 import org.lynxz.imtg.bean.TgSendMessageReqBean
 import org.lynxz.imtg.bean.TgSendMessageRespBean
 import org.lynxz.imtg.para.ConstantsPara
-import org.lynxz.imtg.para.TGKeyNames
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,39 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory
  * 网络访问具体处理类
  */
 object HttpManager {
-
-    // 给请求添加统一的query参数:access_token
-    private val queryInterceptor = Interceptor { chain ->
-        val original = chain.request()
-        val url = original.url.newBuilder()
-            // .addQueryParameter("access_token", "xxx")
-            .build()
-
-        val requestBuilder = original.newBuilder().url(url)
-        chain.proceed(requestBuilder.build())
-    }
-
-    // 给请求添加统一的header参数:Content-Type
-    private val headerInterceptor = Interceptor { chain ->
-        val request = chain.request().newBuilder()
-            .addHeader(TGKeyNames.HEADER_KEY_CONTENT_TYPE, "application/json")
-            .build()
-        chain.proceed(request)
-    }
-
-    // 显示请求日志,可选
-    private val logInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-
-    private val okHttpClient: OkHttpClient = OkHttpClient()
-        .newBuilder()
-        .addInterceptor(headerInterceptor)
-        .addInterceptor(queryInterceptor)
-        .addInterceptor(logInterceptor)
-        .build()
-
     private val tgRetrofit: Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
+        .client(BaseOkhttpGenerator().clientBuilder.build())
         .baseUrl(ConstantsPara.TG_SERVER_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())

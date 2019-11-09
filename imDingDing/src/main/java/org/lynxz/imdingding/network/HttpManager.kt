@@ -3,17 +3,14 @@ package org.lynxz.imdingding.network
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.*
 import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.lynxz.baseimlib.bean.SendMessageReqBean
-import org.lynxz.baseimlib.msec2date
+import org.lynxz.baseimlib.network.BaseOkhttpGenerator
 import org.lynxz.imdingding.bean.*
 import org.lynxz.imdingding.para.ConstantsPara
 import org.lynxz.imdingding.para.DDKeyNames
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 
 /**
@@ -23,7 +20,7 @@ import java.util.*
 object HttpManager {
 
     // 给请求添加统一的query参数:access_token
-    private val queryInterceptor = Interceptor { chain ->
+    private val accessTokenInterceptor = Interceptor { chain ->
         val original = chain.request()
         val url = original.url.newBuilder()
             .addQueryParameter(DDKeyNames.QUERY_KEY_ACCESS_TOKEN, ConstantsPara.accessToken)
@@ -33,27 +30,13 @@ object HttpManager {
         chain.proceed(requestBuilder.build())
     }
 
-    // 给请求添加统一的header参数:Content-Type
-    private val headerInterceptor = Interceptor { chain ->
-        val request = chain.request().newBuilder()
-            .addHeader(DDKeyNames.HEADER_KEY_CONTENT_TYPE, "application/json")
-            .build()
-        chain.proceed(request)
-    }
-
-    // 显示请求日志,可选
-    private val logInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-
-    private val okHttpClient: OkHttpClient = OkHttpClient()
-        .newBuilder()
-        .addInterceptor(headerInterceptor)
-        .addInterceptor(queryInterceptor)
-        .addInterceptor(logInterceptor)
-        .build()
 
     private val ddRetrofit: Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
+        .client(
+            BaseOkhttpGenerator()
+                .clientBuilder.apply { addInterceptor(accessTokenInterceptor) }
+                .build()
+        )
         .baseUrl(ConstantsPara.DINGDING_SERVER_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
