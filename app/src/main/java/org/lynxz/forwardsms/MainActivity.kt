@@ -2,11 +2,15 @@ package org.lynxz.forwardsms
 
 import PermissionResultInfo
 import android.Manifest
+import android.content.Intent
 import android.os.Build
+import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.MainScope
 import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
@@ -18,6 +22,7 @@ import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
+
 
 /**
  * 测试及设置页面
@@ -162,5 +167,17 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private fun activeImTest() {
         // 临时测试用
+        try {
+            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
+            } else {
+                Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tv_info.text = e.message
+        }
+
     }
 }

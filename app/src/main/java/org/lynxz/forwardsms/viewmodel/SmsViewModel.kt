@@ -1,5 +1,6 @@
 package org.lynxz.forwardsms.viewmodel
 
+import PermissionFragment
 import android.Manifest
 import android.app.Application
 import android.content.IntentFilter
@@ -7,12 +8,17 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
-import androidx.core.database.*
+import androidx.core.database.getDoubleOrNull
+import androidx.core.database.getIntOrNull
+import androidx.core.database.getLongOrNull
+import androidx.core.database.getStringOrNull
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
@@ -23,6 +29,8 @@ import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.receiver.SmsReceiver
 import org.lynxz.forwardsms.util.ConfigUtil
 import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.viewmodel.SmsViewModel.getReceivedSms
+import org.lynxz.forwardsms.viewmodel.SmsViewModel.init
 import org.lynxz.forwardsms.widget.SmsHandler
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imtg.TGActionImpl
@@ -51,15 +59,16 @@ object SmsViewModel : ViewModel() {
     // contentResolver 中读取的最新的短信
     private var lastSmsInDb: SmsDetail? = null
 
-    // 短信接收监听
-    private val smsReceiver =
-        SmsReceiver(object : ISmsReceiveObserver {
-            override fun onReceiveSms(smsDetail: SmsDetail?) {
-                if (!smsDetail?.body.isNullOrBlank()) {
-                    smsReceivedLiveData.value = smsDetail
-                }
+    private val iSmsReceiveObserver = object : ISmsReceiveObserver {
+        override fun onReceiveSms(smsDetail: SmsDetail?) {
+            if (!smsDetail?.body.isNullOrBlank()) {
+                smsReceivedLiveData.value = smsDetail
             }
-        })
+        }
+    }
+
+    // 短信接收监听
+    private val smsReceiver = SmsReceiver(iSmsReceiveObserver)
 
     // 短信数据库变化监听,避免国产rom无法监听短信接收时使用
     // todo 暂不使用,因国内rom对短信数据库有定制,不通用,后续有时间研究
@@ -91,17 +100,24 @@ object SmsViewModel : ViewModel() {
     fun init(application: Application): SmsViewModel {
         if (app == null) {
             app = application.apply {
+                // 注册短信接收广播监听
                 registerReceiver(
                     smsReceiver, IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION)
                 )
-//                registerReceiver(
-//                    smsReceiver, IntentFilter(Telephony.Sms.Intents.SMS_DELIVER_ACTION)
-//                )
 
-//                contentResolver.registerContentObserver(
-//                    smsContentUri, true,
-//                    smsContentResolverObserver
-//                )
+                // registerReceiver(
+                //    smsReceiver, IntentFilter(Telephony.Sms.Intents.SMS_DELIVER_ACTION)
+                // )
+
+                // 通过通知栏推送获取短信内容(无法获取发件人等信息)
+                // SmsNotificationListenerService.registerSmsObserver(iSmsReceiveObserver)
+
+
+                // 通过短信数据库监听内容变化
+                // contentResolver.registerContentObserver(
+                //     smsContentUri, true,
+                //     smsContentResolverObserver
+                // )
             }
         }
         return this
@@ -110,7 +126,8 @@ object SmsViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         app?.unregisterReceiver(smsReceiver)
-//        app?.contentResolver?.unregisterContentObserver(smsContentResolverObserver)
+        // SmsNotificationListenerService.registerSmsObserver(null)
+        // app?.contentResolver?.unregisterContentObserver(smsContentResolverObserver)
     }
 
     private val smsQueryProjection =

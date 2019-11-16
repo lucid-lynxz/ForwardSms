@@ -1,5 +1,6 @@
 package org.lynxz.forwardsms.bean
 
+import android.app.Notification
 import android.telephony.SmsMessage
 import org.lynxz.forwardsms.network.SmsConstantParas
 import java.text.SimpleDateFormat
