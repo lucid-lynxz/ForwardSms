@@ -89,7 +89,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         SmsViewModel.getSmsHistory().observe(this, Observer {
             val his = StringBuilder(100)
-            his.append("共获取短信 ").append(it.size).append("条:")
+            his.append("版本:").append(BuildConfig.VERSION_NAME)
+                .append("\n共获取短信 ").append(it.size).append("条:")
             if (it.isNotEmpty()) {
                 lastSms = it[0].format()
             }
