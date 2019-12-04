@@ -5,6 +5,7 @@ import org.lynxz.baseimlib.actions.IPropertyAction
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.CommonResult
 import org.lynxz.baseimlib.bean.ImInitPara
+import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.network.requestScope
 import org.lynxz.baseimlib.network.retrofit
@@ -116,6 +117,16 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
                     result.ok = false
                     result.detail = "canceled"
                 }
+
+                // 保存最后发送成功的短信信息
+                propertyUtil?.let {
+                    if (result.ok) {
+                        it.save(IIMAction.lastSendMsgInfo, body.content)
+                        it.save(IIMAction.lastSendMsgImType, ImType.DingDing)
+                        it.save(IIMAction.lastSendMsgTime, System.currentTimeMillis())
+                    }
+                }
+
                 doOnComplete.invoke(result)
             }
 
@@ -124,6 +135,7 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
             }
 
             onFailed { error, code ->
+                result.ok = false
                 result.detail = "$error"
             }
         }

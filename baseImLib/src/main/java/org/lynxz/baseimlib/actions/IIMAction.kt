@@ -11,6 +11,14 @@ import org.lynxz.baseimlib.network.requestScope
  * IM库功能接口
  * */
 interface IIMAction {
+    companion object {
+        // 通用参数
+        const val spIm = "spIM"
+        const val lastSendMsgInfo = "last_sms_content"
+        const val lastSendMsgImType = "last_send_im_type"
+        const val lastSendMsgTime = "last_send_sms_time"
+    }
+
     /**
      * 初始化操作,用于设置
      * */

@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
 import org.lynxz.baseimlib.IMManager
+import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.msec2date
@@ -30,6 +31,7 @@ import org.lynxz.forwardsms.viewmodel.SmsViewModel
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private val TAG = "MainActivity"
+    private var lastSmsTs by SpDelegateUtil(this, IIMAction.lastSendMsgInfo, "", IIMAction.spIm)
 
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
     private var ddUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyDDUserName, "")

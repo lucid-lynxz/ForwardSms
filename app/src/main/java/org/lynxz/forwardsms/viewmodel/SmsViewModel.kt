@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.lynxz.baseimlib.IMManager
+import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.BuildConfig
@@ -203,7 +204,7 @@ object SmsViewModel : ViewModel() {
                 BuildConfig.dd_corpsecret,
                 BuildConfig.dd_agent
             ).apply {
-                propertyUtil = ConfigUtil(app!!, "sp_dd")
+                propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
             })
         Logger.d(TAG, "activeImDD result $initResult")
 
@@ -213,7 +214,7 @@ object SmsViewModel : ViewModel() {
                 BuildConfig.tg_bottoken,
                 BuildConfig.tg_default_userName
             ).apply {
-                propertyUtil = ConfigUtil(app!!, "sp_tg")
+                propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
             })
         Logger.d(TAG, "activeImTg result $initResult")
 
