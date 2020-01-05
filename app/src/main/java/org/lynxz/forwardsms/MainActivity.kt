@@ -2,9 +2,7 @@ package org.lynxz.forwardsms
 
 import PermissionResultInfo
 import android.Manifest
-import android.content.Intent
 import android.os.Build
-import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,6 +17,7 @@ import org.lynxz.baseimlib.msec2date
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.ui.BaseActivity
+import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
@@ -56,7 +55,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
 
-        requestPermission(Manifest.permission.READ_SMS)
+//        requestPermission(Manifest.permission.READ_SMS)
 
         // 注册im
         SmsViewModel.activeIm()
@@ -135,6 +134,10 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             }
         }
 
+        btn_auto_start.setOnClickListener {
+            BrandUtil.goAutoStartSetting(this)
+        }
+
         btn_temp_test.setOnClickListener {
             activeImTest()
         }
@@ -170,17 +173,18 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private fun activeImTest() {
         // 临时测试用
-        try {
-            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
-            } else {
-                Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-            }
-            startActivity(intent)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            tv_info.text = e.message
-        }
+//        try {
+//            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
+//            } else {
+//                Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+//            }
+//            startActivity(intent)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//            tv_info.text = e.message
+//        }
 
+        requestPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
     }
 }

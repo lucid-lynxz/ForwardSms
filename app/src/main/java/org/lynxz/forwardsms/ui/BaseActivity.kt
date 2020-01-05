@@ -11,12 +11,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_base.*
 import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
 import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.util.ScreenUtil
 
 abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
     private val permissionFrag by lazy {
-        BaseTransFragment.getTransFragment(this, "permission_tag", PermissionFragment())
+        BaseTransFragment.getTransFragment(this, "permission_tag", PermissionFragment().apply {
+            registerPermissionChecker(IgnoreBatteryOptimCheckerImpl)
+        })
     }
 
     protected fun requestPermission(permission: String) {

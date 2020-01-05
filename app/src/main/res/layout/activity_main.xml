@@ -24,13 +24,22 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_temp_test" />
 
+
+    <Button
+        android:id="@+id/btn_auto_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="自启动设置"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_send_msg" />
+
     <Button
         android:id="@+id/btn_sms_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="获取短信列表"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_send_msg" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_auto_start" />
 
 
     <EditText
