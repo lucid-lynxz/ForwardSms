@@ -1,13 +1,10 @@
 package org.lynxz.securitysp.util;
 
-import androidx.annotation.Keep;
-
 import java.nio.ByteBuffer;
 
 /**
  * Created by lynxz on 05/06/2017.
  */
-@Keep
 public class ByteUtil {
     /**
      * 将整数转换成字节数组

@@ -1,7 +1,5 @@
 package org.lynxz.securitysp
 
-import javax.crypto.SecretKey
-
 /**
  * 用于sp文件key-value加解密
  * 由用户自定义传入

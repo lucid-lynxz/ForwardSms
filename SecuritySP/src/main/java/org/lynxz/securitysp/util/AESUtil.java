@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lynxz.securitysp.ISpEncryptUtil;
 
 import java.security.Provider;
@@ -26,7 +23,6 @@ import javax.crypto.spec.SecretKeySpec;
  * <p>
  * Description:
  */
-@Keep
 public class AESUtil implements ISpEncryptUtil {
     private final static String HEX = "0123456789ABCDEF";
     private static final String CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";//AES是加密方式 CBC是工作模式 PKCS5Padding是填充模式
@@ -120,10 +116,7 @@ public class AESUtil implements ISpEncryptUtil {
      * @param key       解密密钥
      * @param encrypted 密文
      */
-    /*
-     * 解密
-     */
-    @NonNull
+    @NotNull
     public static String decrypt(String key, String encrypted, @Nullable IvParameterSpec ivSpec) {
         if (TextUtils.isEmpty(encrypted)) {
             return "";

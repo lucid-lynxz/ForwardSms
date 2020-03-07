@@ -175,15 +175,15 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private fun activeImTest() {
         // 临时测试用
-//        val securitySP = SecuritySP(this, "security_sp1", Context.MODE_PRIVATE)
-//        securitySP.putPreference("StrValue", "hhhh")
+        val securitySP = SecuritySP(this, "security_sp1", Context.MODE_PRIVATE)
+        securitySP.putPreference("StrValue", "hhhh")
 //            .putPreference("BooleanValue", true)
 //            .putPreference("LongValue", 0L)
 //            .putPreference("IntValue", 0)
 //            .putPreference("FloatValue", 0F)
 
-//        val tagx = "securitySp"
-//        Logger.d(tagx, "sp strValue:" + securitySP.getPreference("StrValue", "defaultStr"))
+        val tagx = "securitySp"
+        Logger.d(tagx, "sp strValue:" + securitySP.getPreference("StrValue", "defaultStr"))
 //        Logger.d(tagx, "sp BooleanValue:" + securitySP.getPreference("BooleanValue", false))
 //        Logger.d(tagx, "sp LongValue:" + securitySP.getPreference("LongValue", 1111L))
 //        Logger.d(tagx, "sp IntValue:" + securitySP.getPreference("IntValue", 2222))

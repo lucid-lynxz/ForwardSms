@@ -2,9 +2,8 @@ package org.lynxz.securitysp.util;
 
 import android.text.TextUtils;
 
-import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +12,6 @@ import java.security.NoSuchAlgorithmException;
 /**
  * 摘要算法
  */
-@Keep
 public class DigestUtil {
     public static final String SHA1 = "SHA-1";
     public static final String SHA256 = "SHA-256";
@@ -23,12 +21,12 @@ public class DigestUtil {
      * 对元数据进行sha256摘要处理
      */
     @Nullable
-    public static byte[] sha256(@NonNull byte[] srcData) {
+    public static byte[] sha256(@NotNull byte[] srcData) {
         return encryptToByte(srcData, DigestUtil.SHA256);
     }
 
     @Nullable
-    public static byte[] sha1(@NonNull byte[] srcData) {
+    public static byte[] sha1(@NotNull byte[] srcData) {
         return encryptToByte(srcData, DigestUtil.SHA1);
     }
 

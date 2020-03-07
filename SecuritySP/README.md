@@ -2,6 +2,11 @@
 
 ## 使用方法
 
+### 导入依赖库
+```gradle
+implementation 'org.lynxz.securitysp:SecuritySp:1.0.3'
+```
+
 ### 获取 SecuritySP 对象
 ```kotlin
 // 方法1: 默认使用内置的 aes 加解密算法
