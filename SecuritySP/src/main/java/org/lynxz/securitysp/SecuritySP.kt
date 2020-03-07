@@ -31,7 +31,7 @@ inline fun <reified T> Set<*>.isSetOfType(): Boolean = all { it is T }
  * 2. 存储数据到sp: [putPreference]
  * 3. 从sp中提取数据: [getPreference]
  * 4. 获取当前加密密钥内容: [getSecurityKey]
- * 5. 生成一个aeskey: [generateRandomKey]
+ * 5. 生成一个aeskey: [generateRandomAesKey]
  * 5. 从sp中删除自动生成的解密密钥: [removeSecurityKey], 注意: 移除后由用户保存, 下次使用sp需要传入securityKey, 否则解密失败
  *
  * 示例:
@@ -65,8 +65,8 @@ class SecuritySP constructor(
         private val SecurityKeyName =
             DigestUtil.encryptToString("SecuritySP_key", DigestUtil.SHA256) ?: ""
 
-        // 生成随机密钥,建议由
-        fun generateRandomKey(context: Context): String {
+        // 生成随机aes密钥
+        fun generateRandomAesKey(context: Context): String {
             val deviceSerialNumber = DeviceUtil.getDeviceSerialNumber(context) ?: ""
             val seed =
                 deviceSerialNumber + Random(System.currentTimeMillis()).nextLong() + "$#sjl93&!7jsfj~0|"
@@ -87,18 +87,19 @@ class SecuritySP constructor(
             // 自动生成密钥, 优先从sp文件中获取,若为首次创建sp,则获取失败,自动生成并存入sp中
             secretKey = innerSp.getString(SecurityKeyName, "")
             if (secretKey.isNullOrBlank()) {
-                secretKey = generateRandomKey(context)
+                secretKey = generateRandomAesKey(context)
                 innerSp.edit().putString(SecurityKeyName, secretKey).apply()
             }
-        } else if (secretKey.isNullOrBlank()) {
-            // 非自动生成密钥,则密钥必传,否则直接抛出异常
-            throw IllegalArgumentException("autoGenerateKey=true but secretKey is empty")
         }
+//        else if (secretKey.isNullOrBlank()) {
+//            // 非自动生成密钥,则密钥必传,否则直接抛出异常
+//            throw IllegalArgumentException("autoGenerateKey=true but secretKey is empty")
+//        }
     }
 
     /**
      * 从sp中提取数据
-     * @param  name sp中存储的key明文,内部会自动调用加密算法,注意: 暂不支持非对称加密
+     * @param  name sp中存储的key明文,内部会自动调用加密算法,注意: 默认不支持非对称加密,当然,用户可以通过 [getAll] 来获取所有数据
      * @param default 若sp未存储相关key数据,则返回该默认值
      * */
     @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
