@@ -13,7 +13,7 @@ import org.lynxz.forwardsms.util.Logger
 
 class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : BroadcastReceiver() {
     companion object {
-        private val TAG = "SmsReceiver"
+        private const val TAG = "SmsReceiver"
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

@@ -1,2 +1,3 @@
 include ':app', ':baseImLib', ':imDingDing', ':imTG'
 rootProject.name='ForwardSms'
+include ':SecuritySP'

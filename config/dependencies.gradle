@@ -1,6 +1,6 @@
-// configVersion: 20
-// date: 2019.10.07
-// description:  更新版本,添加androidX
+// configVersion: 22
+// date: 2020.03.05
+// description: 添加androidx junit ext
 ext {
     gradleToolVersion = '3.3.2'
 
@@ -13,6 +13,7 @@ ext {
 
     // androidX
     androidSupportVersionX = '1.1.0'
+    androidLegacyVersionX = '1.0.0'
     constraintLayoutVersionX = '1.1.3'
 
     testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
@@ -114,6 +115,7 @@ ext {
     testRunnerVersion = '1.0.2'
     testRulesVersion = '1.0.2'
 
+    jUnitExtVersionX = '1.1.1'
     testRunnerVersionX = '1.2.0'
     espressoVersionX = '3.2.0'
 
@@ -137,6 +139,7 @@ ext {
 
             // androidX 库
             appcompatX                    : "androidx.appcompat:appcompat:${androidSupportVersionX}",
+            supportV4X                    : "androidx.legacy:legacy-support-v4:${androidLegacyVersionX}",
             constraintLayoutX             : "androidx.constraintlayout:constraintlayout:${constraintLayoutVersionX}",
 
             lifeCycleViewModelX           : "androidx.lifecycle:lifecycle-viewmodel:$lifeCycleVersionX",
@@ -156,7 +159,7 @@ ext {
 
             toasty                        : "com.github.GrenderG:Toasty:${toastyVersion}",
 
-            // 替代shape,直接在xml中设置相关属性
+            // [替代shape,直接在xml中设置相关属性](https://github.com/JavaNoober/BackgroundLibrary)
             backgroundShape               : "com.noober.background:core:$backgroundShapeVersion",
             // 滑动删除
             swipeDelMenuLayout            : "com.github.mcxtzhang:SwipeDelMenuLayout:${swipeDelMenuLayoutVersion}",
@@ -246,13 +249,14 @@ ext {
 
     test = [
             // support库
-            junit              : "junit:junit:${jUnitVersion}",
-            espresso           : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
-            testRunner         : "com.android.support.test:runner:${testRunnerVersion}",
+            junit              : "junit:junit:${jUnitVersion}", // 使用: testImplementation(test.junit)
+            testRunner         : "com.android.support.test:runner:${testRunnerVersion}", // 使用: testImplementation(test.testRunnerX)
             testRules          : "com.android.support.test:rules:${testRulesVersion}",
+            espresso           : "com.android.support.test.espresso:espresso-core:${espressoVersion}",// 使用: androidTestImplementation(test.espresso)
 
             // androidX测试库
-            testRunnerX        : "androidx.test:runner:$testRunnerVersionX",
+            junitExtX          : "androidx.test.ext:junit:${jUnitExtVersionX}", // 导入 junit后使用androidx还需要导入ext库: androidTestImplementation(test.junitExtX)
+            testRunnerX        : "androidx.test:runner:${testRunnerVersionX}",
             espressoX          : "androidx.test.espresso:espresso-core:${espressoVersionX}",
 
             mockIto            : "org.mockito:mockito-core:${mockItoVersion}",

@@ -5,7 +5,7 @@ android {
     signingConfigs {
         release {
             storeFile file(keyStoreFilePath)
-            storePassword getLocalProperties("storePassword", "andoird")
+            storePassword getLocalProperties("storePassword", "android")
             keyAlias getLocalProperties("keyAlias", "androiddebugkey")
             keyPassword getLocalProperties("keyPassword", "android")
         }

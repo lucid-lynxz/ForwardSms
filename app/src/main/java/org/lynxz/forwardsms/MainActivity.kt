@@ -2,6 +2,7 @@ package org.lynxz.forwardsms
 
 import PermissionResultInfo
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
@@ -22,6 +23,7 @@ import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
+import org.lynxz.securitysp.SecuritySP
 
 
 /**
@@ -173,6 +175,20 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private fun activeImTest() {
         // 临时测试用
+//        val securitySP = SecuritySP(this, "security_sp1", Context.MODE_PRIVATE)
+//        securitySP.putPreference("StrValue", "hhhh")
+//            .putPreference("BooleanValue", true)
+//            .putPreference("LongValue", 0L)
+//            .putPreference("IntValue", 0)
+//            .putPreference("FloatValue", 0F)
+
+//        val tagx = "securitySp"
+//        Logger.d(tagx, "sp strValue:" + securitySP.getPreference("StrValue", "defaultStr"))
+//        Logger.d(tagx, "sp BooleanValue:" + securitySP.getPreference("BooleanValue", false))
+//        Logger.d(tagx, "sp LongValue:" + securitySP.getPreference("LongValue", 1111L))
+//        Logger.d(tagx, "sp IntValue:" + securitySP.getPreference("IntValue", 2222))
+//        Logger.d(tagx, "sp FloatValue:" + securitySP.getPreference("FloatValue", 3.8f))
+
 //        try {
 //            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
 //                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
