@@ -37,7 +37,7 @@ dependencies {
 //    implementation(libs.appcompatX)
 //    implementation(libs.constraintLayoutX)
 
-    implementation(libs.kotlinLib)
+    compileOnly(libs.kotlinLib)
 //    implementation(libs.ktxCore)
 //    implementation(libs.kotlinxCoroutinesAndroid)
 }
@@ -57,7 +57,7 @@ publish {
     groupId = 'org.lynxz.securitysp' // 填包名就好
     artifactId = 'SecuritySp'  // bintray中对应的packagename,大小写敏感
     uploadName = 'SecuritySp' // bintray中对应的maven product名称,默认为artifactId, 大小写敏感
-    publishVersion = properties.getProperty('securitySpVersion') // 发布版本号
-    desc = properties.getProperty('securitySpDesc')
+    publishVersion = '1.0.4' // 发布版本号
+    desc = '修改kotlin依赖为compileOnly,由app提供'
     website = 'https://github.com/lucid-lynxz/ForwardSms.git'
 }

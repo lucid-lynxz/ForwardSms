@@ -4,7 +4,10 @@
 
 ### 导入依赖库
 ```gradle
-implementation 'org.lynxz.securitysp:SecuritySp:1.0.3'
+// app/build.gradle
+// 需要kotlin支持
+implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61'
+implementation 'org.lynxz.securitysp:SecuritySp:1.0.4'
 ```
 
 ### 获取 SecuritySP 对象
