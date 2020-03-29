@@ -1,6 +1,7 @@
 package org.lynxz.securitysp.util;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -69,29 +70,31 @@ public class AESUtil implements ISpEncryptUtil {
     }
 
     // 生成随机密钥
+    // 参考: https://juejin.im/post/5d664915e51d4561f40adda9#heading-9
     @SuppressLint("DeletedProvider")
     public static byte[] getRawKey(byte[] seed) throws Exception {
-        KeyGenerator kgen = KeyGenerator.getInstance(AES);
-        //for android
-        SecureRandom sr = null;
-        // 在4.2以上版本中，SecureRandom获取方式发生了改变
-        int sdk_version = android.os.Build.VERSION.SDK_INT;
-        if (sdk_version > 23) {  // Android  6.0 以上
-            sr = SecureRandom.getInstance(SHA1PRNG, new CryptoProvider());
-        } else if (sdk_version >= 17) {
-            sr = SecureRandom.getInstance(SHA1PRNG, "Crypto");
+        int sdkInt = Build.VERSION.SDK_INT;
+        if (sdkInt >= 24) {//对 9.0 以上的进行处理
+            return InsecureSHA1PRNGKeyDerivator.deriveInsecureKey(seed, 32);
         } else {
-            sr = SecureRandom.getInstance(SHA1PRNG);
+            KeyGenerator kgen = KeyGenerator.getInstance(AES);
+            //for android
+            SecureRandom sr = null;
+            // 在4.2以上版本中，SecureRandom获取方式发生了改变
+            if (sdkInt >= 17) {
+                sr = SecureRandom.getInstance(SHA1PRNG, "Crypto");
+            } else {
+                sr = SecureRandom.getInstance(SHA1PRNG);
+            }
+            // for Java
+            // secureRandom = SecureRandom.getInstance(SHA1PRNG);
+            sr.setSeed(seed);
+            kgen.init(128, sr); //256 bits or 128 bits,192bits
+            //AES中128位密钥版本有10个加密循环，192比特密钥版本有12个加密循环，256比特密钥版本则有14个加密循环。
+            SecretKey skey = kgen.generateKey();
+            return skey.getEncoded();
         }
-        // for Java
-        // secureRandom = SecureRandom.getInstance(SHA1PRNG);
-        sr.setSeed(seed);
-        kgen.init(128, sr); //256 bits or 128 bits,192bits
-        //AES中128位密钥版本有10个加密循环，192比特密钥版本有12个加密循环，256比特密钥版本则有14个加密循环。
-        SecretKey skey = kgen.generateKey();
-        return skey.getEncoded();
     }
-
     public static byte[] encrypt(byte[] key, String content, IvParameterSpec ivSpec) {
         if (TextUtils.isEmpty(content)) {
             return null;
