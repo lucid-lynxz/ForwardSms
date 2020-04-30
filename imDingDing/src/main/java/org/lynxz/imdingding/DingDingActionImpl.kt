@@ -54,7 +54,7 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
                 // todo 失败重试
                 // 获取accessToken
                 val accessToken = HttpManager.refreshAccessTokenAsync().await()
-                print(accessToken.access_token)
+                print("get dingding accessToken=${accessToken.access_token}")
                 ConstantsPara.accessToken = accessToken.access_token ?: ""
 
                 // 获取部门列表

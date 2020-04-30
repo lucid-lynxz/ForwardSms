@@ -131,7 +131,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
                 if (!it.ok) {
                     IMManager.sendTextMessage(ImType.DingDing, body.apply {
                         name = SmsConstantParas.ddName
-                    })
+                    }) {
+                        tv_info.text =
+                            "${tv_info.text}\nsend msg from dingding result ${it.ok}\n${it.detail}"
+                        println("send msg from dingding result ${it.ok}")
+                    }
                 }
             }
         }

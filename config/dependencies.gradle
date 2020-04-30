@@ -1,6 +1,6 @@
-// configVersion: 22
-// date: 2020.03.05
-// description: 添加androidx junit ext
+// configVersion: 35
+// date: 2020.04.18
+// description: 添加 baseRecyclerViewAdapterHelper 无限加载更多的处理方案
 ext {
     gradleToolVersion = '3.3.2'
 
@@ -25,26 +25,21 @@ ext {
     rollviewpagerVersion = '1.4.6'
     swipeDelMenuLayoutVersion = 'V1.2.5'
     bgaSswipebacklayoutVersion = '1.0.8@aar'
-    bannerVersion = '1.4.10'
     recyclerviewfastscrollerVersion = '0.1.3'
     lottieVersion = '2.5.5'
     siyamedShapeIamgeviewVersion = '0.9.3@aar'
     ShimmerRecyclerViewVersion = '1.3'
 
-    lubanVersion = '1.1.8'
-
-    kotlinLibVersion = '1.3.50'
-    ktxCoreVersion = '1.1.0'
+    kotlinLibVersion = '1.3.61'
+    ktxCoreVersion = '1.2.0'
     kotlinxCoroutinesVersion = '1.1.1'
 
     glideVersion = "4.7.1"
 
     materialprogressbarVersion = "1.4.1"
     butterKnifeVersion = '8.8.1'
-    flycoTabLayoutVersion = "2.1.2@aar"
     switchButtonVersion = '0.0.3@aar'
     systembartintVersion = '1.0.3'
-    magicindicatorVersion = '1.5.0'
     statusBarUtilVersion = '1.2.5'
     photoViewVersion = '2.1.4'
 
@@ -61,7 +56,7 @@ ext {
     richTextVersion = '3.0.7'
     richTextHtmlParserVersion = '1.0.2'
 
-    okhttpVersion = '4.2.1'
+    okhttpVersion = '4.6.0'
     gsonVersion = '2.8.5'
 
     rxJavaVersion = '1.1.0'
@@ -83,7 +78,7 @@ ext {
     fragmentationVersion = "1.3.6"
 
     leakcanaryVersion = "1.5.1"
-    stethoVersion = "1.5.0"
+    stethoVersion = "1.5.1"
 
     // arch support 库
     lifeCycleVersion = '1.1.1'
@@ -130,8 +125,12 @@ ext {
             supportV13                    : "com.android.support:support-v13:${androidSupportVersion}",
             cardView                      : "com.android.support:cardview-v7:${androidSupportVersion}",
             multiDex                      : "com.android.support:multidex:${multiDexVersion}",
+            // 使用文章: https://juejin.im/post/5bac92f2f265da0aba70c1bf#heading-8
             constraintLayout              : "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}",
 
+            // ViewModel and LiveData
+            // implementation(libs.lifeCycleExtension)
+            // annotationProcessor(libs.lifeCycleCompiler) 或 kapt(libs.lifeCycleCompiler)
             lifeCycleExtension            : "android.arch.lifecycle:extensions:$lifeCycleVersion",
             lifeCycleCompiler             : "android.arch.lifecycle:compiler:$lifeCycleVersion",
             roomRuntime                   : "android.arch.persistence.room:runtime:$roomVersion",
@@ -142,20 +141,38 @@ ext {
             supportV4X                    : "androidx.legacy:legacy-support-v4:${androidLegacyVersionX}",
             constraintLayoutX             : "androidx.constraintlayout:constraintlayout:${constraintLayoutVersionX}",
 
-            lifeCycleViewModelX           : "androidx.lifecycle:lifecycle-viewmodel:$lifeCycleVersionX",
-            lifeCycleViewModelKtxX        : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersionX",
+            // // ViewModel and LiveData
+            // implementation(libs.lifeCycleExtensionX)
+            // annotationProcessor(libs.lifeCycleCompilerX) 或 kapt(libs.lifeCycleCompilerX)
             lifeCycleExtensionX           : "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersionX",
             lifeCycleCompilerX            : "androidx.lifecycle:lifecycle-compiler:$lifeCycleVersionX",
+            lifeCycleViewModelKtxX        : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersionX",
 
-
-
-
+            /* 3.x wiki: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/wiki
+               2.x wiki: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/blob/2.x/README-cn.md
+               2.9.44 版本是support库, 最新的3.0.1是androidx, 注意区分下
+               2.9.x 无限加载更多issue: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/issues/2229
+               implementation(libs.baseRecyclerViewAdapterHelper)
+             */
             baseRecyclerViewAdapterHelper : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${baseRecyclerViewAdapterHelperVersion}",
             recyclerviewfastscroller      : "xyz.danoz:recyclerviewfastscroller:${recyclerviewfastscrollerVersion}",
-            // 广告banner控件,带多种样式(指示器/数字/数字+文字等)
-            banner                        : "com.youth.banner:banner:${bannerVersion}",
+
+            /*
+                https://github.com/youth5201314/banner
+                广告banner控件,带多种样式(指示器/数字/数字+文字等)
+                1.4.10 用的是support库, 2.x是androidX库
+             */
+            banner                        : "com.youth.banner:banner:1.4.10",
+
             // 自动轮播的Viewpager
             rollviewpager                 : "com.jude:rollviewpager:${rollviewpagerVersion}",
+
+            // 城市选择器: https://github.com/crazyandcoder/citypicker
+            // 仿iOS滚轮实现、仿京东样式、一级城市列表、三级城市列表
+            cityPicker                    : "liji.library.dev:citypickerview:5.2.1",
+
+            // 日期/城市/时间选择器: https://github.com/Bigkoo/Android-PickerView
+            pickerView                    : "com.contrarywind:Android-PickerView:4.1.9",
 
             toasty                        : "com.github.GrenderG:Toasty:${toastyVersion}",
 
@@ -175,13 +192,33 @@ ext {
             richText                      : "com.zzhoujay.richtext:richtext:$richTextVersion",
             richTextHtmlParser            : "com.zzhoujay:html:$richTextHtmlParserVersion",
 
-            // viewpager指示器框架,支持多种样式
-            magicIndicator                : "com.github.hackware1993:MagicIndicator:$magicindicatorVersion",
-            // TabLayout 支持多种样式
-            flycoTabLayout                : "com.flyco.tablayout:FlycoTabLayout_Lib:${flycoTabLayoutVersion}",
+            /*
+                https://github.com/hackware1993/MagicIndicator
+                viewpager指示器框架,支持多种样式
+                maven { url "https://jitpack.io" }
+                implementation(libs.magicIndicator){ exclude group: "com.android.support", module: "appcompat-v7" }
+             */
+            magicIndicator                : "com.github.hackware1993:MagicIndicator:1.6.0",
+            /*
+               https://github.com/H07000223/FlycoTabLayout/blob/master/README_CN.md
+               TabLayout 支持多种样式, 使用的support库
+               implementation(libs.flycoTabLayout) { exclude group: "com.android.support", module: "support-v4" }
+             */
+            flycoTabLayout                : "com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar",
 
-            // 仿微信图片压缩库,生成jpeg图片
-            luban                         : "top.zibin:Luban:$lubanVersion",
+            /*
+            * 仿微信图片压缩库,生成jpeg图片: https://github.com/Curzibn/Luban
+            */
+            luban                         : "top.zibin:Luban:1.1.8",
+
+            /*
+                https://github.com/woxingxiao/BubbleSeekBar
+                有lite版本,如 3.20-lite, 只支持xml属性,增强版支持java设置相关属性
+                implementation(libs.bubbleseekbar) { exclude group: "com.android.support", module: "appcompat-v7" }
+             */
+            bubbleseekbar                 : "com.xw.repo:bubbleseekbar:3.20",
+            // https://github.com/rubensousa/PreviewSeekBar
+            PreviewSeekBar                : "com.github.rubensousa:previewseekbar:2.0.0",
 
             // 视频缓存
             videoCache                    : "com.danikula:videocache:${videoCacheVersion}",
@@ -196,7 +233,16 @@ ext {
             kotlinxCoroutinesAndroid      : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kotlinxCoroutinesVersion}",
 
             gson                          : "com.google.code.gson:gson:${gsonVersion}",
+            /*
+              https://github.com/square/okhttp
+              conscrypt 库使用于解决issue: https://github.com/square/okhttp/issues/5760
+
+              implementation(libs.okHttp)
+              implementation(libs.conscrypt)
+              implementation(libs.okHttpLogging)
+            * */
             okHttp                        : "com.squareup.okhttp3:okhttp:${okhttpVersion}",
+            conscrypt                     : "org.conscrypt:conscrypt-android:2.2.1",
             okHttpLogging                 : "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}",
 
             rxJava                        : "io.reactivex:rxjava:${rxJavaVersion}",
@@ -209,34 +255,60 @@ ext {
 
             retrofit2                     : "com.squareup.retrofit2:retrofit:${retrofit2Version}",
             retrofit2Gson                 : "com.squareup.retrofit2:converter-gson:${retrofit2Version}",
-            // retorift kotlin coroutine 适配器
+
+            // retrofit kotlin coroutines 适配器
             retrofit2KtxAdapter           : "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit2KtxAdapterVersion",
             retrofit2Rxjava               : "com.squareup.retrofit2:adapter-rxjava:${retrofit2Version}",
             retrofit2Rxjava2              : "com.squareup.retrofit2:adapter-rxjava2:${retrofit2Version}",
+            retrofit2Logging              : "com.squareup.okhttp3:logging-interceptor:${retrofit2LoggerVersion}",
 
-            // debugImplementation(libs.readystatesoftwareChuckDebug)
-            // releaseImplementation(libs.readystatesoftwareChuckRelease)
+            /* 抓包工具, 直接在app上查看, https://github.com/jgilfelt/chuck
+               debugImplementation(libs.readystatesoftwareChuckDebug)
+               releaseImplementation(libs.readystatesoftwareChuckRelease)
+             */
             readystatesoftwareChuckDebug  : "com.readystatesoftware.chuck:library:${readystatesoftwareChuckVersion}",
             readystatesoftwareChuckRelease: "com.readystatesoftware.chuck:library-no-op:${readystatesoftwareChuckVersion}",
+
+            /* Facebook 出品: https://github.com/facebook/stetho
+             implementation(libs.stetho)
+             implementation(libs.stethoOkhttp3)
+             1. 在 application#onCreate() 中进行初始化: Stetho.initializeWithDefaults(this);
+             2. 创建 retrofit 时, OkHttpClient httpClient = new OkHttpClient.Builder().addNetworkInterceptor(new StethoInterceptor()).build();
+             3. 在 chrome 中输入: chrome://inspect 查看, 注意: 首次连接需要科学上网
+             */
+            stetho                        : "com.facebook.stetho:stetho:$stethoVersion",
+            stethoOkhttp3                 : "com.facebook.stetho:stetho-okhttp3:$stethoVersion",
 
             eventbus                      : "org.greenrobot:eventbus:${eventbusVersion}",
             fragmentation                 : "me.yokeyword:fragmentation:${fragmentationVersion}",
 
-            stetho                        : "com.facebook.stetho:stetho:$stethoVersion",
-            stethoOkhttp3                 : "com.facebook.stetho:stetho-okhttp3:$stethoVersion",
             leakcanary                    : "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion",
 
+            // 图片加载: https://github.com/bumptech/glide
+            // implementation(libs.glide){ exclude group: "com.android.support"}
+            // annotationProcessor(libs.glideCompiler) 或者  kapt(libs.glideCompiler)
             glide                         : "com.github.bumptech.glide:glide:${glideVersion}",
             glideCompiler                 : "com.github.bumptech.glide:compiler:${glideVersion}",
 
             lottie                        : "com.airbnb.android:lottie:${lottieVersion}",
-            materialprogressbar           : "me.zhanghai.android.materialprogressbar:library:${materialprogressbarVersion}",
 
+            // 水平和圆形进度条:https://github.com/zhanghai/MaterialProgressBar
+            materialprogressbar           : "me.zhanghai.android.materialprogressbar:library:${materialprogressbarVersion}",
+            // 分步进度条:https://github.com/kofigyan/StateProgressBar
+            stateprogressbar              : "com.kofigyan.stateprogressbar:stateprogressbar:1.0.0",
+
+            // https://github.com/JakeWharton/butterknife
+            // 8.8.1 是support库,最新的 10.x 是androidx库
+            // implementation(libs.butterKnife)
+            // annotationProcessor(libs.butterKnifeCompiler) 或 kapt(libs.butterKnifeCompiler)
             butterKnife                   : "com.jakewharton:butterknife:${butterKnifeVersion}",
             butterKnifeCompiler           : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
 
+            // https://github.com/zcweng/SwitchButton
             switchButton                  : "com.github.zcweng:switch-button:${switchButtonVersion}",
+
             zxing                         : "com.google.zxing:core:${zxingVersion}",
+
             // 沉浸式状态栏工具库
             statusBarUtil                 : "com.jaeger.statusbaruitl:library:$statusBarUtilVersion",
 
@@ -245,6 +317,70 @@ ext {
             zhugeio                       : "com.zhuge.analysis:zhugeio:${zhugeioVersion}",
             baiduMobStat                  : "com.baidu.mobstat:mtj-sdk-circle:${baiduMobStatVersion}",
             amapLocation                  : "com.amap.api:location:${amapLocationVersion}",
+
+
+            // 个人库
+            /*
+            加密sp: https://github.com/lucid-lynxz/ForwardSms/tree/master/SecuritySP
+            implementation(libs.kotlinLib)
+            implementation(libs.securitySp)
+             */
+            securitySp                    : "org.lynxz.securitysp:SecuritySp:1.0.5",
+            /*
+            长流程封装fragment,已集成权限申请功能: https://github.com/lucid-lynxz/TransFragment
+            implementation(libs.kotlinLib)
+            implementation(libs.appcompat)
+            implementation(libs.transFragment)
+            * */
+            transFragment                 : "org.lynxz.transfragment:TransFragment:1.0.0",
+
+            /*
+            * umeng微信登录和分享二次包装库: https://github.com/lucid-lynxz/LoginDemo.git
+            * 需要kotlin支持
+            *
+            * implementation(libs.kotlinLib)
+            * implementation(libs.umengWrapper)
+            */
+            umengWrapper                  : "org.lynxz.umeng_wrapper:umeng_wrapper:1.0.2",
+            /*
+            * 自动创建三方框架必须的空类注解: https://github.com/lucid-lynxz/LoginDemo.git
+            * 如微信登录回调页面 WXEntryActivity
+            *
+            * implementation(libs.thirdClassGeneration)
+            * kapt(libs.thirdClassGeneration) 或者 annotationProcessor(libs.thirdClassGeneration)
+            *
+            * P.S. 使用kapt可能需要在 gradle 中添加如下配置:
+            * android{
+            *   defaultConfig{
+            *       javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
+            *   }
+            * }
+            *
+            * 在 app 主module任意类上添加注解,即可自动生成 {applicationId}.wxapi.WXEntryActivity
+            * <pre>
+                @ThirdActivityAutoGenerator(
+                      getApplicationId = BuildConfig.APPLICATION_ID,
+                      getSubPackageName = "wxapi",
+                      getTargetActivityName = "WXEntryActivity",
+                      getSupperClass = WXTemplateActivity::class
+                  )
+            * </pre>
+            */
+            thirdClassGeneration          : "org.lynxz.third_generation:third_generation:1.0.0",
+
+            /*
+             * 支付相关封装库: https://github.com/lucid-lynxz/PayWrapper.git
+             * 主module需要提供kotlin支持
+             *
+             * implementation(libs.kotlinLib)
+             *
+             * implementation(libs.basePayWrapper) // 必须
+             * implementation(libs.wechatPayWrapper) // 按需,微信支付
+             * implementation(libs.aliPayWrapper) // 按需,支付宝支付
+             */
+            basePayWrapper                : 'org.lynxz.basepaywrapper:basepaywrapper:1.0.5',
+            wechatPayWrapper              : 'org.lynxz.wechatpaywrapper:wechatpaywrapper:1.0.5',
+            aliPayWrapper                 : 'org.lynxz.alipaywrapper:alipaywrapper:1.0.5',
     ]
 
     test = [

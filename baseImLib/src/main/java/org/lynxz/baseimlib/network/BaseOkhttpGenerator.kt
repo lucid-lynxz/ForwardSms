@@ -34,11 +34,12 @@ class BaseOkhttpGenerator {
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 
     // 返回builder，便于调用方按需添加其他拦截器等功能
+    // 由于tg需要科学上网, 而科学上网时,访问钉钉又容易超时,因此增大各超时时间
     val clientBuilder: OkHttpClient.Builder = OkHttpClient()
         .newBuilder()
-        .connectTimeout(3, TimeUnit.SECONDS)
-        .readTimeout(3, TimeUnit.SECONDS)
-        .writeTimeout(3, TimeUnit.SECONDS)
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
         .addInterceptor(headerInterceptor)
         .addInterceptor(queryInterceptor)
         .addInterceptor(logInterceptor)

@@ -10,8 +10,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 4
-        versionName "1.4"
+        versionCode 5
+        versionName "1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.ktxCore)
     implementation(libs.kotlinxCoroutinesAndroid)
 
-    implementation(libs.lifeCycleViewModelX)
+//    implementation(libs.lifeCycleViewModelX)
     implementation(libs.lifeCycleViewModelKtxX)
     implementation(libs.lifeCycleExtensionX)
 }
