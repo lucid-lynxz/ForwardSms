@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import java.lang.IllegalArgumentException
 
 
 /**
@@ -65,10 +66,14 @@ object BrandUtil {
         activityDir: String
     ) {
 
-        context.startActivity(Intent().apply {
-            component = ComponentName(packageName, activityDir)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        })
+        try {
+            context.startActivity(Intent().apply {
+                component = ComponentName(packageName, activityDir)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            })
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        }
     }
 
 

@@ -11,12 +11,12 @@ android {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
         versionCode 7
-        versionName "1.5.3"
+        versionName "1.5.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             buildConfigField("String", "dd_corpid", getLocalProperties("dd_corpid", ""))
             buildConfigField("String", "dd_corpsecret", getLocalProperties("dd_corpsecret", ""))
             buildConfigField("String", "dd_agent", getLocalProperties("dd_agent", ""))
