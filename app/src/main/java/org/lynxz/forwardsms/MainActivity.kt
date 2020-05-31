@@ -2,8 +2,12 @@ package org.lynxz.forwardsms
 
 import PermissionResultInfo
 import android.Manifest
-import android.content.Context
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Build
+import android.provider.Settings
+import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
+import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,7 +27,6 @@ import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
-import org.lynxz.securitysp.SecuritySP
 
 
 /**
@@ -41,11 +44,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
     private var ddUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyDDUserName, "")
     private var phoneTag by SpDelegateUtil(this, SmsConstantParas.SpKeyPhoneTag, "")
+    private val smsReceiveLiveData by lazy { SmsViewModel.getReceivedSms() }
 
     override fun getLayoutRes() = R.layout.activity_main
     var lastSms = ""
     override fun afterViewCreated() {
-
         // 显示tg用户名
         if (phoneTag.isBlank()) {
             phoneTag = Build.MODEL
@@ -64,6 +67,17 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
+
+        // 转发微信消息,默认转发
+        cbx_wechat.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                enableMonitorNotification()
+            }
+            SmsViewModel.enableWechatForward(isChecked)
+        }
+        enableMonitorNotification()
+        SmsViewModel.enableWechatForward(true)
+
 
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {
@@ -88,6 +102,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 //        }
         SmsViewModel.getReceivedSms().observe(this, Observer<SmsDetail> {
             tv_info.text = it.toString()
+
         })
 
         SmsViewModel.getSmsHistory().observe(this, Observer {
@@ -179,32 +194,6 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private fun activeImTest() {
         // 临时测试用
-        val securitySP = SecuritySP(this, "security_sp1", Context.MODE_PRIVATE)
-        securitySP.putPreference("StrValue", "hhhh")
-//            .putPreference("BooleanValue", true)
-//            .putPreference("LongValue", 0L)
-//            .putPreference("IntValue", 0)
-//            .putPreference("FloatValue", 0F)
-
-        val tagx = "securitySp"
-        Logger.d(tagx, "sp strValue:" + securitySP.getPreference("StrValue", "defaultStr"))
-//        Logger.d(tagx, "sp BooleanValue:" + securitySP.getPreference("BooleanValue", false))
-//        Logger.d(tagx, "sp LongValue:" + securitySP.getPreference("LongValue", 1111L))
-//        Logger.d(tagx, "sp IntValue:" + securitySP.getPreference("IntValue", 2222))
-//        Logger.d(tagx, "sp FloatValue:" + securitySP.getPreference("FloatValue", 3.8f))
-
-//        try {
-//            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
-//            } else {
-//                Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-//            }
-//            startActivity(intent)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            tv_info.text = e.message
-//        }
-
         requestPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
     }
 
@@ -236,6 +225,45 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             SmsViewModel.activeIm(ImType.TG)
         } else {
             IMManager.unregisterIm(ImType.TG)
+        }
+    }
+
+    // 判断是否打开了通知监听权限
+    private fun isNotificationListenerEnabled(): Boolean {
+        val pkgName = packageName
+        val flat = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
+        if (!TextUtils.isEmpty(flat)) {
+            val names = flat.split(":".toRegex()).toTypedArray()
+            for (i in names.indices) {
+                val cn = ComponentName.unflattenFromString(names[i])
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.packageName)) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    /**
+     * 允许读取通知栏信息
+     * */
+    private fun enableMonitorNotification() {
+        if (isNotificationListenerEnabled()) {
+            return
+        }
+
+        try {
+            val intent: Intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS)
+            } else {
+                Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            tv_info.text = e.message
         }
     }
 }

@@ -42,6 +42,15 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_auto_start" />
 
 
+    <CheckBox
+        android:id="@+id/cbx_wechat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="转发微信通知栏信息内容"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sms_list" />
+
     <EditText
         android:id="@+id/edt_phone_tag"
         android:layout_width="wrap_content"
@@ -49,8 +58,7 @@
         android:hint="本机号码或昵称"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/btn_confirm_phone_tag"
-        app:layout_constraintTop_toBottomOf="@+id/btn_sms_list" />
-
+        app:layout_constraintTop_toBottomOf="@+id/cbx_wechat" />
 
     <Button
         android:id="@+id/btn_confirm_phone_tag"

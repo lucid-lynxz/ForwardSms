@@ -4,6 +4,7 @@ import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import org.lynxz.forwardsms.bean.SmsDetail
+import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.util.Logger
 
@@ -43,13 +44,24 @@ class SmsNotificationListenerService : NotificationListenerService() {
     companion object {
         private const val TAG = "SmsNotificationListenerService"
 
-        private var observer: ISmsReceiveObserver? = null
+        // 短信监听
+        private var smsObserver: ISmsReceiveObserver? = null
+
+        // 普通app通知栏信息监听(包括短信)
+        private var appObserver: IAppNotificationObserver? = null
 
         /**
          * 注册短信内容回调监听器
          * */
         fun registerSmsObserver(observer: ISmsReceiveObserver?) {
-            this.observer = observer
+            this.smsObserver = observer
+        }
+
+        /**
+         * 注册普通app通知回调监听器
+         * */
+        fun registerAppObserver(observer: IAppNotificationObserver?) {
+            this.appObserver = observer
         }
     }
 
@@ -64,17 +76,23 @@ class SmsNotificationListenerService : NotificationListenerService() {
 //        短信 com.android.mms
 //        sbn.packageName // 应用通知的包名
 
-        val pkgName = sbn?.packageName ?: ""
+        val pkgName = sbn?.packageName
+        Logger.d(TAG, "onNotificationPosted $pkgName $appObserver")
+        if (pkgName.isNullOrBlank()) {
+            return
+        }
+
+        appObserver?.onReceiveAppNotification(pkgName, sbn, rankingMap)
         if (pkgName != "com.android.mms") {
             return
         }
-        sbn?.postTime // 1573881489793
+        sbn.postTime // 1573881489793
         Logger.d(TAG, "$sbn $rankingMap")
-        val notification = sbn?.notification
+        val notification = sbn.notification
         notification?.tickerText?.toString()?.let {
             if (it.isNotBlank()) {
                 Logger.d(TAG, "tickerText: $it")
-                observer?.onReceiveSms(SmsDetail().apply {
+                smsObserver?.onReceiveSms(SmsDetail().apply {
                     body = it
                 })
             }

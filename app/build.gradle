@@ -10,8 +10,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 6
-        versionName "1.5.1"
+        versionCode 7
+        versionName "1.5.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

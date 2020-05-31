@@ -8,6 +8,8 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.provider.Telephony
+import android.service.notification.NotificationListenerService
+import android.service.notification.StatusBarNotification
 import androidx.core.database.getDoubleOrNull
 import androidx.core.database.getIntOrNull
 import androidx.core.database.getLongOrNull
@@ -26,6 +28,7 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.BuildConfig
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.isSameAs
+import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.receiver.SmsReceiver
 import org.lynxz.forwardsms.util.ConfigUtil
@@ -33,6 +36,7 @@ import org.lynxz.forwardsms.util.Logger
 import org.lynxz.forwardsms.viewmodel.SmsViewModel.getReceivedSms
 import org.lynxz.forwardsms.viewmodel.SmsViewModel.init
 import org.lynxz.forwardsms.widget.SmsHandler
+import org.lynxz.forwardsms.widget.SmsNotificationListenerService
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imtg.TGActionImpl
 
@@ -64,6 +68,35 @@ object SmsViewModel : ViewModel() {
         override fun onReceiveSms(smsDetail: SmsDetail?) {
             if (!smsDetail?.body.isNullOrBlank()) {
                 smsReceivedLiveData.value = smsDetail
+            }
+        }
+    }
+
+    // 通知栏中的app推送消息监听, 当前只监听微信
+    private val wechatNotificationObserver = object : IAppNotificationObserver {
+        override fun onReceiveAppNotification(
+            pkgName: String,
+            sbn: StatusBarNotification?,
+            rankingMap: NotificationListenerService.RankingMap?
+        ) {
+            println("获取到微信内容为0: $pkgName")
+            if (pkgName == "com.tencent.mm") { // 微信
+                val notification = sbn!!.notification
+                notification?.tickerText?.toString()?.let {
+                    val index = it.indexOf(":")
+                    println("获取到微信内容为: $it")
+                    if (index <= 0) {
+                        return
+                    }
+
+                    val fromUser = it.substring(0, index) // 发送人
+                    val wxContent = it.substring(index + 1, it.length) // 消息内容
+
+                    smsReceivedLiveData.postValue(SmsDetail().apply {
+                        body = wxContent
+                        from = "$fromUser(微信)"
+                    })
+                }
             }
         }
     }
@@ -113,6 +146,8 @@ object SmsViewModel : ViewModel() {
                 // 通过通知栏推送获取短信内容(无法获取发件人等信息)
                 // SmsNotificationListenerService.registerSmsObserver(iSmsReceiveObserver)
 
+                // 通过通知栏获取并转发微信消息
+                // SmsNotificationListenerService.registerAppObserver(wechatNotificationObserver)
 
                 // 通过短信数据库监听内容变化
                 // contentResolver.registerContentObserver(
@@ -127,7 +162,8 @@ object SmsViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         app?.unregisterReceiver(smsReceiver)
-        // SmsNotificationListenerService.registerSmsObserver(null)
+        SmsNotificationListenerService.registerSmsObserver(null)
+        SmsNotificationListenerService.registerAppObserver(null)
         // app?.contentResolver?.unregisterContentObserver(smsContentResolverObserver)
     }
 
@@ -256,6 +292,17 @@ object SmsViewModel : ViewModel() {
                     Logger.d(TAG, "钉钉初始化结果:${it.ok} ${it.detail}")
                 }
             }
+        }
+    }
+
+    /**
+     * 通过通知栏获取并转发微信消息
+     */
+    fun enableWechatForward(enable: Boolean) {
+        if (enable) {
+            SmsNotificationListenerService.registerAppObserver(wechatNotificationObserver)
+        } else {
+            SmsNotificationListenerService.registerAppObserver(null)
         }
     }
 }
