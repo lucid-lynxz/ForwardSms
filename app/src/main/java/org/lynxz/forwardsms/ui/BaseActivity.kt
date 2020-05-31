@@ -70,22 +70,25 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
 
     private val mHandler by lazy { Handler() }
     private val delayActionMap by lazy { mutableMapOf<Long, Runnable>() }
-    fun doDelay(delay: Long, tag: Long = System.currentTimeMillis(), block: () -> Unit) {
+
+    fun doDelay(delayMs: Long, tag: Long = System.currentTimeMillis(), block: () -> Unit) {
         delayActionMap[tag]?.let {
             mHandler.removeCallbacks(it)
         }
 
         val delayRunnable = Runnable {
+            Logger.d("doDelay action $tag , running.... $isFinishing")
             if (!isFinishing) {
                 block()
             }
         }
 
         delayActionMap[tag] = delayRunnable
-        mHandler.postDelayed(delayRunnable, delay)
+        mHandler.postDelayed(delayRunnable, delayMs)
     }
 
     protected fun cancelDelayAction(tag: Long = Long.MIN_VALUE) {
+        Logger.d("cancelDelayAction $tag")
         if (delayActionMap.isEmpty()) {
             return
         }

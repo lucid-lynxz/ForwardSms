@@ -13,6 +13,8 @@ import org.lynxz.imdingding.bean.DepartmentMemberDetailListBean
 import org.lynxz.imdingding.bean.MessageResponseBean
 import org.lynxz.imdingding.network.HttpManager
 import org.lynxz.imdingding.para.ConstantsPara
+import java.lang.IllegalArgumentException
+import java.util.concurrent.TimeUnit
 
 /**
  * 钉钉相关操作
@@ -47,15 +49,34 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
         return CommonResult(valid, detail)
     }
 
+    /**
+     * 刷新钉钉token
+     * 接口文档: https://ding-doc.dingtalk.com/doc#/serverapi2/eev437
+     * 有效期 7200 秒
+     * */
+    private suspend fun refreshToken(): String {
+        val accessToken = HttpManager.refreshAccessTokenAsync().await()
+        print("get dingding accessToken=${accessToken.access_token}")
+        return accessToken.access_token?.trim() ?: ""
+    }
+
     override fun refresh(doOnComplete: (CommonResult) -> Unit) {
         launch {
             val result = CommonResult()
             try {
-                // todo 失败重试
                 // 获取accessToken
-                val accessToken = HttpManager.refreshAccessTokenAsync().await()
-                print("get dingding accessToken=${accessToken.access_token}")
-                ConstantsPara.accessToken = accessToken.access_token ?: ""
+                for (i in 0..3) { // 最多重试试三次
+                    ConstantsPara.accessToken = refreshToken()
+
+                    if (!ConstantsPara.accessToken.isBlank()) {
+                        break
+                    }
+                    print("第 ${i + 1} 次尝试重新获取钉钉token\n")
+                }
+
+                if (ConstantsPara.accessToken.isBlank()) {
+                    throw IllegalArgumentException("获取钉钉token失败,请检查")
+                }
 
                 // 获取部门列表
                 ConstantsPara.departmentList = HttpManager.getDepartmentInfoAsync().await()
@@ -98,6 +119,7 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
 
     /**
      * 发送文本消息给指定钉钉用户
+     * 若token不合法,报错: {"errcode":40014,"errmsg":"不合法的access_token"}
      * */
     override fun sendTextMessage(
         body: SendMessageReqBean,
@@ -135,6 +157,7 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
             }
 
             onFailed { error, code ->
+                print("发送钉钉消息失败(${ConstantsPara.accessToken}): $code  $error")
                 result.ok = false
                 result.detail = "$error"
             }

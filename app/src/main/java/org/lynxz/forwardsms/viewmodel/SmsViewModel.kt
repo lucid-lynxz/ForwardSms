@@ -194,22 +194,28 @@ object SmsViewModel : ViewModel() {
     }
 
     /**
-     * 启用支持的im中断
+     * 启用支持的im,默认启用钉钉和tg
      * */
-    fun activeIm() {
+    fun activeIm(vararg imTypes: String?) {
+        if (imTypes.isNullOrEmpty()) {
+            activeImDingding()
+            activeImTg()
+            return
+        }
+        for (type in imTypes) {
+            if (type == ImType.DingDing) {
+                activeImDingding()
+            } else if (type == ImType.TG) {
+                activeImTg()
+            }
+        }
+    }
 
-        var initResult = DingDingActionImpl.init(
-            ImInitPara.DDInitPara(
-                BuildConfig.dd_corpid,
-                BuildConfig.dd_corpsecret,
-                BuildConfig.dd_agent
-            ).apply {
-                propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
-            })
-        Logger.d(TAG, "activeImDD result $initResult")
-
-
-        initResult = TGActionImpl.init(
+    /**
+     * 启用电报im
+     * */
+    fun activeImTg() {
+        val initResult = TGActionImpl.init(
             ImInitPara.TGInitPara(
                 BuildConfig.tg_bottoken,
                 BuildConfig.tg_default_userName
@@ -220,11 +226,35 @@ object SmsViewModel : ViewModel() {
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                IMManager.registerIm(ImType.DingDing, DingDingActionImpl)
                 IMManager.registerIm(ImType.TG, TGActionImpl)
+                IMManager.refresh(ImType.TG) {
+                    Logger.d(TAG, "tg初始化结果:${it.ok} ${it.detail}")
+                }
+            }
+        }
+    }
 
-                IMManager.refresh(ImType.DingDing)
-                IMManager.refresh(ImType.TG)
+    /**
+     * 启用钉钉im
+     * */
+    private fun activeImDingding() {
+        val initResult = DingDingActionImpl.init(
+            ImInitPara.DDInitPara(
+                BuildConfig.dd_corpid,
+                BuildConfig.dd_corpsecret,
+                BuildConfig.dd_agent
+            ).apply {
+                propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
+            })
+        Logger.d(TAG, "activeImDD result $initResult")
+
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                IMManager.registerIm(ImType.DingDing, DingDingActionImpl)
+                IMManager.refresh(ImType.DingDing) {
+                    Logger.d(TAG, "钉钉初始化结果:${it.ok} ${it.detail}")
+                }
             }
         }
     }

@@ -37,14 +37,41 @@ class SmsService : Service() {
 
         // tg发送失败则尝试使用钉钉发送
         IMManager.sendTextMessage(ImType.TG, body) {
-            if (!it.ok) {
-                IMManager.sendTextMessage(ImType.DingDing, body.apply {
-                    name = SmsConstantParas.ddName
-                })
+            if (it.ok) {
+                return@sendTextMessage
             }
+
+            sendByDingding(body.apply {
+                name = SmsConstantParas.ddName
+            }, 1, 3)
         }
 //        HttpManager.sendMessage(it.format(), SmsConstantParas.tgUserNme)
     }
+
+    /**
+     * 通过钉钉发送消息,若发送失败,则尝试刷新钉钉token及通讯录后,再次尝试发送, 直到次数达到最大
+     * @param body 钉钉消息请求体
+     * @param curIndex 当前尝试次数,没法送一次递增1,直到达到 maxIndex
+     * @param maxIndex 最大尝试次数,达到此次数后不再尝试,默认为3
+     * */
+    private fun sendByDingding(body: SendMessageReqBean, curIndex: Int, maxIndex: Int = 3) {
+        if (curIndex >= maxIndex) {
+            print("sendByDingding fail as curIndex($curIndex) reach maxIndex")
+            return
+        }
+
+        IMManager.sendTextMessage(ImType.DingDing, body) { ddResult ->
+            if (ddResult.ok) {
+                return@sendTextMessage
+            }
+
+            // 刷新token并尝试重发该消息
+            IMManager.refresh(ImType.DingDing) {
+                sendByDingding(body, curIndex + 1, maxIndex)
+            }
+        }
+    }
+
 
     // 锁屏时启动单像素页面保活, 开屏后关闭单像素页面,避免影响屏幕事件
 //    private val screenObserver = Observer<Boolean> { screenOn ->

@@ -31,7 +31,11 @@ import org.lynxz.securitysp.SecuritySP
  * */
 @UseExperimental(ExperimentalCoroutinesApi::class)
 class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
-    private val TAG = "MainActivity"
+    companion object {
+        const val TAG = "MainActivity"
+        private const val delayActionTagRefreshDingDing = 0x001L // 刷新钉钉token
+    }
+
     private var lastSmsTs by SpDelegateUtil(this, IIMAction.lastSendMsgInfo, "", IIMAction.spIm)
 
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
@@ -43,24 +47,20 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     override fun afterViewCreated() {
 
         // 显示tg用户名
-        SmsConstantParas.tgUserNme = tgUserName
-        SmsConstantParas.ddName = ddUserName
-        if (phoneTag.isNullOrBlank()) {
+        if (phoneTag.isBlank()) {
             phoneTag = Build.MODEL
         }
-
         SmsConstantParas.phoneTag = phoneTag
 
         edt_user_name_tg.setText(tgUserName)
         edt_user_name_dd.setText(ddUserName)
         edt_phone_tag.setText(phoneTag)
-
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
-
 //        requestPermission(Manifest.permission.READ_SMS)
 
         // 注册im
-        SmsViewModel.activeIm()
+        activeTg(tgUserName)
+        activeDingding(ddUserName)
 
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
@@ -68,13 +68,13 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {
             tgUserName = edt_user_name_tg.text.toString().trim()
-            SmsConstantParas.tgUserNme = tgUserName
+            activeTg(tgUserName)
         }
 
         // 设置钉钉接收用户
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
-            SmsConstantParas.ddName = ddUserName
+            activeDingding(ddUserName)
         }
 
         // 设置本机识别名
@@ -206,5 +206,36 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 //        }
 
         requestPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+    }
+
+    /**
+     * 启用或停止钉钉im
+     * @param userName 要发送的钉钉用户名信息,若为空,则停用钉钉
+     * */
+    private fun activeDingding(userName: String?) {
+        SmsConstantParas.ddName = userName ?: ""
+        if (!userName.isNullOrBlank()) {
+            SmsViewModel.activeIm(ImType.DingDing)
+            doDelay(10 * 60 * 1000, delayActionTagRefreshDingDing) {
+                Logger.d(TAG, "定时刷新钉钉token...")
+                IMManager.refresh(ImType.DingDing)
+            }
+        } else {
+            IMManager.unregisterIm(ImType.DingDing)
+            cancelDelayAction(delayActionTagRefreshDingDing)
+        }
+    }
+
+    /**
+     * 启用或停止tg im
+     * @param userName tg用户昵称
+     * */
+    private fun activeTg(userName: String?) {
+        SmsConstantParas.tgUserNme = userName ?: ""
+        if (!userName.isNullOrBlank()) {
+            SmsViewModel.activeIm(ImType.TG)
+        } else {
+            IMManager.unregisterIm(ImType.TG)
+        }
     }
 }
