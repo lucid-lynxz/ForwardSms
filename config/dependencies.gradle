@@ -1,6 +1,6 @@
-// configVersion: 35
-// date: 2020.04.18
-// description: 添加 baseRecyclerViewAdapterHelper 无限加载更多的处理方案
+// configVersion: 37
+// date: 2020.05.31
+// description: 更新recyclerviewHelper issue
 ext {
     gradleToolVersion = '3.3.2'
 
@@ -21,7 +21,6 @@ ext {
     //Libraries
     multiDexVersion = '1.0.3'
     constraintLayoutVersion = '1.1.3'
-    baseRecyclerViewAdapterHelperVersion = '2.9.44'
     rollviewpagerVersion = '1.4.6'
     swipeDelMenuLayoutVersion = 'V1.2.5'
     bgaSswipebacklayoutVersion = '1.0.8@aar'
@@ -84,10 +83,6 @@ ext {
     lifeCycleVersion = '1.1.1'
     roomVersion = '1.1.1'
     lifeCycleVersionX = '2.1.0'
-
-    // 极光推送: https://docs.jiguang.cn/jpush/client/Android/android_guide/
-    jpushVersion = "3.1.3"
-    jcoreVersion = "1.2.1"
 
     // 友盟统计分享: https://developer.umeng.com/docs/66632/detail/66889
     umengCommonVersion = "1.5.4"
@@ -152,9 +147,11 @@ ext {
                2.x wiki: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/blob/2.x/README-cn.md
                2.9.44 版本是support库, 最新的3.0.1是androidx, 注意区分下
                2.9.x 无限加载更多issue: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/issues/2229
+               2.9.x viewpager+fragment+recyclerview切换崩溃issue: https://github.com/CymChad/BaseRecyclerViewAdapterHelper/issues/2843
                implementation(libs.baseRecyclerViewAdapterHelper)
              */
-            baseRecyclerViewAdapterHelper : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${baseRecyclerViewAdapterHelperVersion}",
+            baseRecyclerViewAdapterHelper : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.44",
+
             recyclerviewfastscroller      : "xyz.danoz:recyclerviewfastscroller:${recyclerviewfastscrollerVersion}",
 
             /*
@@ -312,8 +309,14 @@ ext {
             // 沉浸式状态栏工具库
             statusBarUtil                 : "com.jaeger.statusbaruitl:library:$statusBarUtilVersion",
 
-            jpush                         : "cn.jiguang.sdk:jpush:${jpushVersion}",
-            jcore                         : "cn.jiguang.sdk:jcore:${jcoreVersion}",
+            /*
+             极光推送: https://docs.jiguang.cn/jpush/client/Android/android_guide/
+             需要自定义service和receiver,详见文档
+                implementation(libs.jcore)
+                implementation(libs.jpush)
+             */
+            jcore                         : "cn.jiguang.sdk:jcore:2.3.4",
+            jpush                         : "cn.jiguang.sdk:jpush:3.6.0",
             zhugeio                       : "com.zhuge.analysis:zhugeio:${zhugeioVersion}",
             baiduMobStat                  : "com.baidu.mobstat:mtj-sdk-circle:${baiduMobStatVersion}",
             amapLocation                  : "com.amap.api:location:${amapLocationVersion}",

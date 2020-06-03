@@ -10,17 +10,6 @@ import java.util.concurrent.TimeUnit
  * okhttp通用参数设定
  * */
 class BaseOkhttpGenerator {
-    // 给请求添加统一的query参数:access_token
-    private val queryInterceptor = Interceptor { chain ->
-        val original = chain.request()
-        val url = original.url.newBuilder()
-            // .addQueryParameter("access_token", "xxx")
-            .build()
-
-        val requestBuilder = original.newBuilder().url(url)
-        chain.proceed(requestBuilder.build())
-    }
-
     // 给请求添加统一的header参数:Content-Type
     private val headerInterceptor = Interceptor { chain ->
         val request = chain.request().newBuilder()
@@ -41,6 +30,5 @@ class BaseOkhttpGenerator {
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .addInterceptor(headerInterceptor)
-        .addInterceptor(queryInterceptor)
         .addInterceptor(logInterceptor)
 }

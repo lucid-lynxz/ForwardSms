@@ -32,7 +32,7 @@ import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.receiver.SmsReceiver
 import org.lynxz.forwardsms.util.ConfigUtil
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.viewmodel.SmsViewModel.getReceivedSms
 import org.lynxz.forwardsms.viewmodel.SmsViewModel.init
 import org.lynxz.forwardsms.widget.SmsHandler
@@ -109,7 +109,7 @@ object SmsViewModel : ViewModel() {
     private val smsContentResolverObserver = object : ContentObserver(SmsHandler) {
         override fun onChange(selfChange: Boolean) {
             super.onChange(selfChange)
-            Logger.d(TAG, "onChange $selfChange")
+            LoggerUtil.d(TAG, "onChange $selfChange")
             val list = reloadSmsHistory(1)
             val tLastSms = list.getOrNull(0)
 
@@ -127,7 +127,7 @@ object SmsViewModel : ViewModel() {
 
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             super.onChange(selfChange, uri)
-            Logger.d(TAG, "onChange2 $selfChange $uri")
+            LoggerUtil.d(TAG, "onChange2 $selfChange $uri")
         }
     }
 
@@ -185,7 +185,7 @@ object SmsViewModel : ViewModel() {
         val list = mutableListOf<SmsDetail>()
         val granted = PermissionFragment.isPermissionGranted(app!!, Manifest.permission.READ_SMS)
         if (!granted) {
-            Logger.e(TAG, "read_sms权限未授予,读取短信列表失败")
+            LoggerUtil.e(TAG, "read_sms权限未授予,读取短信列表失败")
             return list
         }
 
@@ -258,13 +258,13 @@ object SmsViewModel : ViewModel() {
             ).apply {
                 propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
             })
-        Logger.d(TAG, "activeImTg result $initResult")
+        LoggerUtil.d(TAG, "activeImTg result $initResult")
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 IMManager.registerIm(ImType.TG, TGActionImpl)
                 IMManager.refresh(ImType.TG) {
-                    Logger.d(TAG, "tg初始化结果:${it.ok} ${it.detail}")
+                    LoggerUtil.d(TAG, "tg初始化结果:${it.ok} ${it.detail}")
                 }
             }
         }
@@ -282,14 +282,14 @@ object SmsViewModel : ViewModel() {
             ).apply {
                 propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
             })
-        Logger.d(TAG, "activeImDD result $initResult")
+        LoggerUtil.d(TAG, "activeImDD result $initResult")
 
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 IMManager.registerIm(ImType.DingDing, DingDingActionImpl)
                 IMManager.refresh(ImType.DingDing) {
-                    Logger.d(TAG, "钉钉初始化结果:${it.ok} ${it.detail}")
+                    LoggerUtil.d(TAG, "钉钉初始化结果:${it.ok} ${it.detail}")
                 }
             }
         }

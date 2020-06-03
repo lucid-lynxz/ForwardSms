@@ -10,7 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.lynxz.forwardsms.bean.ImType
 import org.lynxz.forwardsms.bean.SendMessageReqBean
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -58,7 +58,7 @@ object HttpManager {
                     imType = ImType.TG
                 }).await()
             }
-            Logger.d(TAG, "发送消息完成")
+            LoggerUtil.d(TAG, "发送消息完成")
         }
     }
 }

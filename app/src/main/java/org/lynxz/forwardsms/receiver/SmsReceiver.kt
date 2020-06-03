@@ -6,11 +6,15 @@ import android.content.Intent
 import android.os.Build
 import android.telephony.SmsMessage
 import androidx.annotation.RequiresApi
+import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.isSdkGE
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 
+/**
+ * 收到短信提醒receiver
+ * */
 class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : BroadcastReceiver() {
     companion object {
         private const val TAG = "SmsReceiver"
@@ -18,7 +22,6 @@ class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : Broadcast
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context?, intent: Intent?) {
-        Logger.d(TAG, "$intent")
         intent?.let {
             val format = it.getStringExtra("format")
             val smsDetail = SmsDetail()
@@ -32,7 +35,7 @@ class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : Broadcast
                 }
             }
 
-            Logger.d(TAG, "receive msg: $smsDetail")
+            LoggerUtil.w(TAG, "receive new msg: ${convert2Str(smsDetail)}")
             observer?.onReceiveSms(smsDetail)
         }
     }

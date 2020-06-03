@@ -546,7 +546,7 @@ public class ScreenUtil {
                 sMiUIVersionCode = Integer.parseInt(uiCode);
             }
         } catch (Exception e) {
-            Logger.d("" + e.getMessage());
+            LoggerUtil.d("" + e.getMessage());
             // e.printStackTrace();
         } finally {
             if (fis != null) {

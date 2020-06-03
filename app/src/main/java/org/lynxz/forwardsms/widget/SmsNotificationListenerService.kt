@@ -6,7 +6,7 @@ import android.service.notification.StatusBarNotification
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 
 /**
  * 通过查看通知栏信息读取短信，但只能读取短信内容，发信人信息无
@@ -67,7 +67,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
 
     override fun onListenerConnected() {
         super.onListenerConnected()
-        Logger.d(TAG, "onListenerConnected")
+        LoggerUtil.d(TAG, "onListenerConnected")
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {
@@ -77,7 +77,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
 //        sbn.packageName // 应用通知的包名
 
         val pkgName = sbn?.packageName
-        Logger.d(TAG, "onNotificationPosted $pkgName $appObserver")
+        LoggerUtil.d(TAG, "onNotificationPosted $pkgName $appObserver")
         if (pkgName.isNullOrBlank()) {
             return
         }
@@ -87,11 +87,11 @@ class SmsNotificationListenerService : NotificationListenerService() {
             return
         }
         sbn.postTime // 1573881489793
-        Logger.d(TAG, "$sbn $rankingMap")
+        LoggerUtil.d(TAG, "$sbn $rankingMap")
         val notification = sbn.notification
         notification?.tickerText?.toString()?.let {
             if (it.isNotBlank()) {
-                Logger.d(TAG, "tickerText: $it")
+                LoggerUtil.d(TAG, "tickerText: $it")
                 smsObserver?.onReceiveSms(SmsDetail().apply {
                     body = it
                 })

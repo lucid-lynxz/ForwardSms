@@ -23,7 +23,7 @@ import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.ui.BaseActivity
 import org.lynxz.forwardsms.util.BrandUtil
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
@@ -102,7 +102,6 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 //        }
         SmsViewModel.getReceivedSms().observe(this, Observer<SmsDetail> {
             tv_info.text = it.toString()
-
         })
 
         SmsViewModel.getSmsHistory().observe(this, Observer {
@@ -174,7 +173,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 具体某个权限的授权结果
         val msg =
             "授权结果\n权限名=${permission.name},是否授权=${permission.granted},是否可再弹出系统权限框=${permission.shouldShowRequestPermissionRationale}"
-        Logger.d(TAG, msg)
+        LoggerUtil.d(TAG, msg)
         tv_info.text = msg
 
         if (permission.name == Manifest.permission.READ_SMS) {
@@ -188,7 +187,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Logger.d(TAG, "main onDestroy")
+        LoggerUtil.d(TAG, "main onDestroy")
     }
 
 
@@ -206,7 +205,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         if (!userName.isNullOrBlank()) {
             SmsViewModel.activeIm(ImType.DingDing)
             doDelay(10 * 60 * 1000, delayActionTagRefreshDingDing) {
-                Logger.d(TAG, "定时刷新钉钉token...")
+                LoggerUtil.d(TAG, "定时刷新钉钉token...")
                 IMManager.refresh(ImType.DingDing)
             }
         } else {

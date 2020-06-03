@@ -3,14 +3,18 @@ package org.lynxz.imdingding.network
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import kotlinx.coroutines.*
 import okhttp3.Interceptor
+import okhttp3.Response
 import org.lynxz.baseimlib.bean.SendMessageReqBean
+import org.lynxz.baseimlib.convert2Obj
 import org.lynxz.baseimlib.network.BaseOkhttpGenerator
+import org.lynxz.baseimlib.network.interceptor.RetryInterceptor
 import org.lynxz.imdingding.bean.*
 import org.lynxz.imdingding.para.ConstantsPara
 import org.lynxz.imdingding.para.DDKeyNames
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.nio.charset.Charset
 
 
 /**
@@ -21,20 +25,61 @@ object HttpManager {
 
     // 给请求添加统一的query参数:access_token
     private val accessTokenInterceptor = Interceptor { chain ->
-        val original = chain.request()
-        val url = original.url.newBuilder()
+        val oriRequest = chain.request()
+        val url = oriRequest.url.newBuilder()
             .addQueryParameter(DDKeyNames.QUERY_KEY_ACCESS_TOKEN, ConstantsPara.accessToken)
             .build()
+        val requestBuilder = oriRequest.newBuilder().url(url)
+        var oriResponse = chain.proceed(requestBuilder.build())
 
-        val requestBuilder = original.newBuilder().url(url)
-        chain.proceed(requestBuilder.build())
+        // 若token不合法,报错: {"errcode":40014,"errmsg":"不合法的access_token"}
+        if (isTokenExpired(oriResponse)) {
+            runBlocking {
+                val accessToken = refreshAccessTokenAsync().await()
+                if (!accessToken.access_token.isNullOrBlank()) {
+                    ConstantsPara.accessToken = accessToken.access_token ?: ""
+
+                    // token刷新后尝试重新请求一次
+                    val url2 = oriRequest.url.newBuilder()
+                        .addQueryParameter(
+                            DDKeyNames.QUERY_KEY_ACCESS_TOKEN,
+                            ConstantsPara.accessToken
+                        )
+                        .build()
+                    val requestBuilder2 = oriRequest.newBuilder().url(url2)
+                    oriResponse = chain.proceed(requestBuilder2.build())
+                }
+            }
+        }
+
+        oriResponse
+    }
+
+    /**
+     * 判断token是否过期
+     * */
+    private fun isTokenExpired(response: Response): Boolean {
+        // 若token不合法,报错: {"errcode":40014,"errmsg":"不合法的access_token"}
+        val oriRespBody = response.body
+        val source = oriRespBody?.source()
+        source?.request(Long.MAX_VALUE)
+        val buffer = source?.buffer
+        val contentType = oriRespBody?.contentType()
+        val charset = contentType?.charset() ?: Charset.forName("UTF-8")
+        val respStr = buffer?.clone()?.readString(charset)
+        val commonResp = convert2Obj(respStr, CommonResponse::class.java)
+        return commonResp?.errcode == CommonResponse.codeTokenExpired
     }
 
 
     private val ddRetrofit: Retrofit = Retrofit.Builder()
         .client(
             BaseOkhttpGenerator()
-                .clientBuilder.apply { addInterceptor(accessTokenInterceptor) }
+                .clientBuilder.apply {
+                    addInterceptor(accessTokenInterceptor)
+                    addInterceptor(RetryInterceptor())
+                    retryOnConnectionFailure(false)
+                }
                 .build()
         )
         .baseUrl(ConstantsPara.DINGDING_SERVER_URL)

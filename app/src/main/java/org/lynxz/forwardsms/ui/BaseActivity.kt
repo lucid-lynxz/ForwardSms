@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_base.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ScreenUtil
 
 abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
@@ -77,7 +77,7 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
         }
 
         val delayRunnable = Runnable {
-            Logger.d("doDelay action $tag , running.... $isFinishing")
+            LoggerUtil.d("doDelay action $tag , running.... $isFinishing")
             if (!isFinishing) {
                 block()
             }
@@ -88,7 +88,7 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
     }
 
     protected fun cancelDelayAction(tag: Long = Long.MIN_VALUE) {
-        Logger.d("cancelDelayAction $tag")
+        LoggerUtil.d("cancelDelayAction $tag")
         if (delayActionMap.isEmpty()) {
             return
         }
@@ -136,7 +136,7 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
      * */
     open fun updatePaddingTopWithStatusHeight(containerView: View?) {
         if (containerView == null) {
-            Logger.d("updatePaddingTopWithStatusHeight fail  $containerView $this")
+            LoggerUtil.d("updatePaddingTopWithStatusHeight fail  $containerView $this")
             return
         }
 

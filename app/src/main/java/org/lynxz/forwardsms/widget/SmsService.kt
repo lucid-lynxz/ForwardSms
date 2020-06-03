@@ -2,18 +2,15 @@ package org.lynxz.forwardsms.widget
 
 import android.app.Service
 import android.content.Intent
-import android.database.ContentObserver
-import android.net.Uri
-import android.os.Handler
 import android.os.IBinder
-import android.os.Message
 import androidx.lifecycle.Observer
 import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
+import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
 
@@ -37,6 +34,7 @@ class SmsService : Service() {
 
         // tg发送失败则尝试使用钉钉发送
         IMManager.sendTextMessage(ImType.TG, body) {
+            LoggerUtil.w(TAG, "sendTextMsg by Tg result: ${convert2Str(it)}")
             if (it.ok) {
                 return@sendTextMessage
             }
@@ -61,6 +59,10 @@ class SmsService : Service() {
         }
 
         IMManager.sendTextMessage(ImType.DingDing, body) { ddResult ->
+            LoggerUtil.w(
+                TAG,
+                "sendTextMsg by dingding(curIndex=$curIndex) result: ${convert2Str(ddResult)}"
+            )
             if (ddResult.ok) {
                 return@sendTextMessage
             }
@@ -92,13 +94,13 @@ class SmsService : Service() {
         super.onCreate()
         smsReceiveLiveData.observeForever(smsObserver)
 //        screenStateLiveData.observeForever(screenObserver)
-        Logger.d(TAG, "sms service created")
+        LoggerUtil.d(TAG, "sms service created")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         smsReceiveLiveData.removeObserver(smsObserver)
 //        screenStateLiveData.removeObserver(screenObserver)
-        Logger.d(TAG, "sms service destroyed")
+        LoggerUtil.d(TAG, "sms service destroyed")
     }
 }

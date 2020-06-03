@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import org.lynxz.forwardsms.util.Logger
+import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ScreenUtil
 
 /**
@@ -100,7 +100,7 @@ abstract class BaseFragment : Fragment() {
     open fun updatePaddingTopWithStatusHeight(containerView: View?) {
         val act = activity
         if (containerView == null || act == null) {
-            Logger.d("updatePaddingTopWithStatusHeight fail  $containerView $act")
+            LoggerUtil.d("updatePaddingTopWithStatusHeight fail  $containerView $act")
             return
         }
 
