@@ -13,7 +13,6 @@ import org.lynxz.forwardsms.viewmodel.SmsViewModel
 import org.lynxz.forwardsms.widget.OnePixelActManager
 import org.lynxz.forwardsms.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.widget.SmsService
-import org.lynxz.imdingding.para.ConstantsPara
 
 class SmsApplication : Application() {
 

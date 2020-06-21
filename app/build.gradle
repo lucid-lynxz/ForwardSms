@@ -43,6 +43,7 @@ dependencies {
 //    api project(path: ':baseImLib')
     api project(path: ':imDingDing')
     api project(path: ':imTG')
+    api project(path: ':imFeishu')
 
     api project(path: ':SecuritySP')
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
