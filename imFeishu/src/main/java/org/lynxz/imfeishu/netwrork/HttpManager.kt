@@ -5,16 +5,17 @@ import kotlinx.coroutines.*
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.lynxz.baseimlib.bean.SendMessageReqBean
-import org.lynxz.baseimlib.msec2date
+import org.lynxz.baseimlib.convert2Obj
+import org.lynxz.baseimlib.convert2Str
 import org.lynxz.baseimlib.network.BaseOkhttpGenerator
 import org.lynxz.baseimlib.network.interceptor.RetryInterceptor
 import org.lynxz.imfeishu.bean.*
 import org.lynxz.imfeishu.para.ConstantsPara
 import org.lynxz.imfeishu.para.FeishuKeyNames
-import org.lynxz.imfeishu.para.MessageType
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.nio.charset.Charset
 
 
 /**
@@ -22,10 +23,57 @@ import retrofit2.converter.gson.GsonConverterFactory
  * 网络访问具体处理类
  */
 object HttpManager {
+    // token过期时拦截重试
+    private val tenantTokenInterceptor = Interceptor { chain ->
+        var oriRequest = chain.request()
+        var oriResponse = chain.proceed(oriRequest)
+
+        // 若token过期尝试刷新
+        if (isTokenExpired(oriResponse)) {
+            runBlocking {
+                val tenantTokenBean = refreshAccessTokenAsync().await()
+                print("重新获取到的token ${convert2Str(tenantTokenBean)}")
+
+                if (!tenantTokenBean.tenant_access_token.isNullOrBlank()) {
+                    ConstantsPara.tenantToken = tenantTokenBean.tenant_access_token ?: ""
+
+                    // token刷新后尝试重新请求一次
+                    oriRequest = oriRequest.newBuilder()
+                        .addHeader(
+                            FeishuKeyNames.HEAD_AUTHORIZATION,
+                            "Bearer ${ConstantsPara.tenantToken}"
+                        )
+                        .build()
+
+                    oriResponse = chain.proceed(chain.request())
+                }
+            }
+        }
+
+        oriResponse
+    }
+
+    /**
+     * 判断token是否过期
+     * */
+    private fun isTokenExpired(response: Response): Boolean {
+        // 若token不合法,报错:  {"code":99991663,"msg":"tenant_access_token not valid:t-9b43cc80fddd89b7c8dfde95e1aff978d2886933"}
+        val oriRespBody = response.body
+        val source = oriRespBody?.source()
+        source?.request(Long.MAX_VALUE)
+        val buffer = source?.buffer
+        val contentType = oriRespBody?.contentType()
+        val charset = contentType?.charset() ?: Charset.forName("UTF-8")
+        val respStr = buffer?.clone()?.readString(charset)
+        val commonResp = convert2Obj(respStr, CommonResponse::class.java)
+        return commonResp?.code == CommonResponse.codeTokenExpired
+    }
+
     private val feishuRetrofit: Retrofit = Retrofit.Builder()
         .client(
             BaseOkhttpGenerator()
                 .clientBuilder.apply {
+                    addInterceptor(tenantTokenInterceptor)
                     addInterceptor(RetryInterceptor())
                     retryOnConnectionFailure(false)
                 }
@@ -40,6 +88,7 @@ object HttpManager {
 
     /**
      * 刷新accessToken
+     * token失效时报错:  {"code":99991663,"msg":"tenant_access_token not valid:t-9b43cc80fddd89b7c8dfde95e1aff978d2886933"}
      * */
     fun refreshAccessTokenAsync(): Deferred<TenantTokenBean> {
         return apiService.getTenantToken(ConstantsPara.appId, ConstantsPara.appSecret)

@@ -10,7 +10,8 @@ data class CommonResponse<T>(
 ) {
     // 是否成功
     fun isSuccess() = code == 0L
-//    companion object {
-//        const val codeTokenExpired = 40014L // token过时错误码
-//    }
+
+    companion object {
+        const val codeTokenExpired = 99991663L // token过时错误码
+    }
 }
