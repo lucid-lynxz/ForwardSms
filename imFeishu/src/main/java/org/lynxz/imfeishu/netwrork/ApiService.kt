@@ -2,6 +2,8 @@ package org.lynxz.imfeishu.netwrork
 
 import kotlinx.coroutines.Deferred
 import org.lynxz.imfeishu.bean.*
+import org.lynxz.imfeishu.para.ConstantsPara
+import org.lynxz.imfeishu.para.FeishuKeyNames
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -28,7 +30,7 @@ internal interface ApiService {
      *
      * */
     @GET("open-apis/contact/v1/scope/get")
-    fun getContactScope(): Deferred<CommonResponse<GetContactScopeResponse>>
+    fun getContactScope(@Header(FeishuKeyNames.HEAD_AUTHORIZATION) tokenHead: String = "Bearer ${ConstantsPara.tenantToken}"): Deferred<CommonResponse<GetContactScopeResponse>>
 
     /**
      * [获取部门用户详情](https://open.feishu.cn/document/ukTMukTMukTM/uYzN3QjL2czN04iN3cDN)
@@ -36,11 +38,17 @@ internal interface ApiService {
      * 此处未做分页,最多100个员工
      */
     @GET("open-apis/contact/v1/department/user/detail/list?page_size=100&fetch_child=true")
-    fun getDepartmentMemberDetailList(@Query("department_id") department_id: String): Deferred<CommonResponse<GetDepartmentMemberListResponse>>
+    fun getDepartmentMemberDetailList(
+        @Query("department_id") department_id: String,
+        @Header(FeishuKeyNames.HEAD_AUTHORIZATION) tokenHead: String = "Bearer ${ConstantsPara.tenantToken}"
+    ): Deferred<CommonResponse<GetDepartmentMemberListResponse>>
 
     /**
      * [发送富文本消息](https://open.feishu.cn/document/ukTMukTMukTM/uMDMxEjLzATMx4yMwETM)
      */
     @POST("open-apis/message/v4/send/")
-    fun sendTextMessage(@Body bean: MessageTextBean): Call<CommonResponse<SendMessageResponse>>
+    fun sendTextMessage(
+        @Body bean: MessageTextBean,
+        @Header(FeishuKeyNames.HEAD_AUTHORIZATION) tokenHead: String = "Bearer ${ConstantsPara.tenantToken}"
+    ): Call<CommonResponse<SendMessageResponse>>
 }

@@ -1,121 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    tools:context=".MainActivity">
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_temp_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="测试"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_send_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="发送消息"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_temp_test" />
+        <Button
+            android:id="@+id/btn_temp_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-
-    <Button
-        android:id="@+id/btn_auto_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="自启动设置"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_send_msg" />
-
-    <Button
-        android:id="@+id/btn_sms_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获取短信列表"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_auto_start" />
+        <Button
+            android:id="@+id/btn_send_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送消息"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_temp_test" />
 
 
-    <CheckBox
-        android:id="@+id/cbx_wechat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="转发微信通知栏信息内容"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_sms_list" />
+        <Button
+            android:id="@+id/btn_auto_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自启动设置"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_send_msg" />
 
-    <EditText
-        android:id="@+id/edt_phone_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="本机号码或昵称"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_confirm_phone_tag"
-        app:layout_constraintTop_toBottomOf="@+id/cbx_wechat" />
-
-    <Button
-        android:id="@+id/btn_confirm_phone_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:text="确定"
-        app:layout_constraintBaseline_toBaselineOf="@+id/edt_phone_tag"
-        app:layout_constraintLeft_toRightOf="@+id/edt_phone_tag" />
+        <Button
+            android:id="@+id/btn_sms_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取短信列表"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_auto_start" />
 
 
-    <EditText
-        android:id="@+id/edt_user_name_tg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="tg user name"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_confirm_tg"
-        app:layout_constraintTop_toBottomOf="@+id/edt_phone_tag" />
+        <CheckBox
+            android:id="@+id/cbx_wechat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="转发微信通知栏信息内容"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_sms_list" />
 
-    <Button
-        android:id="@+id/btn_confirm_tg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:text="确定"
-        app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_tg"
-        app:layout_constraintLeft_toRightOf="@+id/edt_user_name_tg" />
+        <EditText
+            android:id="@+id/edt_phone_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="本机号码或昵称"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_confirm_phone_tag"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_wechat" />
 
-
-    <EditText
-        android:id="@+id/edt_user_name_dd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="DingDing name"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btn_confirm_dd"
-        app:layout_constraintTop_toBottomOf="@+id/edt_user_name_tg" />
-
-    <Button
-        android:id="@+id/btn_confirm_dd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:text="确定"
-        app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_dd"
-        app:layout_constraintLeft_toRightOf="@+id/edt_user_name_dd" />
-
-    <TextView
-        android:id="@+id/tv_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:scrollbars="vertical"
-        android:text="Hello World!"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_user_name_dd" />
+        <Button
+            android:id="@+id/btn_confirm_phone_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="确定"
+            app:layout_constraintBaseline_toBaselineOf="@+id/edt_phone_tag"
+            app:layout_constraintLeft_toRightOf="@+id/edt_phone_tag" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/edt_user_name_tg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="tg user name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_confirm_tg"
+            app:layout_constraintTop_toBottomOf="@+id/edt_phone_tag" />
+
+        <Button
+            android:id="@+id/btn_confirm_tg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="确定"
+            app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_tg"
+            app:layout_constraintLeft_toRightOf="@+id/edt_user_name_tg" />
+
+
+        <EditText
+            android:id="@+id/edt_user_name_dd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="钉钉员工名"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_confirm_dd"
+            app:layout_constraintTop_toBottomOf="@+id/edt_user_name_tg" />
+
+        <Button
+            android:id="@+id/btn_confirm_dd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="确定"
+            app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_dd"
+            app:layout_constraintLeft_toRightOf="@+id/edt_user_name_dd" />
+
+        <EditText
+            android:id="@+id/edt_user_name_feishu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="飞书员工名"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_confirm_dd"
+            app:layout_constraintTop_toBottomOf="@+id/edt_user_name_dd" />
+
+        <Button
+            android:id="@+id/btn_confirm_feishu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:text="确定"
+            app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_feishu"
+            app:layout_constraintLeft_toRightOf="@+id/edt_user_name_feishu" />
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:scrollbars="vertical"
+            android:text="Hello World!"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_user_name_feishu" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+

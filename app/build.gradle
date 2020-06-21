@@ -10,8 +10,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 8
-        versionName "1.5.5"
+        versionCode 9
+        versionName "1.6.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,8 +20,12 @@ android {
             buildConfigField("String", "dd_corpid", getLocalProperties("dd_corpid", ""))
             buildConfigField("String", "dd_corpsecret", getLocalProperties("dd_corpsecret", ""))
             buildConfigField("String", "dd_agent", getLocalProperties("dd_agent", ""))
+
             buildConfigField("String", "tg_bottoken", getLocalProperties("tg_bottoken", ""))
             buildConfigField("String", "tg_default_userName", getLocalProperties("tg_default_userName", ""))
+
+            buildConfigField("String", "feishu_appid", getLocalProperties("feishu_appid", ""))
+            buildConfigField("String", "feishu_appsecret", getLocalProperties("feishu_appsecret", ""))
         }
         release {
             initWith(debug)

@@ -10,7 +10,7 @@ data class MessageTextBean(
      * 给用户发私聊消息，只需要填 open_id、email、user_id 中的一个即可
      * 向群里发消息使用群的 chat_id
      */
-    var open_id: String = "", // 给用户发私聊消息，只需要填 open_id、email、user_id 中的一个即可，向群里发消息使用群的 chat_id
+    var open_id: String? = "", // 给用户发私聊消息，只需要填 open_id、email、user_id 中的一个即可，向群里发消息使用群的 chat_id
     var content: Content? = null, // 息的内容
     var msg_type: String = MessageType.RICH_TEXT, // 消息类型,参考 MessageType 类,富文本固定为: post
     var root_id: String? = "" // 可选, 如果需要回复某条消息，填对应消息的消息 ID

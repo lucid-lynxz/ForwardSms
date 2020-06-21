@@ -43,6 +43,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
     private var tgUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyTgUserName, "")
     private var ddUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyDDUserName, "")
+    private var feiShuUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyFeishuUserName, "")
     private var phoneTag by SpDelegateUtil(this, SmsConstantParas.SpKeyPhoneTag, "")
     private val smsReceiveLiveData by lazy { SmsViewModel.getReceivedSms() }
 
@@ -57,6 +58,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         edt_user_name_tg.setText(tgUserName)
         edt_user_name_dd.setText(ddUserName)
+        edt_user_name_feishu.setText(feiShuUserName)
         edt_phone_tag.setText(phoneTag)
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
 //        requestPermission(Manifest.permission.READ_SMS)
@@ -64,6 +66,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 注册im
         activeTg(tgUserName)
         activeDingding(ddUserName)
+        activeFeishu(feiShuUserName)
 
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
@@ -89,6 +92,12 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
             activeDingding(ddUserName)
+        }
+
+        // 设置飞书接收用户名
+        btn_confirm_feishu.setOnClickListener {
+            feiShuUserName = edt_user_name_feishu.text.toString().trim()
+            activeFeishu(feiShuUserName)
         }
 
         // 设置本机识别名
@@ -136,31 +145,31 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             }
 
             // tg发送失败则尝试使用钉钉发送
+            tv_info.text = "发送消息到各im..."
             IMManager.sendTextMessage(ImType.TG, body.apply {
                 name = SmsConstantParas.tgUserNme
             }) {
-                tv_info.text = "send msg from tg result ${it.ok}\n${it.detail}"
-
+                tv_info.append("\nsend msg from tg result ${it.ok}\n${it.detail}")
                 println("send msg from tg result ${it.ok}")
-                if (!it.ok) {
-                    IMManager.sendTextMessage(ImType.DingDing, body.apply {
-                        name = SmsConstantParas.ddName
-                    }) {
-                        tv_info.text =
-                            "${tv_info.text}\nsend msg from dingding result ${it.ok}\n${it.detail}"
-                        println("send msg from dingding result ${it.ok}")
-                    }
-                }
+            }
+
+            IMManager.sendTextMessage(ImType.DingDing, body.apply {
+                name = SmsConstantParas.ddName
+            }) {
+                tv_info.append("\nsend msg from dingding result ${it.ok}\n${it.detail}")
+                println("send msg from dingding result ${it.ok}")
+            }
+
+            IMManager.sendTextMessage(ImType.FeiShu, body.apply {
+                name = SmsConstantParas.feishuName
+            }) {
+                tv_info.append("\nsend msg from feishu result ${it.ok}\n${it.detail}")
+                println("send msg from feishu result ${it.ok}")
             }
         }
 
-        btn_auto_start.setOnClickListener {
-            BrandUtil.goAutoStartSetting(this)
-        }
-
-        btn_temp_test.setOnClickListener {
-            activeImTest()
-        }
+        btn_auto_start.setOnClickListener { BrandUtil.goAutoStartSetting(this) }
+        btn_temp_test.setOnClickListener { activeImTest() }
     }
 
 
@@ -224,6 +233,19 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             SmsViewModel.activeIm(ImType.TG)
         } else {
             IMManager.unregisterIm(ImType.TG)
+        }
+    }
+
+    /**
+     * 启用或停止飞书 im
+     * @param userName tg用户昵称
+     * */
+    private fun activeFeishu(userName: String?) {
+        SmsConstantParas.feishuName = userName ?: ""
+        if (!userName.isNullOrBlank()) {
+            SmsViewModel.activeIm(ImType.FeiShu)
+        } else {
+            IMManager.unregisterIm(ImType.FeiShu)
         }
     }
 

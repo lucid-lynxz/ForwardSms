@@ -38,6 +38,7 @@ import org.lynxz.forwardsms.viewmodel.SmsViewModel.init
 import org.lynxz.forwardsms.widget.SmsHandler
 import org.lynxz.forwardsms.widget.SmsNotificationListenerService
 import org.lynxz.imdingding.DingDingActionImpl
+import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
 
 /**
@@ -236,13 +237,14 @@ object SmsViewModel : ViewModel() {
         if (imTypes.isNullOrEmpty()) {
             activeImDingding()
             activeImTg()
+            activeImFeishu()
             return
         }
         for (type in imTypes) {
-            if (type == ImType.DingDing) {
-                activeImDingding()
-            } else if (type == ImType.TG) {
-                activeImTg()
+            when (type) {
+                ImType.DingDing -> activeImDingding()
+                ImType.TG -> activeImTg()
+                ImType.FeiShu -> activeImFeishu()
             }
         }
     }
@@ -290,6 +292,30 @@ object SmsViewModel : ViewModel() {
                 IMManager.registerIm(ImType.DingDing, DingDingActionImpl)
                 IMManager.refresh(ImType.DingDing) {
                     LoggerUtil.d(TAG, "钉钉初始化结果:${it.ok} ${it.detail}")
+                }
+            }
+        }
+    }
+
+    /**
+     * 启用飞书im
+     * */
+    private fun activeImFeishu() {
+        val initResult = FeishuActionImpl.init(
+            ImInitPara.FeiShuPara(
+                BuildConfig.feishu_appid,
+                BuildConfig.feishu_appsecret
+            ).apply {
+                propertyUtil = ConfigUtil(app!!, IIMAction.spIm)
+            })
+        LoggerUtil.d(TAG, "activeImFeishu result $initResult")
+
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                IMManager.registerIm(ImType.FeiShu, FeishuActionImpl)
+                IMManager.refresh(ImType.FeiShu) {
+                    LoggerUtil.d(TAG, "飞书初始化结果:${it.ok} ${it.detail}")
                 }
             }
         }

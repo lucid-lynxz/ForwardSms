@@ -11,6 +11,7 @@ object SmsConstantParas {
 
     const val SpKeyTgUserName = "tgUserName" // 默认tg接收消息的用户名
     const val SpKeyDDUserName = "ddUserName"// 默认钉钉接收消息的用户名
+    const val SpKeyFeishuUserName = "feishuUserName"// 默认飞书接收消息的用户名
     const val SpKeyPhoneTag = "phoneTag"// 本机号码或昵称等信息
 
     // tg消息接收人 userName或者昵称
@@ -18,6 +19,9 @@ object SmsConstantParas {
 
     // 钉钉消息接收人姓名或者备注名
     var ddName = ""
+
+    // 飞书消息接收人姓名
+    var feishuName = ""
 
     // 本机号码或昵称等信息,默认为手机型号
     var phoneTag: String = android.os.Build.MODEL

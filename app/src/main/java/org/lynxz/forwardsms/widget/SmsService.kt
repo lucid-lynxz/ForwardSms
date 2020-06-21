@@ -35,14 +35,18 @@ class SmsService : Service() {
         // tg发送失败则尝试使用钉钉发送
         IMManager.sendTextMessage(ImType.TG, body) {
             LoggerUtil.w(TAG, "sendTextMsg by Tg result: ${convert2Str(it)}")
-            if (it.ok) {
-                return@sendTextMessage
-            }
-
-            sendByDingding(body.apply {
-                name = SmsConstantParas.ddName
-            }, 1, 3)
         }
+
+        sendByDingding(body.duplicate().apply {
+            name = SmsConstantParas.ddName
+            imType = ImType.DingDing
+        }, 1, 3)
+
+        IMManager.sendTextMessage(ImType.FeiShu, body.duplicate().apply {
+            name = SmsConstantParas.feishuName
+            imType = ImType.FeiShu
+        })
+
 //        HttpManager.sendMessage(it.format(), SmsConstantParas.tgUserNme)
     }
 

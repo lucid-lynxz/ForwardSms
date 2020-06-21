@@ -85,38 +85,15 @@ object FeishuActionImpl : IIMAction, CoroutineScope by requestScope {
                     .await()
 
                 if (departBean.isSuccess()) {
-                    departBean.data?.user_infos?.let {
-                        
+                    departBean.data?.user_infos?.forEach {
+                        ConstantsPara.userNameIdMap[it.name] = it.open_id
+                        // 飞书手机号默认添加了 +86, 自动删除, 此处未考虑境外地区手机号问题
+                        ConstantsPara.userMobileIdMap[it.mobile.replace("+86", "")] = it.open_id
                     }
                 }
 
-                // 获取部门列表
-                ConstantsPara.departmentList = HttpManager.getDepartmentInfoAsync().await()
-                HttpManager.getDepartmentMemberDetailListAsync()
-
-                val detailDeferrs =
-                    mutableListOf<Deferred<Deferred<DepartmentMemberDetailListBean>>>()
-
-                val departmentList = ConstantsPara.departmentList?.department
-
-                // 获取各部门成员详情信息
-                departmentList?.forEach {
-                    ConstantsPara.departmentNameMap[it.id] = it.name // 获取部门id和部门名称之间的对应关系
-
-                    val detail =
-                        async { HttpManager.getDepartmentMemberDetailListAsync(it.id) }
-                    detailDeferrs.add(detail)
-                }
-
-
-                detailDeferrs.forEachIndexed { index, deferred ->
-                    val bean = deferred.await().await()
-                    ConstantsPara.departmentMemberDetailMap[departmentList!![index].id] =
-                        bean.userlist
-                }
-
-                println("refresh dingding finish...")
-                if (ConstantsPara.departmentMemberDetailMap.size == 0) {
+                println("refresh feishu finish...")
+                if (ConstantsPara.userNameIdMap.isEmpty() && ConstantsPara.userMobileIdMap.isEmpty()) {
                     result.ok = false
                     result.detail = "获取部门成员列表失败,数据为空,请检查"
                 }
@@ -131,8 +108,7 @@ object FeishuActionImpl : IIMAction, CoroutineScope by requestScope {
     }
 
     /**
-     * 发送文本消息给指定钉钉用户
-     * 若token不合法,报错: {"errcode":40014,"errmsg":"不合法的access_token"}
+     * 发送文本消息给指定飞书用户
      * */
     override fun sendTextMessage(
         body: SendMessageReqBean,
