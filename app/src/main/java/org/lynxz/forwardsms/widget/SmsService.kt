@@ -65,12 +65,13 @@ class SmsService : Service() {
         IMManager.sendTextMessage(ImType.DingDing, body) { ddResult ->
             LoggerUtil.w(
                 TAG,
-                "sendTextMsg by dingding(curIndex=$curIndex) result: ${convert2Str(ddResult)}"
+                "sendTextMsg by dingding(curIndex=$curIndex) result: ${convert2Str(ddResult)}, body:${convert2Str(
+                    body
+                )}"
             )
             if (ddResult.ok) {
                 return@sendTextMessage
             }
-
             // 刷新token并尝试重发该消息
             IMManager.refresh(ImType.DingDing) {
                 sendByDingding(body, curIndex + 1, maxIndex)
