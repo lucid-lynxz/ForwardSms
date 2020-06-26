@@ -25,8 +25,8 @@ class BaseOkhttpGenerator(extHeaderMap: Map<String, String>? = null) {
     }
 
     // 显示请求日志,可选
-    private val bodyLogInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+//    private val bodyLogInterceptor =
+//        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
     private val headLogInterceptor =
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS }
 
@@ -38,6 +38,6 @@ class BaseOkhttpGenerator(extHeaderMap: Map<String, String>? = null) {
         .readTimeout(10, TimeUnit.SECONDS)
         .writeTimeout(10, TimeUnit.SECONDS)
         .addInterceptor(headerInterceptor)
-        .addInterceptor(bodyLogInterceptor)
+//        .addInterceptor(bodyLogInterceptor)
         .addInterceptor(headLogInterceptor)
 }

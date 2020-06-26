@@ -146,7 +146,7 @@ object FeishuActionImpl : IIMAction, CoroutineScope by requestScope {
             }
 
             onFailed { error, code ->
-                print("发送飞书消息失败(${ConstantsPara.tenantToken}): $code  $error")
+                println("发送飞书消息失败(${ConstantsPara.tenantToken}): $code  $error")
                 result.ok = false
                 result.detail = "$error"
             }

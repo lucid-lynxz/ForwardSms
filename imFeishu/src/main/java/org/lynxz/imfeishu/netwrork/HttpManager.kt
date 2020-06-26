@@ -32,24 +32,26 @@ object HttpManager {
         if (isTokenExpired(oriResponse)) {
             runBlocking {
                 val tenantTokenBean = refreshAccessTokenAsync().await()
-                print("重新获取到的token ${convert2Str(tenantTokenBean)}")
+                println("重新获取到的token ${convert2Str(tenantTokenBean)} 原token:${ConstantsPara.tenantToken}")
 
-                if (!tenantTokenBean.tenant_access_token.isNullOrBlank()) {
-                    ConstantsPara.tenantToken = tenantTokenBean.tenant_access_token ?: ""
-
+                if (!tenantTokenBean.tenant_access_token.isNullOrBlank()
+                    and !ConstantsPara.tenantToken.equals(tenantTokenBean.tenant_access_token)
+                ) {
+                    ConstantsPara.tenantToken = tenantTokenBean.tenant_access_token
                     // token刷新后尝试重新请求一次
-                    oriRequest = oriRequest.newBuilder()
-                        .addHeader(
+                    oriRequest = chain.request().newBuilder()
+                        .header(
                             FeishuKeyNames.HEAD_AUTHORIZATION,
                             "Bearer ${ConstantsPara.tenantToken}"
                         )
                         .build()
 
-                    oriResponse = chain.proceed(chain.request())
+                    println("更新飞书token,并尝试重新发送消息: ${oriRequest.header(FeishuKeyNames.HEAD_AUTHORIZATION)} ")
+                    oriResponse.close()
+                    oriResponse = chain.proceed(oriRequest)
                 }
             }
         }
-
         oriResponse
     }
 
@@ -139,6 +141,8 @@ object HttpManager {
                 post = Post(zh_cn = ZhCn(contentRichTextList))
             }
         }
+
+        println("发送飞书消息: ${convert2Str(messageBean)}")
         return apiService.sendTextMessage(messageBean)
     }
 }

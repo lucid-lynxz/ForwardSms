@@ -80,7 +80,7 @@ object SmsViewModel : ViewModel() {
             sbn: StatusBarNotification?,
             rankingMap: NotificationListenerService.RankingMap?
         ) {
-            println("获取到微信内容为0: $pkgName")
+            println("获取到notification包名0: $pkgName")
             if (pkgName == "com.tencent.mm") { // 微信
                 val notification = sbn!!.notification
                 notification?.tickerText?.toString()?.let {

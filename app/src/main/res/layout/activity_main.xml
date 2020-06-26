@@ -76,12 +76,20 @@
             app:layout_constraintLeft_toRightOf="@+id/edt_phone_tag" />
 
 
+        <CheckBox
+            android:id="@+id/cbx_tg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_phone_tag" />
+
         <EditText
             android:id="@+id/edt_user_name_tg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="tg user name"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cbx_tg"
             app:layout_constraintRight_toLeftOf="@+id/btn_confirm_tg"
             app:layout_constraintTop_toBottomOf="@+id/edt_phone_tag" />
 
@@ -95,12 +103,20 @@
             app:layout_constraintLeft_toRightOf="@+id/edt_user_name_tg" />
 
 
+        <CheckBox
+            android:id="@+id/cbx_dingding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_user_name_tg" />
+
         <EditText
             android:id="@+id/edt_user_name_dd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="钉钉员工名"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cbx_dingding"
             app:layout_constraintRight_toLeftOf="@+id/btn_confirm_dd"
             app:layout_constraintTop_toBottomOf="@+id/edt_user_name_tg" />
 
@@ -113,12 +129,20 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/edt_user_name_dd"
             app:layout_constraintLeft_toRightOf="@+id/edt_user_name_dd" />
 
+        <CheckBox
+            android:id="@+id/cbx_feishu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_user_name_dd" />
+
         <EditText
             android:id="@+id/edt_user_name_feishu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="飞书员工名"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cbx_feishu"
             app:layout_constraintRight_toLeftOf="@+id/btn_confirm_dd"
             app:layout_constraintTop_toBottomOf="@+id/edt_user_name_dd" />
 

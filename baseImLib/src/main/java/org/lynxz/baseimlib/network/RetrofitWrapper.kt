@@ -19,9 +19,11 @@ fun <ResultType> CoroutineScope.retrofit(dsl: RetrofitCoroutineDsl<ResultType>.(
             try {
                 api?.execute()
             } catch (e: ConnectException) {
+                println("retrofit ConnectException ${e.message}")
                 retrofitCoroutine.onFailed?.invoke(e.message, -100)
                 null
-            } catch (e: IOException) {
+            } catch (e: Exception) {
+                println("retrofit Exception ${e.message}")
                 retrofitCoroutine.onFailed?.invoke(e.message, -1)
                 null
             }
@@ -48,7 +50,7 @@ fun <ResultType> CoroutineScope.retrofit(dsl: RetrofitCoroutineDsl<ResultType>.(
 //                        }
 //                    }
                 retrofitCoroutine.onFailed?.invoke(
-                    response.errorBody().toString(),
+                    response.errorBody()?.string(),
                     response.code()
                 )
             }

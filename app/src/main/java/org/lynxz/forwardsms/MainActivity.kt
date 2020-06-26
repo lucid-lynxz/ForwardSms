@@ -63,6 +63,29 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
 //        requestPermission(Manifest.permission.READ_SMS)
 
+        cbx_tg.setOnCheckedChangeListener { _, isChecked ->
+            edt_user_name_tg.isEnabled = isChecked
+            btn_confirm_tg.isEnabled = isChecked
+            activeTg(tgUserName, isChecked)
+        }
+
+        cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
+            edt_user_name_dd.isEnabled = isChecked
+            btn_confirm_dd.isEnabled = isChecked
+            activeDingding(
+                ddUserName,
+                isChecked
+            )
+        }
+        cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
+            edt_user_name_feishu.isEnabled = isChecked
+            btn_confirm_feishu.isEnabled = isChecked
+            activeFeishu(
+                feiShuUserName,
+                isChecked
+            )
+        }
+
         // 注册im
         activeTg(tgUserName)
         activeDingding(ddUserName)
@@ -209,9 +232,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
      * 启用或停止钉钉im
      * @param userName 要发送的钉钉用户名信息,若为空,则停用钉钉
      * */
-    private fun activeDingding(userName: String?) {
+    private fun activeDingding(userName: String?, active: Boolean = true) {
         SmsConstantParas.ddName = userName ?: ""
-        if (!userName.isNullOrBlank()) {
+        if (active && !userName.isNullOrBlank()) {
             SmsViewModel.activeIm(ImType.DingDing)
             doDelay(10 * 60 * 1000, delayActionTagRefreshDingDing) {
                 LoggerUtil.d(TAG, "定时刷新钉钉token...")
@@ -227,9 +250,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
      * 启用或停止tg im
      * @param userName tg用户昵称
      * */
-    private fun activeTg(userName: String?) {
+    private fun activeTg(userName: String?, active: Boolean = true) {
         SmsConstantParas.tgUserNme = userName ?: ""
-        if (!userName.isNullOrBlank()) {
+        if (active && !userName.isNullOrBlank()) {
             SmsViewModel.activeIm(ImType.TG)
         } else {
             IMManager.unregisterIm(ImType.TG)
@@ -240,9 +263,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
      * 启用或停止飞书 im
      * @param userName tg用户昵称
      * */
-    private fun activeFeishu(userName: String?) {
+    private fun activeFeishu(userName: String?, active: Boolean = true) {
         SmsConstantParas.feishuName = userName ?: ""
-        if (!userName.isNullOrBlank()) {
+        if (active && !userName.isNullOrBlank()) {
             SmsViewModel.activeIm(ImType.FeiShu)
         } else {
             IMManager.unregisterIm(ImType.FeiShu)
