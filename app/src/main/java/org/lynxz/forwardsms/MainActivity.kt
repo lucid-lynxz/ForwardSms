@@ -45,10 +45,19 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private var ddUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyDDUserName, "")
     private var feiShuUserName by SpDelegateUtil(this, SmsConstantParas.SpKeyFeishuUserName, "")
     private var phoneTag by SpDelegateUtil(this, SmsConstantParas.SpKeyPhoneTag, "")
+
+    private var bForwardWechat by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardWechat, true)
+
+    private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
+    private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
+    private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
+
     private val smsReceiveLiveData by lazy { SmsViewModel.getReceivedSms() }
 
     override fun getLayoutRes() = R.layout.activity_main
+
     var lastSms = ""
+
     override fun afterViewCreated() {
         // 显示tg用户名
         if (phoneTag.isBlank()) {
@@ -66,20 +75,24 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         cbx_tg.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_tg.isEnabled = isChecked
             btn_confirm_tg.isEnabled = isChecked
+            bEnableTg = isChecked
             activeTg(tgUserName, isChecked)
         }
 
         cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_dd.isEnabled = isChecked
             btn_confirm_dd.isEnabled = isChecked
+            bEnableDingDing = isChecked
             activeDingding(
                 ddUserName,
                 isChecked
             )
         }
+
         cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_feishu.isEnabled = isChecked
             btn_confirm_feishu.isEnabled = isChecked
+            bEnableFeishu = isChecked
             activeFeishu(
                 feiShuUserName,
                 isChecked
@@ -91,11 +104,16 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         activeDingding(ddUserName)
         activeFeishu(feiShuUserName)
 
+        cbx_tg.isChecked = bEnableTg
+        cbx_dingding.isChecked = bEnableDingDing
+        cbx_feishu.isChecked = bEnableFeishu
+
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
 
         // 转发微信消息,默认转发
         cbx_wechat.setOnCheckedChangeListener { buttonView, isChecked ->
+            bForwardWechat = isChecked
             if (isChecked) {
                 enableMonitorNotification()
             }
@@ -103,7 +121,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
         enableMonitorNotification()
         SmsViewModel.enableWechatForward(true)
-
+        cbx_wechat.isChecked = bForwardWechat
 
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {

@@ -23,9 +23,6 @@ class SmsApplication : Application() {
         LogPersistenceUtil.getInstance()
             .setPersistenceLevel(LoggerUtil.LEVEL_WARN)
             .init(this)
-        LoggerUtil.w("测试", "helloSmsForwoard")
-        LoggerUtil.w("测试", "helloSmsForwoard")
-        LoggerUtil.w("测试", "helloSmsForwoard")
 
         // 初始化短信监听
         OnePixelActManager.init(this)

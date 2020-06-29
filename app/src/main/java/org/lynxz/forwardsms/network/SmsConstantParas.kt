@@ -14,6 +14,13 @@ object SmsConstantParas {
     const val SpKeyFeishuUserName = "feishuUserName"// 默认飞书接收消息的用户名
     const val SpKeyPhoneTag = "phoneTag"// 本机号码或昵称等信息
 
+    const val SpKeyEnableTg = "enableTg" // 是否启用tg发送
+    const val SpKeyEnableDingDing = "enableDingDing" // 是否启用钉钉发送
+    const val SpKeyEnableFeishu = "enableFeishu" // 是否启用飞书发送
+
+    const val SpKeyForwardWechat = "forwardWechat" // 是否允许转发微信通知信息
+
+
     // tg消息接收人 userName或者昵称
     var tgUserNme = ""
 
