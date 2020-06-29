@@ -14,8 +14,11 @@ import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
 
-class SmsService : Service() {
-    private val TAG = "SmsService"
+/**
+ * 开启service用于转发消息到IM
+ * */
+class ForwardService : Service() {
+    private val TAG = "ForwardService"
 
 
     // 收到新短信息事件监听

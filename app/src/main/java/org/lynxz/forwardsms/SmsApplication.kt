@@ -12,7 +12,7 @@ import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 import org.lynxz.forwardsms.viewmodel.SmsViewModel
 import org.lynxz.forwardsms.widget.OnePixelActManager
 import org.lynxz.forwardsms.widget.SmsNotificationListenerService
-import org.lynxz.forwardsms.widget.SmsService
+import org.lynxz.forwardsms.widget.ForwardService
 
 class SmsApplication : Application() {
 
@@ -30,7 +30,7 @@ class SmsApplication : Application() {
         ScreenStateViewModel.init(this)
 
         // 与application生命周期保持一致
-        bindService(Intent(this, SmsService::class.java), smsServiceConn, Service.BIND_AUTO_CREATE)
+        bindService(Intent(this, ForwardService::class.java), smsServiceConn, Service.BIND_AUTO_CREATE)
 
         // 通知栏监听
         bindService(

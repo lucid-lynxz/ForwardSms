@@ -34,7 +34,7 @@
             android:excludeFromRecents="true"
             android:theme="@style/OnePixelActivityTheme" />
 
-        <service android:name=".widget.SmsService" />
+        <service android:name=".widget.ForwardService" />
 
         <receiver
             android:name=".receiver.BootReceiver"

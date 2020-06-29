@@ -47,12 +47,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private var phoneTag by SpDelegateUtil(this, SmsConstantParas.SpKeyPhoneTag, "")
 
     private var bForwardWechat by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardWechat, true)
+    private var bForwardSms by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardSms, true)
 
     private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
     private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
     private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
-
-    private val smsReceiveLiveData by lazy { SmsViewModel.getReceivedSms() }
 
     override fun getLayoutRes() = R.layout.activity_main
 
@@ -72,6 +71,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
 //        requestPermission(Manifest.permission.READ_SMS)
 
+        // 是否启用telegram
         cbx_tg.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_tg.isEnabled = isChecked
             btn_confirm_tg.isEnabled = isChecked
@@ -79,6 +79,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             activeTg(tgUserName, isChecked)
         }
 
+        // 是否启用钉钉
         cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_dd.isEnabled = isChecked
             btn_confirm_dd.isEnabled = isChecked
@@ -89,6 +90,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             )
         }
 
+        // 是否启用飞书
         cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
             edt_user_name_feishu.isEnabled = isChecked
             btn_confirm_feishu.isEnabled = isChecked
@@ -111,17 +113,25 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
 
-        // 转发微信消息,默认转发
-        cbx_wechat.setOnCheckedChangeListener { buttonView, isChecked ->
+        // 转发微信消息,默认转发, 需要在手机设置中启用通知栏权限
+        cbx_forward_wechat.setOnCheckedChangeListener { buttonView, isChecked ->
             bForwardWechat = isChecked
             if (isChecked) {
                 enableMonitorNotification()
             }
-            SmsViewModel.enableWechatForward(isChecked)
+            SmsViewModel.enableForwardWechat(isChecked)
         }
         enableMonitorNotification()
-        SmsViewModel.enableWechatForward(true)
-        cbx_wechat.isChecked = bForwardWechat
+        SmsViewModel.enableForwardWechat(true)
+        cbx_forward_wechat.isChecked = bForwardWechat
+
+        // 是否启用短信转发,默认启用
+        cbx_forward_sms.setOnCheckedChangeListener { buttonView, isChecked ->
+            bForwardSms = isChecked
+            SmsViewModel.enableForwardSms(isChecked)
+        }
+        cbx_forward_sms.isChecked = bForwardSms
+        SmsViewModel.enableForwardSms(bForwardSms)
 
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {

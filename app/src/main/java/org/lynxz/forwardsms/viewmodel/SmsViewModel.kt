@@ -42,7 +42,7 @@ import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
 
 /**
- * sms接收监听及短信列表读取
+ * sms接收监听及短信列表读取,并监听通知栏变化(需要自行在手机设置中启用通知栏权限)
  * 使用:
  * 1.在application中调用初始化方法 [init]
  * 2. 获取上一次接收到的短信信息 [getReceivedSms]
@@ -67,7 +67,7 @@ object SmsViewModel : ViewModel() {
 
     private val iSmsReceiveObserver = object : ISmsReceiveObserver {
         override fun onReceiveSms(smsDetail: SmsDetail?) {
-            if (!smsDetail?.body.isNullOrBlank()) {
+            if (!smsDetail?.body.isNullOrBlank() && enableForwardSms) {
                 smsReceivedLiveData.value = smsDetail
             }
         }
@@ -80,12 +80,12 @@ object SmsViewModel : ViewModel() {
             sbn: StatusBarNotification?,
             rankingMap: NotificationListenerService.RankingMap?
         ) {
-            println("获取到notification包名0: $pkgName")
+            LoggerUtil.w(TAG, "获取到notification包名: $pkgName")
             if (pkgName == "com.tencent.mm") { // 微信
                 val notification = sbn!!.notification
                 notification?.tickerText?.toString()?.let {
                     val index = it.indexOf(":")
-                    println("获取到微信内容为: $it")
+                    LoggerUtil.w(TAG, "获取到微信内容为: $it")
                     if (index <= 0) {
                         return
                     }
@@ -163,7 +163,6 @@ object SmsViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         app?.unregisterReceiver(smsReceiver)
-        SmsNotificationListenerService.registerSmsObserver(null)
         SmsNotificationListenerService.registerAppObserver(null)
         // app?.contentResolver?.unregisterContentObserver(smsContentResolverObserver)
     }
@@ -190,9 +189,7 @@ object SmsViewModel : ViewModel() {
             return list
         }
 
-
         val cr = app?.contentResolver ?: return list
-
 
         // todo 子线程
         // todo 添加短信内容监听
@@ -324,11 +321,21 @@ object SmsViewModel : ViewModel() {
     /**
      * 通过通知栏获取并转发微信消息
      */
-    fun enableWechatForward(enable: Boolean) {
+    fun enableForwardWechat(enable: Boolean) {
         if (enable) {
             SmsNotificationListenerService.registerAppObserver(wechatNotificationObserver)
         } else {
             SmsNotificationListenerService.registerAppObserver(null)
         }
+    }
+
+
+    private var enableForwardSms = true
+
+    /**
+     * 是否允许转发短信
+     * */
+    fun enableForwardSms(enable: Boolean) {
+        enableForwardSms = enable
     }
 }

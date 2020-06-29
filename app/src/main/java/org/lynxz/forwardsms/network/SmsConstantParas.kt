@@ -19,6 +19,7 @@ object SmsConstantParas {
     const val SpKeyEnableFeishu = "enableFeishu" // 是否启用飞书发送
 
     const val SpKeyForwardWechat = "forwardWechat" // 是否允许转发微信通知信息
+    const val SpKeyForwardSms = "forwardSms" // 是否允许转发短信
 
 
     // tg消息接收人 userName或者昵称
