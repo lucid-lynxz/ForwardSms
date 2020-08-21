@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import org.lynxz.forwardsms.para.GlobalImSettingPara
 import org.lynxz.forwardsms.util.LogPersistenceUtil
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
@@ -24,13 +25,20 @@ class SmsApplication : Application() {
             .setPersistenceLevel(LoggerUtil.LEVEL_WARN)
             .init(this)
 
+        // 初始化IM配置信息
+        GlobalImSettingPara.initPara(this)
+
         // 初始化短信监听
         OnePixelActManager.init(this)
         SmsViewModel.init(this)
         ScreenStateViewModel.init(this)
 
         // 与application生命周期保持一致
-        bindService(Intent(this, ForwardService::class.java), smsServiceConn, Service.BIND_AUTO_CREATE)
+        bindService(
+            Intent(this, ForwardService::class.java),
+            smsServiceConn,
+            Service.BIND_AUTO_CREATE
+        )
 
         // 通知栏监听
         bindService(

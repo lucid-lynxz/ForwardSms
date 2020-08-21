@@ -118,7 +118,7 @@ class SecuritySP constructor(
             is Int -> oriValue.toInt()
             is Boolean -> oriValue.toBoolean()
             is Float -> oriValue.toFloat()
-            else -> throw IllegalArgumentException("This type can not be saved")
+            else -> default
         }
         return res as? U
     }
@@ -236,16 +236,16 @@ class SecuritySP constructor(
             return this
         }
 
-        override fun putStringSet(key: String, values: Set<String>): SharedPreferences.Editor {
+        override fun putStringSet(key: String, values: Set<String>?): SharedPreferences.Editor {
             val encryptSet: MutableSet<String> = HashSet()
-            for (value in values) {
-                encryptSet.add(doEncrypt(value))
+            values?.forEach {
+                encryptSet.add(doEncrypt(it))
             }
             mEditor.putStringSet(doEncrypt(key), encryptSet)
             return this
         }
 
-        override fun putString(key: String, value: String) = putStringImpl(key, value)
+        override fun putString(key: String, value: String?) = putStringImpl(key, value)
 
         override fun putInt(key: String, value: Int) = putStringImpl(key, value)
 

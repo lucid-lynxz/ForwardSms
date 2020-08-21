@@ -21,6 +21,9 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.msec2date
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
+import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSetting
+import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseActivity
 import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.LoggerUtil
@@ -49,66 +52,109 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private var bForwardWechat by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardWechat, true)
     private var bForwardSms by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardSms, true)
 
-    private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
-    private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
-    private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
+//    private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
+//    private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
+//    private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
 
     override fun getLayoutRes() = R.layout.activity_main
 
     var lastSms = ""
 
     override fun afterViewCreated() {
-        // 显示tg用户名
-        if (phoneTag.isBlank()) {
-            phoneTag = Build.MODEL
-        }
-        SmsConstantParas.phoneTag = phoneTag
+//        if (phoneTag.isBlank()) {
+//            phoneTag = Build.MODEL
+//        }
 
-        edt_user_name_tg.setText(tgUserName)
-        edt_user_name_dd.setText(ddUserName)
-        edt_user_name_feishu.setText(feiShuUserName)
+        GlobalImSettingPara.imSettingMapLiveData()
+            .observe(this, Observer {
+                it[ImType.TG]?.let { setting ->
+                    edt_user_name_tg.setText(setting.targetUserName)
+                    cbx_tg.isChecked = setting.enable
+                    edt_user_name_tg.isEnabled = setting.enable
+                    btn_confirm_tg.isEnabled = setting.enable
+                }
+
+                it[ImType.DingDing]?.let { setting ->
+                    edt_user_name_dd.setText(setting.targetUserName)
+                    cbx_dingding.isChecked = setting.enable
+                    edt_user_name_dd.isEnabled = setting.enable
+                    btn_confirm_dd.isEnabled = setting.enable
+                }
+
+                it[ImType.FeiShu]?.let { setting ->
+                    edt_user_name_feishu.setText(setting.targetUserName)
+                    cbx_feishu.isChecked = setting.enable
+                    edt_user_name_feishu.isEnabled = setting.enable
+                    btn_confirm_feishu.isEnabled = setting.enable
+                }
+            })
+
+//        edt_user_name_tg.setText(tgUserName)
+//        edt_user_name_dd.setText(ddUserName)
+//        edt_user_name_feishu.setText(feiShuUserName)
+
+        SmsConstantParas.phoneTag = if (phoneTag.isBlank()) Build.MODEL else phoneTag
         edt_phone_tag.setText(phoneTag)
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
+
 //        requestPermission(Manifest.permission.READ_SMS)
 
         // 是否启用telegram
         cbx_tg.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_tg.isEnabled = isChecked
-            btn_confirm_tg.isEnabled = isChecked
-            bEnableTg = isChecked
+//            edt_user_name_tg.isEnabled = isChecked
+//            btn_confirm_tg.isEnabled = isChecked
+//            bEnableTg = isChecked
+            GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.TG, isChecked, "")
+                    return setting.apply {
+                        enable = isChecked
+                    }
+                }
+            })
             activeTg(tgUserName, isChecked)
         }
 
         // 是否启用钉钉
         cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_dd.isEnabled = isChecked
-            btn_confirm_dd.isEnabled = isChecked
-            bEnableDingDing = isChecked
-            activeDingding(
-                ddUserName,
-                isChecked
-            )
+//            edt_user_name_dd.isEnabled = isChecked
+//            btn_confirm_dd.isEnabled = isChecked
+//            bEnableDingDing = isChecked
+            GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.DingDing, isChecked, "")
+                    return setting.apply {
+                        enable = isChecked
+                    }
+                }
+            })
+            activeDingding(ddUserName, isChecked)
         }
 
         // 是否启用飞书
         cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_feishu.isEnabled = isChecked
-            btn_confirm_feishu.isEnabled = isChecked
-            bEnableFeishu = isChecked
-            activeFeishu(
-                feiShuUserName,
-                isChecked
-            )
+//            edt_user_name_feishu.isEnabled = isChecked
+//            btn_confirm_feishu.isEnabled = isChecked
+//            bEnableFeishu = isChecked
+            GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.FeiShu, isChecked, "")
+                    return setting.apply {
+                        enable = isChecked
+                    }
+                }
+            })
+            activeFeishu(feiShuUserName, isChecked)
         }
 
         // 注册im
-        activeTg(tgUserName)
-        activeDingding(ddUserName)
-        activeFeishu(feiShuUserName)
+//        activeTg(tgUserName)
+//        activeDingding(ddUserName)
+//        activeFeishu(feiShuUserName)
 
-        cbx_tg.isChecked = bEnableTg
-        cbx_dingding.isChecked = bEnableDingDing
-        cbx_feishu.isChecked = bEnableFeishu
+//        cbx_tg.isChecked = bEnableTg
+//        cbx_dingding.isChecked = bEnableDingDing
+//        cbx_feishu.isChecked = bEnableFeishu
 
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
