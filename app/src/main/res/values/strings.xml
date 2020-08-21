@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ForwardSms</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">信息转发 by Lynxz</string>
+    <string name="nav_header_subtitle">lynxz8866@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_sms">短信列表</string>
+    <string name="menu_forward_setting">转发配置</string>
+    <string name="menu_other_setting">其他设置</string>
 </resources>

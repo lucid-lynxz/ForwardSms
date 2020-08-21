@@ -1,6 +1,8 @@
+package org.lynxz.forwardsms.ui.trans
+
 // 导入 android X 使用如下导包
-import PermissionFragment.Companion.isPermissionGranted
-import PermissionFragment.Companion.startSettingActivity
+//import PermissionFragment.Companion.isPermissionGranted
+//import PermissionFragment.Companion.startSettingActivity
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
@@ -120,8 +122,10 @@ interface IPermissionChecker {
 class PermissionFragment : BaseTransFragment() {
     // 权限申请结果回调
     private val mCallbacks = SparseArray<IPermissionCallback?>()
+
     // 通过 startActivityForResult() 进行权限申请的权限名信息
     private val mStartForResultPermissionRequest = SparseArray<String>()
+
     // 用于随机生成 requestCode
     private val mRandom = Random(System.currentTimeMillis())
 

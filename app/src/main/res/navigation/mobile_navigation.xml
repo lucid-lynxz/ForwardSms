@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_forward_setting">
+    <fragment
+        android:id="@+id/nav_forward_setting"
+        android:name="org.lynxz.forwardsms.ui.fragment.forwardsetting.ForwardSettingFragment"
+        android:label="@string/menu_forward_setting"
+        tools:layout="@layout/fragment_forward_setting" />
+
+    <fragment
+        android:id="@+id/nav_sms"
+        android:name="org.lynxz.forwardsms.ui.fragment.smslist.SmsListFragment"
+        android:label="@string/menu_sms"
+        tools:layout="@layout/fragment_sms_list" />
+
+    <fragment
+        android:id="@+id/nav_other_setting"
+        android:name="org.lynxz.forwardsms.ui.fragment.othersetting.OtherSettingFragment"
+        android:label="@string/menu_other_setting"
+        tools:layout="@layout/fragment_other_setting" />
+</navigation>

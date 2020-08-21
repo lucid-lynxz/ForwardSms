@@ -1,8 +1,8 @@
 package org.lynxz.forwardsms.viewmodel
 
-import PermissionFragment
 import android.Manifest
 import android.app.Application
+import android.app.Notification
 import android.content.IntentFilter
 import android.database.ContentObserver
 import android.database.Cursor
@@ -16,9 +16,8 @@ import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.lynxz.baseimlib.IMManager
@@ -31,12 +30,13 @@ import org.lynxz.forwardsms.bean.isSameAs
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.receiver.SmsReceiver
+import org.lynxz.forwardsms.ui.trans.PermissionFragment
+import org.lynxz.forwardsms.ui.widget.SmsHandler
+import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.ConfigUtil
 import org.lynxz.forwardsms.util.LoggerUtil
-import org.lynxz.forwardsms.viewmodel.SmsViewModel.getReceivedSms
-import org.lynxz.forwardsms.viewmodel.SmsViewModel.init
-import org.lynxz.forwardsms.widget.SmsHandler
-import org.lynxz.forwardsms.widget.SmsNotificationListenerService
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.getReceivedSms
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.init
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
@@ -47,7 +47,7 @@ import org.lynxz.imtg.TGActionImpl
  * 1.在application中调用初始化方法 [init]
  * 2. 获取上一次接收到的短信信息 [getReceivedSms]
  * */
-object SmsViewModel : ViewModel() {
+object GlobalParaUtil {
     private const val TAG = "SmsViewModel"
     private var app: Application? = null
     private val smsContentUri: Uri = Uri.parse("content://sms/inbox")
@@ -83,19 +83,28 @@ object SmsViewModel : ViewModel() {
             LoggerUtil.w(TAG, "获取到notification包名: $pkgName")
             if (pkgName == "com.tencent.mm") { // 微信
                 val notification = sbn!!.notification
+
+                // 通知标题信息:
+                // 群消息时表示群名称
+                // 普通好友消息时表示好友名称
+                val title = notification?.extras?.get(Notification.EXTRA_TITLE)
                 notification?.tickerText?.toString()?.let {
-                    val index = it.indexOf(":")
-                    LoggerUtil.w(TAG, "获取到微信内容为: $it")
-                    if (index <= 0) {
-                        return
-                    }
-
-                    val fromUser = it.substring(0, index) // 发送人
-                    val wxContent = it.substring(index + 1, it.length) // 消息内容
-
+//                    val index = it.indexOf(":")
+//                    LoggerUtil.w(TAG, "获取到微信标题: $title 内容为: $it")
+//                    if (index <= 0) {
+//                        return
+//                    }
+//
+//                    val fromUser = it.substring(0, index) // 发送人
+//                    val wxContent = it.substring(index + 1, it.length) // 消息内容
+//
+//                    smsReceivedLiveData.postValue(SmsDetail().apply {
+//                        body = wxContent
+//                        from = "$title $fromUser(微信)"
+//                    })
                     smsReceivedLiveData.postValue(SmsDetail().apply {
-                        body = wxContent
-                        from = "$fromUser(微信)"
+                        body = it
+                        from = "$title(微信)"
                     })
                 }
             }
@@ -132,7 +141,7 @@ object SmsViewModel : ViewModel() {
         }
     }
 
-    fun init(application: Application): SmsViewModel {
+    fun init(application: Application): GlobalParaUtil {
         if (app == null) {
             app = application.apply {
                 // 注册短信接收广播监听
@@ -160,8 +169,7 @@ object SmsViewModel : ViewModel() {
         return this
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    fun release() {
         app?.unregisterReceiver(smsReceiver)
         SmsNotificationListenerService.registerAppObserver(null)
         // app?.contentResolver?.unregisterContentObserver(smsContentResolverObserver)
@@ -172,9 +180,9 @@ object SmsViewModel : ViewModel() {
 
     fun loadSmsHistory(maxCount: Int = 10) {
         val list = reloadSmsHistory(maxCount)
-        if (list.isNotEmpty()) {
-            smsHistoryLiveData.postValue(list)
-        }
+        smsHistoryLiveData.postValue(list)
+//        if (list.isNotEmpty()) {
+//        }
     }
 
     /**
@@ -190,6 +198,7 @@ object SmsViewModel : ViewModel() {
         }
 
         val cr = app?.contentResolver ?: return list
+
 
         // todo 子线程
         // todo 添加短信内容监听
@@ -211,6 +220,8 @@ object SmsViewModel : ViewModel() {
             }
             cursor.close()
         }
+
+
         return list
     }
 
@@ -259,7 +270,7 @@ object SmsViewModel : ViewModel() {
             })
         LoggerUtil.d(TAG, "activeImTg result $initResult")
 
-        viewModelScope.launch {
+        GlobalScope.launch {
             withContext(Dispatchers.IO) {
                 IMManager.registerIm(ImType.TG, TGActionImpl)
                 IMManager.refresh(ImType.TG) {
@@ -283,8 +294,7 @@ object SmsViewModel : ViewModel() {
             })
         LoggerUtil.d(TAG, "activeImDD result $initResult")
 
-
-        viewModelScope.launch {
+        GlobalScope.launch {
             withContext(Dispatchers.IO) {
                 IMManager.registerIm(ImType.DingDing, DingDingActionImpl)
                 IMManager.refresh(ImType.DingDing) {
@@ -307,8 +317,7 @@ object SmsViewModel : ViewModel() {
             })
         LoggerUtil.d(TAG, "activeImFeishu result $initResult")
 
-
-        viewModelScope.launch {
+        GlobalScope.launch {
             withContext(Dispatchers.IO) {
                 IMManager.registerIm(ImType.FeiShu, FeishuActionImpl)
                 IMManager.refresh(ImType.FeiShu) {

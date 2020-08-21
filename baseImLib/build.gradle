@@ -30,6 +30,5 @@ dependencies {
     api(libs.retrofit2KtxAdapter)
 
     api(libs.okHttp)
-    api(libs.conscrypt)
     api(libs.okHttpLogging)
 }

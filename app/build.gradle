@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply from: "../config/sign.gradle"
 
 android {
@@ -10,8 +11,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 12
-        versionName "1.6.3"
+        versionCode 13
+        versionName "1.6.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,6 +41,10 @@ android {
         targetCompatibility = 1.8
         sourceCompatibility = 1.8
     }
+
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -50,6 +55,12 @@ dependencies {
     api project(path: ':imFeishu')
 
     api project(path: ':SecuritySP')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0'
+    implementation 'androidx.navigation:navigation-ui:2.1.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
 
     testImplementation(test.junit)
@@ -60,6 +71,7 @@ dependencies {
     implementation(libs.constraintLayoutX)
 
     implementation(libs.ktxCore)
+    implementation(libs.gson)
     implementation(libs.kotlinxCoroutinesAndroid)
 
 //    implementation(libs.lifeCycleViewModelX)
@@ -67,6 +79,8 @@ dependencies {
     implementation(libs.lifeCycleExtensionX)
 
     implementation(libs.pickerView)
+    // recyclerview adapter
+    implementation 'com.github.angcyo:DslAdapter:2.5.1'
 }
 
 

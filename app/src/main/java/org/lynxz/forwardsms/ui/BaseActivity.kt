@@ -1,8 +1,5 @@
 package org.lynxz.forwardsms.ui
 
-import IPermissionCallback
-import PermissionFragment
-import PermissionResultInfo
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -11,6 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_base.*
 import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.ui.trans.BaseTransFragment
+import org.lynxz.forwardsms.ui.trans.IPermissionCallback
+import org.lynxz.forwardsms.ui.trans.PermissionFragment
+import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ScreenUtil
@@ -66,6 +67,35 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
         }
 
         afterViewCreated()
+    }
+
+
+    /**
+     * 在 android.R.id.content 中追加一个fragment
+     */
+    open fun showFragment(fragment: BaseFragment?, tag: String? = null) {
+        if (fragment == null) {
+            return
+        }
+
+        val fTag = if (tag.isNullOrBlank()) fragment::class.java.canonicalName else tag
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.fragment_in,
+                R.anim.fragment_out,
+                R.anim.enter_from_bottom_to_top,
+                R.anim.exit_from_top_to_bottom
+            )
+            .add(android.R.id.content, fragment, fTag)
+            .addToBackStack(fTag)
+            .commit()
+    }
+
+    /**
+     * 移除指定的fragment
+     */
+    open fun hideContentFragment(fragment: BaseFragment) {
+        supportFragmentManager.beginTransaction().remove(fragment).commit()
     }
 
     private val mHandler by lazy { Handler() }

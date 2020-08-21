@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import org.lynxz.forwardsms.ui.trans.BaseTransFragment
+import org.lynxz.forwardsms.ui.trans.IPermissionCallback
+import org.lynxz.forwardsms.ui.trans.PermissionFragment
+import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ScreenUtil
+import org.lynxz.forwardsms.util.ViewUtil
 
-/**
- * Created by xqc on 2018/10/25.
- * Developer App
- */
 abstract class BaseFragment : Fragment() {
 
     override fun onCreateView(
@@ -29,6 +30,43 @@ abstract class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         afterViewCreated(view)
     }
+
+
+    /**
+     * 将自身添加到指定的activity中
+     */
+    open fun add2Activity(targetActivity: BaseActivity) {
+        targetActivity.showFragment(this, null)
+    }
+
+    /**
+     * 跳转显示其他fragment页面
+     */
+    protected open fun showFragment(fragment: BaseFragment?) {
+        val isFinishing = activity?.isFinishing ?: true
+        if (!isFinishing && (activity is BaseActivity)) {
+            (activity as BaseActivity).showFragment(fragment)
+            // 清除焦点,关闭键盘
+            val currentFocus = activity!!.currentFocus
+            ViewUtil.hideKeyboard(currentFocus)
+            currentFocus?.clearFocus()
+        }
+
+//        if ((activity is BaseActivity) and !activity.isFinishing) {
+//
+//            if (!(activity as BaseActivity).isFinishing()) {
+//                (activity as BaseActivity?).showExtraContentFragment(fragment, null)
+//            }
+//
+//            // 清除焦点,关闭键盘
+//            val currentFocus = getActivity()!!.currentFocus
+//            currentFocus?.clearFocus()
+//            hideKeyBoard()
+//        } else {
+//            showShortToast("基类activity并非BaseActivity,显示失败,请检查")
+//        }
+    }
+
 
     private val mHandler by lazy { Handler() }
     private val delayActionMap by lazy { mutableMapOf<Long, Runnable>() }
@@ -123,5 +161,34 @@ abstract class BaseFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         cancelDelayAction()
+    }
+
+    // 权限申请fragment
+    private val permissionFrag by lazy {
+        BaseTransFragment.getTransFragment(
+            activity!!,
+            "permission_tag",
+            PermissionFragment().apply { registerPermissionChecker(IgnoreBatteryOptimCheckerImpl) })
+    }
+
+    protected fun requestPermission(permission: String, callback: IPermissionCallback) {
+        permissionFrag?.requestPermission(permission, callback)
+    }
+
+    protected fun requestPermissions(permissions: Array<String>, callback: IPermissionCallback) {
+        permissionFrag?.requestPermissions(permissions, callback)
+    }
+
+    /**
+     * 判断所有权限是否均已被授予
+     * */
+    protected fun isPermissionGranted(vararg permissions: String): Boolean {
+        permissions.forEach {
+            val permissionGranted = PermissionFragment.isPermissionGranted(activity!!, it)
+            if (!permissionGranted) {
+                return false
+            }
+        }
+        return true
     }
 }

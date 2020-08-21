@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RoundImageView">
+        <attr name="riv_radius" format="dimension"/>
+        <attr name="riv_clipCircle" format="boolean"/>
+        <attr name="riv_left_top_radius" format="dimension"/>
+        <attr name="riv_right_top_radius" format="dimension"/>
+        <attr name="riv_right_bottom_radius" format="dimension"/>
+        <attr name="riv_left_bottom_radius" format="dimension"/>
+    </declare-styleable>
+</resources>

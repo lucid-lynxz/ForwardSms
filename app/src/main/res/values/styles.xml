@@ -18,4 +18,47 @@
 
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="commonView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="commonView.text">
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/text_normal</item>
+    </style>
+
+    <style name="commonView.textinputlayout">
+        <!-- 默认状态提示颜色和字体-->
+        <item name="android:textColorHint">#8c8c8c</item>
+        <!-- 下面可以根据需要设置，如果没有将默认使用默认theme的颜色 -->
+        <!-- Label标签的颜色 -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- 默认状态状态设置底线颜色 -->
+        <!--        <item name="colorControlNormal">@color/colorPrimary</item>-->
+        <!-- 选择的底线颜色 -->
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/text_normal</item>
+    </style>
+
+    <style name="commonView.text.subTitle">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textColor">@color/text_sub</item>
+    </style>
+
+    <style name="commonView.text.tip">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:textColor">@color/text_tip</item>
+    </style>
 </resources>

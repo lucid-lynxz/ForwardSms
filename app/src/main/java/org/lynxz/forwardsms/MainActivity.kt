@@ -1,6 +1,5 @@
 package org.lynxz.forwardsms
 
-import PermissionResultInfo
 import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
@@ -25,17 +24,19 @@ import org.lynxz.forwardsms.para.GlobalImSettingPara
 import org.lynxz.forwardsms.para.ImSetting
 import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseActivity
+import org.lynxz.forwardsms.ui.Main2Activity
+import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
-import org.lynxz.forwardsms.viewmodel.SmsViewModel
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 
 
 /**
  * 测试及设置页面
  * */
-@UseExperimental(ExperimentalCoroutinesApi::class)
+@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     companion object {
         const val TAG = "MainActivity"
@@ -52,19 +53,20 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private var bForwardWechat by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardWechat, true)
     private var bForwardSms by SpDelegateUtil(this, SmsConstantParas.SpKeyForwardSms, true)
 
-//    private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
-//    private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
-//    private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
+    private var bEnableTg by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableTg, true)
+    private var bEnableDingDing by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableDingDing, true)
+    private var bEnableFeishu by SpDelegateUtil(this, SmsConstantParas.SpKeyEnableFeishu, true)
 
     override fun getLayoutRes() = R.layout.activity_main
 
     var lastSms = ""
 
     override fun afterViewCreated() {
-//        if (phoneTag.isBlank()) {
-//            phoneTag = Build.MODEL
-//        }
+        if (phoneTag.isBlank()) {
+            phoneTag = Build.MODEL
+        }
 
+        LoggerUtil.w(TAG, "ddUserName $ddUserName  ,bEnableDingDing $bEnableDingDing")
         GlobalImSettingPara.imSettingMapLiveData()
             .observe(this, Observer {
                 it[ImType.TG]?.let { setting ->
@@ -89,9 +91,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
                 }
             })
 
-//        edt_user_name_tg.setText(tgUserName)
-//        edt_user_name_dd.setText(ddUserName)
-//        edt_user_name_feishu.setText(feiShuUserName)
+        edt_user_name_tg.setText(tgUserName)
+        edt_user_name_dd.setText(ddUserName)
+        edt_user_name_feishu.setText(feiShuUserName)
 
         SmsConstantParas.phoneTag = if (phoneTag.isBlank()) Build.MODEL else phoneTag
         edt_phone_tag.setText(phoneTag)
@@ -101,9 +103,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 是否启用telegram
         cbx_tg.setOnCheckedChangeListener { _, isChecked ->
-//            edt_user_name_tg.isEnabled = isChecked
-//            btn_confirm_tg.isEnabled = isChecked
-//            bEnableTg = isChecked
+            edt_user_name_tg.isEnabled = isChecked
+            btn_confirm_tg.isEnabled = isChecked
+            bEnableTg = isChecked
             GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting?): ImSetting {
                     val setting = p1 ?: ImSetting(ImType.TG, isChecked, "")
@@ -117,9 +119,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 是否启用钉钉
         cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
-//            edt_user_name_dd.isEnabled = isChecked
-//            btn_confirm_dd.isEnabled = isChecked
-//            bEnableDingDing = isChecked
+            edt_user_name_dd.isEnabled = isChecked
+            btn_confirm_dd.isEnabled = isChecked
+            bEnableDingDing = isChecked
             GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting?): ImSetting {
                     val setting = p1 ?: ImSetting(ImType.DingDing, isChecked, "")
@@ -133,9 +135,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         // 是否启用飞书
         cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
-//            edt_user_name_feishu.isEnabled = isChecked
-//            btn_confirm_feishu.isEnabled = isChecked
-//            bEnableFeishu = isChecked
+            edt_user_name_feishu.isEnabled = isChecked
+            btn_confirm_feishu.isEnabled = isChecked
+            bEnableFeishu = isChecked
             GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting?): ImSetting {
                     val setting = p1 ?: ImSetting(ImType.FeiShu, isChecked, "")
@@ -165,35 +167,59 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             if (isChecked) {
                 enableMonitorNotification()
             }
-            SmsViewModel.enableForwardWechat(isChecked)
+            GlobalParaUtil.enableForwardWechat(isChecked)
         }
         enableMonitorNotification()
-        SmsViewModel.enableForwardWechat(true)
+        GlobalParaUtil.enableForwardWechat(true)
         cbx_forward_wechat.isChecked = bForwardWechat
 
         // 是否启用短信转发,默认启用
         cbx_forward_sms.setOnCheckedChangeListener { buttonView, isChecked ->
             bForwardSms = isChecked
-            SmsViewModel.enableForwardSms(isChecked)
+            GlobalParaUtil.enableForwardSms(isChecked)
         }
         cbx_forward_sms.isChecked = bForwardSms
-        SmsViewModel.enableForwardSms(bForwardSms)
+        GlobalParaUtil.enableForwardSms(bForwardSms)
 
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {
             tgUserName = edt_user_name_tg.text.toString().trim()
+            GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.TG, true, "")
+                    return setting.apply {
+                        targetUserName = tgUserName
+                    }
+                }
+            })
             activeTg(tgUserName)
         }
 
         // 设置钉钉接收用户
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
+            GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.DingDing, true, "")
+                    return setting.apply {
+                        targetUserName = ddUserName
+                    }
+                }
+            })
             activeDingding(ddUserName)
         }
 
         // 设置飞书接收用户名
         btn_confirm_feishu.setOnClickListener {
             feiShuUserName = edt_user_name_feishu.text.toString().trim()
+            GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
+                override fun invoke(p1: ImSetting?): ImSetting {
+                    val setting = p1 ?: ImSetting(ImType.FeiShu, true, "")
+                    return setting.apply {
+                        targetUserName = feiShuUserName
+                    }
+                }
+            })
             activeFeishu(feiShuUserName)
         }
 
@@ -206,11 +232,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 //        smsModel = ViewModelProviders.of(this).get(SmsViewModel::class.java).apply {
 //            init(application)
 //        }
-        SmsViewModel.getReceivedSms().observe(this, Observer<SmsDetail> {
+        GlobalParaUtil.getReceivedSms().observe(this, Observer<SmsDetail> {
             tv_info.text = it.toString()
         })
 
-        SmsViewModel.getSmsHistory().observe(this, Observer {
+        GlobalParaUtil.getSmsHistory().observe(this, Observer {
             val his = StringBuilder(100)
             his.append("版本:").append(BuildConfig.VERSION_NAME)
                 .append("\n共获取短信 ").append(it.size).append("条:")
@@ -284,7 +310,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 
         if (permission.name == Manifest.permission.READ_SMS) {
             if (permission.granted) {
-                SmsViewModel.loadSmsHistory()
+                GlobalParaUtil.loadSmsHistory()
             } else {
                 showToast("请先允许读取短信列表再试")
             }
@@ -300,6 +326,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private fun activeImTest() {
         // 临时测试用
         requestPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+
+        startActivity(Intent(this, Main2Activity::class.java))
     }
 
     /**
@@ -309,7 +337,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private fun activeDingding(userName: String?, active: Boolean = true) {
         SmsConstantParas.ddName = userName ?: ""
         if (active && !userName.isNullOrBlank()) {
-            SmsViewModel.activeIm(ImType.DingDing)
+            GlobalParaUtil.activeIm(ImType.DingDing)
             doDelay(10 * 60 * 1000, delayActionTagRefreshDingDing) {
                 LoggerUtil.d(TAG, "定时刷新钉钉token...")
                 IMManager.refresh(ImType.DingDing)
@@ -327,7 +355,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private fun activeTg(userName: String?, active: Boolean = true) {
         SmsConstantParas.tgUserNme = userName ?: ""
         if (active && !userName.isNullOrBlank()) {
-            SmsViewModel.activeIm(ImType.TG)
+            GlobalParaUtil.activeIm(ImType.TG)
         } else {
             IMManager.unregisterIm(ImType.TG)
         }
@@ -340,7 +368,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
     private fun activeFeishu(userName: String?, active: Boolean = true) {
         SmsConstantParas.feishuName = userName ?: ""
         if (active && !userName.isNullOrBlank()) {
-            SmsViewModel.activeIm(ImType.FeiShu)
+            GlobalParaUtil.activeIm(ImType.FeiShu)
         } else {
             IMManager.unregisterIm(ImType.FeiShu)
         }

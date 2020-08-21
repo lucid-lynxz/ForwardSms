@@ -1,6 +1,5 @@
 package org.lynxz.forwardsms.ui.trans.permissionCheckerImpl
 
-import IPermissionChecker
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,6 +10,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import org.lynxz.forwardsms.ui.trans.IPermissionChecker
 
 /**
  * [Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS] 电池优化白名单权限申请

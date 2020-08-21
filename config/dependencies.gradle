@@ -55,7 +55,7 @@ ext {
     richTextVersion = '3.0.7'
     richTextHtmlParserVersion = '1.0.2'
 
-    okhttpVersion = '4.6.0'
+    okhttpVersion = '4.8.1'
     gsonVersion = '2.8.5'
 
     rxJavaVersion = '1.1.0'
@@ -240,9 +240,9 @@ ext {
             /*
               https://github.com/square/okhttp
               conscrypt 库使用于解决issue: https://github.com/square/okhttp/issues/5760
+              implementation(libs.conscrypt)  // okhttp 4.8.1+ 后不需要
 
               implementation(libs.okHttp)
-              implementation(libs.conscrypt)
               implementation(libs.okHttpLogging)
             * */
             okHttp                        : "com.squareup.okhttp3:okhttp:${okhttpVersion}",

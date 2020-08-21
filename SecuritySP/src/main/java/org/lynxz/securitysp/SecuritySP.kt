@@ -6,9 +6,11 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Base64
+import org.lynxz.securitysp.SecuritySP.Companion.generateRandomAesKey
 import org.lynxz.securitysp.util.AESUtil
 import org.lynxz.securitysp.util.DeviceUtil
 import org.lynxz.securitysp.util.DigestUtil
+import java.lang.reflect.ParameterizedType
 import kotlin.random.Random
 
 inline fun <reified T> Set<*>.isSetOfType(): Boolean = all { it is T }
@@ -50,15 +52,16 @@ inline fun <reified T> Set<*>.isSetOfType(): Boolean = all { it is T }
  * val floatValue = securitySP.getPreference("FloatKey", 1.0f) // 获取 float 值
  * */
 class SecuritySP constructor(
-    private val context: Context,
-    private val spName: String?,
+    context: Context,
+    spName: String?,
     spMode: Int,
-    private val autoGenerateKey: Boolean,
-    private var secretKey: String?,
-    private val spEncryptUtil: ISpEncryptUtil?
+    autoGenerateKey: Boolean,
+    var secretKey: String?,
+    var spEncryptUtil: ISpEncryptUtil?,
+    var spJsonUtil: ISpJsonUtil?
 ) : SharedPreferences {
     constructor(context: Context, spName: String?, spMode: Int)
-            : this(context, spName, spMode, true, null, AESUtil())
+            : this(context, spName, spMode, true, null, AESUtil(), null)
 
     companion object {
         const val TAG = "SecuritySP"
@@ -103,7 +106,7 @@ class SecuritySP constructor(
      * @param default 若sp未存储相关key数据,则返回该默认值
      * */
     @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-    fun <U> getPreference(name: String, default: U?): U? {
+    fun <U : Any> getPreference(name: String, default: U?): U? {
         if (default is MutableSet<*> && default.isSetOfType<String>()) {
             val result = getStringSet(name, (default as MutableSet<String>?))
             return result as? U
@@ -118,8 +121,13 @@ class SecuritySP constructor(
             is Int -> oriValue.toInt()
             is Boolean -> oriValue.toBoolean()
             is Float -> oriValue.toFloat()
-            else -> default
+            is Nothing? -> default
+            else -> {
+                val uClass: Class<*> = default!!::class.java
+                spJsonUtil?.parseJson(oriValue, uClass) ?: default
+            }
         }
+
         return res as? U
     }
 
@@ -138,11 +146,22 @@ class SecuritySP constructor(
                     is Int -> putInt(name, value)
                     is Boolean -> putBoolean(name, value)
                     is Float -> putFloat(name, value)
-                    else -> throw IllegalArgumentException("This type can not be saved")
+                    else -> {
+                        val valueStr = spJsonUtil?.toJson(value)
+                            ?: throw IllegalArgumentException("This type can not be saved")
+                        putString(name, valueStr)
+                    }
                 }.apply()
             }
         }
         return this
+    }
+
+    fun <T : Any> getTargetClass(t: T): Class<T> {
+        val genericSuperclass = t.javaClass.genericSuperclass as ParameterizedType?
+        val actualTypeArguments = genericSuperclass?.actualTypeArguments
+        val actualTypeArgument = actualTypeArguments?.get(0)
+        return actualTypeArgument as Class<T>
     }
 
     // 获取当前加密密钥

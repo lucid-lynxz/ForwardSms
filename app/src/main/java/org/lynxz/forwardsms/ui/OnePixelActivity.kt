@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
-import org.lynxz.forwardsms.widget.OnePixelActManager
+import org.lynxz.forwardsms.ui.widget.OnePixelActManager
 
 /**
  * 单像素页面,用于锁屏时启用,防止进程被杀

@@ -1,4 +1,4 @@
-package org.lynxz.forwardsms.widget
+package org.lynxz.forwardsms.ui.widget
 
 import android.app.Service
 import android.content.Intent
@@ -12,7 +12,7 @@ import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
-import org.lynxz.forwardsms.viewmodel.SmsViewModel
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 
 /**
  * 开启service用于转发消息到IM
@@ -22,7 +22,7 @@ class ForwardService : Service() {
 
 
     // 收到新短信息事件监听
-    private val smsReceiveLiveData by lazy { SmsViewModel.getReceivedSms() }
+    private val smsReceiveLiveData by lazy { GlobalParaUtil.getReceivedSms() }
 
 
     // 屏幕锁屏开屏事件监听
