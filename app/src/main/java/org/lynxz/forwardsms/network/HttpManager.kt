@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.lynxz.forwardsms.bean.ImType
+import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.bean.SendMessageReqBean
 import org.lynxz.forwardsms.util.LoggerUtil
 import retrofit2.Retrofit

@@ -1,6 +1,6 @@
-// configVersion: 40
-// date: 2020.08.09
-// description: 更新 baserecyclerviewhelper
+// configVersion: 41
+// date: 2020.09.07
+// description: 添加 floatingActionButton
 ext {
     gradleToolVersion = '3.3.2'
 
@@ -310,6 +310,10 @@ ext {
 
             // https://github.com/zcweng/SwitchButton
             switchButton                  : "com.github.zcweng:switch-button:${switchButtonVersion}",
+
+            // https://github.com/Clans/FloatingActionButton
+            // 该库已停止维护
+            floatingActionButton          : "com.github.clans:fab:1.6.4",
 
             zxing                         : "com.google.zxing:core:${zxingVersion}",
 

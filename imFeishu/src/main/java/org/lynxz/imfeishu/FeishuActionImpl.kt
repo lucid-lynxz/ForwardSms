@@ -1,8 +1,6 @@
 package org.lynxz.imfeishu
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.actions.IPropertyAction
@@ -16,7 +14,6 @@ import org.lynxz.imfeishu.bean.CommonResponse
 import org.lynxz.imfeishu.bean.SendMessageResponse
 import org.lynxz.imfeishu.netwrork.HttpManager
 import org.lynxz.imfeishu.para.ConstantsPara
-import java.lang.IllegalArgumentException
 
 /**
  * 飞书信息发送功能实现类
@@ -133,7 +130,7 @@ object FeishuActionImpl : IIMAction, CoroutineScope by requestScope {
                 propertyUtil?.let {
                     if (result.ok) {
                         it.save(IIMAction.lastSendMsgInfo, body.content)
-                        it.save(IIMAction.lastSendMsgImType, ImType.DingDing)
+                        it.save(IIMAction.lastSendMsgImType, ImType.FeiShu)
                         it.save(IIMAction.lastSendMsgTime, System.currentTimeMillis())
                     }
                 }

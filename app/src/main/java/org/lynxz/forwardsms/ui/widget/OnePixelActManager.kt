@@ -3,7 +3,7 @@ package org.lynxz.forwardsms.ui.widget
 import android.app.Activity
 import android.app.Application
 
-import org.lynxz.forwardsms.ui.OnePixelActivity
+import org.lynxz.forwardsms.ui.activity.OnePixelActivity
 
 import java.lang.ref.WeakReference
 

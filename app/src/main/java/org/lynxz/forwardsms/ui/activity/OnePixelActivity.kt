@@ -1,4 +1,4 @@
-package org.lynxz.forwardsms.ui
+package org.lynxz.forwardsms.ui.activity
 
 import android.content.Context
 import android.content.Intent

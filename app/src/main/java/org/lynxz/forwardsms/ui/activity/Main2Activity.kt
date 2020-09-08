@@ -1,4 +1,4 @@
-package org.lynxz.forwardsms.ui
+package org.lynxz.forwardsms.ui.activity
 
 import android.view.Menu
 import androidx.appcompat.widget.Toolbar
@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.activity_main2.*
 import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.ui.BaseActivity
 
 class Main2Activity : BaseActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration

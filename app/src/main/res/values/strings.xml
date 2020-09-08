@@ -11,4 +11,6 @@
     <string name="menu_sms">短信列表</string>
     <string name="menu_forward_setting">转发配置</string>
     <string name="menu_other_setting">其他设置</string>
+
+    <string name="menu_action_ok">确定</string>
 </resources>

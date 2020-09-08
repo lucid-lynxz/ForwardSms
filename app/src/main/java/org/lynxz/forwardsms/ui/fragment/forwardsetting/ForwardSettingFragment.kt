@@ -1,11 +1,12 @@
 package org.lynxz.forwardsms.ui.fragment.forwardsetting
 
+import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_forward_setting.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.ui.BaseFragment
-import org.lynxz.forwardsms.ui.fragment.SetupDingdingFragment
+import org.lynxz.forwardsms.ui.activity.DingdingSettingActivity
 
 /**
  * 消息转发配置
@@ -24,7 +25,8 @@ class ForwardSettingFragment : BaseFragment() {
 //        })
 
         fab_add_config.setOnClickListener {
-            showFragment(SetupDingdingFragment())
+//            showFragment(SetupDingdingFragment())
+            startActivity(Intent(activity, DingdingSettingActivity::class.java))
         }
     }
 }

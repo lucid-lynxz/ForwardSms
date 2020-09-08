@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.Main2Activity"
+            android:name=".ui.activity.Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -41,9 +41,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.OnePixelActivity"
+            android:name=".ui.activity.OnePixelActivity"
             android:excludeFromRecents="true"
             android:theme="@style/OnePixelActivityTheme" />
+        <activity android:name=".ui.activity.DingdingSettingActivity" />
 
         <service android:name=".ui.widget.ForwardService" />
 

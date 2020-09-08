@@ -24,7 +24,7 @@ import org.lynxz.forwardsms.para.GlobalImSettingPara
 import org.lynxz.forwardsms.para.ImSetting
 import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseActivity
-import org.lynxz.forwardsms.ui.Main2Activity
+import org.lynxz.forwardsms.ui.activity.Main2Activity
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.LoggerUtil
@@ -107,11 +107,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             btn_confirm_tg.isEnabled = isChecked
             bEnableTg = isChecked
             GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.TG, isChecked, "")
-                    return setting.apply {
-                        enable = isChecked
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.enable = isChecked
                 }
             })
             activeTg(tgUserName, isChecked)
@@ -123,11 +120,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             btn_confirm_dd.isEnabled = isChecked
             bEnableDingDing = isChecked
             GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.DingDing, isChecked, "")
-                    return setting.apply {
-                        enable = isChecked
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.enable = isChecked
                 }
             })
             activeDingding(ddUserName, isChecked)
@@ -139,11 +133,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             btn_confirm_feishu.isEnabled = isChecked
             bEnableFeishu = isChecked
             GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.FeiShu, isChecked, "")
-                    return setting.apply {
-                        enable = isChecked
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.enable = isChecked
                 }
             })
             activeFeishu(feiShuUserName, isChecked)
@@ -185,11 +176,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         btn_confirm_tg.setOnClickListener {
             tgUserName = edt_user_name_tg.text.toString().trim()
             GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.TG, true, "")
-                    return setting.apply {
-                        targetUserName = tgUserName
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.targetUserName = tgUserName
                 }
             })
             activeTg(tgUserName)
@@ -199,11 +187,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
             GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.DingDing, true, "")
-                    return setting.apply {
-                        targetUserName = ddUserName
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.targetUserName = ddUserName
                 }
             })
             activeDingding(ddUserName)
@@ -213,11 +198,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         btn_confirm_feishu.setOnClickListener {
             feiShuUserName = edt_user_name_feishu.text.toString().trim()
             GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
-                override fun invoke(p1: ImSetting?): ImSetting {
-                    val setting = p1 ?: ImSetting(ImType.FeiShu, true, "")
-                    return setting.apply {
-                        targetUserName = feiShuUserName
-                    }
+                override fun invoke(p1: ImSetting) {
+                    p1.targetUserName = feiShuUserName
                 }
             })
             activeFeishu(feiShuUserName)

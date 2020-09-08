@@ -61,4 +61,9 @@
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:textColor">@color/text_tip</item>
     </style>
+
+    <style name="commonView.text.singleLineInput">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>
