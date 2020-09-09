@@ -2,6 +2,7 @@ package org.lynxz.forwardsms
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.graphics.Outline
 import android.os.Build
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
@@ -18,8 +20,6 @@ import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import androidx.core.content.ContextCompat.startActivity
-import android.content.Intent
 
 
 /**
@@ -109,6 +109,21 @@ fun Context.goHome() {
 
 fun Activity.hideKeyboard() {
     hideKeyBoard(currentFocus)
+}
+
+/**
+ * 光标定位到指定的editText并弹出键盘
+ */
+fun Activity.showKeyBoard(editText: EditText) {
+    editText.isFocusable = true
+    editText.isFocusableInTouchMode = true
+    editText.post {
+        editText.requestFocus()
+        // 强制弹出键盘
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        inputMethodManager?.showSoftInput(editText, 0)
+    }
 }
 
 /**

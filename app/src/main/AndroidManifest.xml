@@ -23,7 +23,6 @@
             android:name=".ui.activity.Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar">
-
             <!--            <intent-filter>-->
             <!--                <action android:name="android.intent.action.MAIN" />-->
 
@@ -44,7 +43,10 @@
             android:name=".ui.activity.OnePixelActivity"
             android:excludeFromRecents="true"
             android:theme="@style/OnePixelActivityTheme" />
+
         <activity android:name=".ui.activity.DingdingSettingActivity" />
+        <activity android:name=".ui.activity.FeishuSettingActivity" />
+        <activity android:name=".ui.activity.TelegramSettingActivity" />
 
         <service android:name=".ui.widget.ForwardService" />
 

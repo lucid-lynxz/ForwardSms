@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.SmsApplication
+import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.GlobalImSettingPara.initPara
 import org.lynxz.forwardsms.para.GlobalImSettingPara.updateImSetting
 import org.lynxz.forwardsms.util.StringUtil
@@ -44,6 +45,11 @@ object GlobalImSettingPara {
     }
 
     /**
+     * 获取配置livedata
+     * */
+    fun imSettingMapLiveData(): LiveData<MutableMap<String, ImSetting?>> = imSettingMapLiveData
+
+    /**
      * 缓存支持的所有IM及对应的设置信息
      * 在 [initPara] 进行初始化
      * */
@@ -54,7 +60,6 @@ object GlobalImSettingPara {
      * */
     private fun getImTypeSpKeyName(imType: String) = "${KEY_PREFIX}$imType"
 
-
     /**
      * 初始化配置信息
      * */
@@ -62,27 +67,38 @@ object GlobalImSettingPara {
         this.application = application
 
         // 遍历支持的平台,并从sp中提取配置信息
-        listOf(ImType.DingDing, ImType.FeiShu, ImType.TG).forEach { type ->
-            val spKeyName = getImTypeSpKeyName(type)
-            val imPara: ImSetting? = imSettingSp.getPreference(spKeyName, null)
-            imPara?.let {
-                imSettingMap[type] = it
-//                imSettingSp.putPreference(spKeyName, convert2Str(it))
-            }
-        }
+        initImSettingBySp(ImType.DingDing)
+        initImSettingBySp(ImType.TG)
+        initImSettingBySp(ImType.FeiShu)
+
         imSettingMapLiveData.value = imSettingMap
     }
 
     /**
-     * 获取配置livedata
+     * 从sp中提取配置, 并返回配置内容
+     * 若之前未配置过,则返回null
      * */
-    fun imSettingMapLiveData(): LiveData<MutableMap<String, ImSetting?>> = imSettingMapLiveData
+    private fun initImSettingBySp(imType: String): ImSetting? {
+        val keyName = getImTypeSpKeyName(imType)
+        val setting = when (imType) {
+            ImType.DingDing -> imSettingSp.getPreference<ImSetting.DDImSetting>(keyName, null)
+            ImType.TG -> imSettingSp.getPreference<ImSetting.TGImSetting>(keyName, null)
+            ImType.FeiShu -> imSettingSp.getPreference<ImSetting.FeishuImSetting>(keyName, null)
+            else -> null
+        }
+
+        setting?.let {
+            imSettingMap[imType] = it
+        }
+
+        return setting
+    }
 
     /**
      * 更新配置信息
      * */
     fun updateImSetting(imType: String, recookImSettingPara: RecookImSettingPara) {
-        val imSetting = imSettingMap[imType] ?: ImSetting(imType, false, "")
+        val imSetting = imSettingMap[imType] ?: ImSetting.generateDefaultImSetting(imType)
         recookImSettingPara(imSetting)
         imSettingMap[imType] = imSetting
         imSettingSp.putPreference(getImTypeSpKeyName(imType), imSetting)
@@ -90,11 +106,9 @@ object GlobalImSettingPara {
     }
 }
 
+/**
+ * 更新现有配置
+ * 若指定的imtype未配置,则会生成一个默认配置对象
+ * */
 typealias RecookImSettingPara = (ImSetting) -> Unit
 
-data class ImSetting(
-    val imType: String, // im标志,参考 [ImType]
-    var enable: Boolean, // 是否允许转发到该IM
-    var targetUserName: String, // 接收该消息的用户名
-    val extPropMap: MutableMap<String, String> = mutableMapOf() // 更多特定IM所需配置参数
-)

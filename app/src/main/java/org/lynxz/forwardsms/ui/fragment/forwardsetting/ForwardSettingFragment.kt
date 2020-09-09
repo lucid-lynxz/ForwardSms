@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_forward_setting.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.ui.BaseFragment
-import org.lynxz.forwardsms.ui.activity.DingdingSettingActivity
+import org.lynxz.forwardsms.ui.activity.TelegramSettingActivity
 
 /**
  * 消息转发配置
@@ -26,7 +26,9 @@ class ForwardSettingFragment : BaseFragment() {
 
         fab_add_config.setOnClickListener {
 //            showFragment(SetupDingdingFragment())
-            startActivity(Intent(activity, DingdingSettingActivity::class.java))
+//            startActivity(Intent(activity, DingdingSettingActivity::class.java))
+            startActivity(Intent(activity, TelegramSettingActivity::class.java))
+//            startActivity(Intent(activity, FeishuSettingActivity::class.java))
         }
     }
 }

@@ -18,10 +18,10 @@ import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.msec2date
+import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.para.GlobalImSettingPara
-import org.lynxz.forwardsms.para.ImSetting
 import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity

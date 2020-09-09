@@ -7,13 +7,13 @@
 
         <variable
             name="imSetting"
-            type="org.lynxz.forwardsms.bean.ImSetting.DDImSetting" />
+            type="org.lynxz.forwardsms.bean.ImSetting.FeishuImSetting" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.Main2Activity">
+        tools:context=".ui.activity.FeishuSettingActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="钉钉" />
+                app:title="飞书" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,62 +39,42 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_corp_id"
+                android:id="@+id/input_layout_app_id"
                 style="@style/commonView.textinputlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="corpid(企业的钉钉唯一标识)"
+                android:hint="appId(应用唯一的 ID 标识)"
                 app:errorEnabled="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_corpid"
+                    android:id="@+id/edt_appid"
                     style="@style/commonView.text.singleLineInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{imSetting.corpId}" />
+                    android:text="@{imSetting.appId}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_corp_secret"
+                android:id="@+id/input_layout_app_secret"
                 style="@style/commonView.textinputlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="corpSecret(企业的凭证密钥)"
+                android:hint="appSecret(应用的凭证密钥)"
                 app:errorEnabled="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_corp_id">
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_app_id">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_corp_secret"
+                    android:id="@+id/edt_app_secret"
                     style="@style/commonView.text.singleLineInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{imSetting.corpSecret}" />
+                    android:text="@{imSetting.appSecret}" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/input_layout_agent_id"
-                style="@style/commonView.textinputlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="agentId(钉钉微应用id)"
-                app:errorEnabled="false"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_corp_secret">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_agent_id"
-                    style="@style/commonView.text.singleLineInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{imSetting.agentId}" />
-            </com.google.android.material.textfield.TextInputLayout>
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_target_name"
@@ -105,7 +85,7 @@
                 app:errorEnabled="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_agent_id">
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_app_secret">
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_target_name"

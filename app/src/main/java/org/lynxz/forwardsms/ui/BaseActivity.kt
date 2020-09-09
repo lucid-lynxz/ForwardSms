@@ -63,10 +63,16 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
                 }
             }
         } else {
-            setContentView(layoutRes)
+            onGetLayoutResSuccessful(layoutRes)
         }
-
         afterViewCreated()
+    }
+
+    /**
+     * 获取到布局id(非0) 时回调, 子类可重写用于切换 databinding 等框架
+     * */
+    open fun onGetLayoutResSuccessful(@LayoutRes layoutRes: Int) {
+        setContentView(layoutRes)
     }
 
 
