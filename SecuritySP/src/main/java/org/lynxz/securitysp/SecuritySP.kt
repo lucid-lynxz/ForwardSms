@@ -103,29 +103,28 @@ class SecuritySP constructor(
     /**
      * 从sp中提取数据
      * @param  name sp中存储的key明文,内部会自动调用加密算法,注意: 默认不支持非对称加密,当然,用户可以通过 [getAll] 来获取所有数据
-     * @param default 若sp未存储相关key数据,则返回该默认值
+     * @param clz 目标类型
+     * @param defaultBean 若sp未存储相关key数据,则返回该默认值
      * */
     @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
-    fun <U : Any> getPreference(name: String, default: U?): U? {
-        if (default is MutableSet<*> && default.isSetOfType<String>()) {
-            val result = getStringSet(name, (default as MutableSet<String>?))
-            return result as? U
-        }
+    fun <U : Any> getPreference(name: String, clz: Class<U>, defaultBean: U? = null): U? {
+//        if (defaultBean is MutableSet<*> && defaultBean.isSetOfType<String>()) {
+//            val result = getStringSet(name, (defaultBean as MutableSet<String>?))
+//            return result as? U
+//        }
+        val oriValue = getString(name, defaultBean.toString()) ?: ""
+        if (oriValue.isBlank()) return defaultBean
 
-        val oriValue = getString(name, default.toString()) ?: ""
-        if (oriValue.isBlank()) return default
-
-        val res = when (default) {
-            is Long -> oriValue.toLong()
-            is String -> oriValue
-            is Int -> oriValue.toInt()
-            is Boolean -> oriValue.toBoolean()
-            is Float -> oriValue.toFloat()
-            is Nothing? -> default
-            else -> {
-                val uClass: Class<*> = default!!::class.java
-                spJsonUtil?.parseJson(oriValue, uClass) ?: default
+        val res = when (clz) {
+            mutableSetOf<Any>().javaClass -> {
+                getStringSet(name, (defaultBean as? MutableSet<String>))
             }
+            Long::class.java -> oriValue.toLong()
+            String::class.java -> oriValue
+            Int::class.java -> oriValue.toInt()
+            Boolean::class.java -> oriValue.toBoolean()
+            Float::class.java -> oriValue.toFloat()
+            else -> spJsonUtil?.parseJson(oriValue, clz) ?: defaultBean
         }
 
         return res as? U
@@ -185,10 +184,17 @@ class SecuritySP constructor(
 
     override fun contains(key: String?) = mSharedPreferences.contains(doEncrypt(key))
     override fun edit() = SecurityEditor()
-    override fun getBoolean(key: String, defValue: Boolean) = getPreference(key, defValue)!!
-    override fun getInt(key: String, defValue: Int) = getPreference(key, defValue)!!
-    override fun getLong(key: String, defValue: Long) = getPreference(key, defValue)!!
-    override fun getFloat(key: String, defValue: Float) = getPreference(key, defValue)!!
+    override fun getBoolean(key: String, defValue: Boolean) =
+        getPreference(key, Boolean::class.java, defValue)!!
+
+    override fun getInt(key: String, defValue: Int) =
+        getPreference(key, Int::class.java, defValue)!!
+
+    override fun getLong(key: String, defValue: Long) =
+        getPreference(key, Long::class.java, defValue)!!
+
+    override fun getFloat(key: String, defValue: Float) =
+        getPreference(key, Float::class.java, defValue)!!
 
     /**
      * 提取sp中的字符串属性类型,并自动解密还原成原始值

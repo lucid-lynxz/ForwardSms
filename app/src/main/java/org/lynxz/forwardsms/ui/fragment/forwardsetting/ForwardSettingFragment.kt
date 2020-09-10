@@ -2,9 +2,13 @@ package org.lynxz.forwardsms.ui.fragment.forwardsetting
 
 import android.content.Intent
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_forward_setting.*
 import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.bean.ImSetting
+import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.showToast
 import org.lynxz.forwardsms.ui.BaseFragment
 import org.lynxz.forwardsms.ui.activity.TelegramSettingActivity
 
@@ -23,6 +27,9 @@ class ForwardSettingFragment : BaseFragment() {
 //        forwardSettingViewModel.text.observe(viewLifecycleOwner, Observer {
 //            text_gallery.text = it
 //        })
+
+        GlobalImSettingPara.imSettingMapLiveData().observe(activity!!,
+            Observer<MutableMap<String, ImSetting?>> { showToast("配置发生变化") })
 
         fab_add_config.setOnClickListener {
 //            showFragment(SetupDingdingFragment())

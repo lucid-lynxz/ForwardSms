@@ -80,12 +80,16 @@ object GlobalImSettingPara {
      * */
     private fun initImSettingBySp(imType: String): ImSetting? {
         val keyName = getImTypeSpKeyName(imType)
-        val setting = when (imType) {
-            ImType.DingDing -> imSettingSp.getPreference<ImSetting.DDImSetting>(keyName, null)
-            ImType.TG -> imSettingSp.getPreference<ImSetting.TGImSetting>(keyName, null)
-            ImType.FeiShu -> imSettingSp.getPreference<ImSetting.FeishuImSetting>(keyName, null)
-            else -> null
-        }
+        val setting =
+            when (imType) {
+                ImType.DingDing ->
+                    imSettingSp.getPreference(keyName, ImSetting.DDImSetting::class.java, null)
+                ImType.TG ->
+                    imSettingSp.getPreference(keyName, ImSetting.TGImSetting::class.java, null)
+                ImType.FeiShu ->
+                    imSettingSp.getPreference(keyName, ImSetting.FeishuImSetting::class.java, null)
+                else -> null
+            }
 
         setting?.let {
             imSettingMap[imType] = it
