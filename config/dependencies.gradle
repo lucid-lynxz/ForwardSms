@@ -37,7 +37,6 @@ ext {
 
     materialprogressbarVersion = "1.4.1"
     butterKnifeVersion = '8.8.1'
-    switchButtonVersion = '0.0.3@aar'
     systembartintVersion = '1.0.3'
     statusBarUtilVersion = '1.2.5'
     photoViewVersion = '2.1.4'
@@ -309,7 +308,7 @@ ext {
             butterKnifeCompiler           : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
 
             // https://github.com/zcweng/SwitchButton
-            switchButton                  : "com.github.zcweng:switch-button:${switchButtonVersion}",
+            switchButton                  : "com.github.zcweng:switch-button:0.0.3@aar",
 
             // https://github.com/Clans/FloatingActionButton
             // 该库已停止维护

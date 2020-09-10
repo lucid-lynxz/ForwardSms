@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.lifeCycleViewModelKtxX)
     implementation(libs.lifeCycleExtensionX)
 
+    implementation(libs.switchButton)
     implementation(libs.pickerView)
 //    implementation(libs.floatingActionButton)
     // recyclerview adapter
