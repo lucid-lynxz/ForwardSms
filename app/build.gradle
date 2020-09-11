@@ -80,7 +80,8 @@ dependencies {
 
     implementation(libs.switchButton)
     implementation(libs.pickerView)
-//    implementation(libs.floatingActionButton)
+    implementation(libs.floatingActionButton)
+
     // recyclerview adapter
     implementation 'com.github.angcyo:DslAdapter:2.5.1'
 }

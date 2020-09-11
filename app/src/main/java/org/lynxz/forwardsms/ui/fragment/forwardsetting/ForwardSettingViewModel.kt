@@ -1,13 +1,24 @@
 package org.lynxz.forwardsms.ui.fragment.forwardsetting
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.lynxz.baseimlib.IMManager
+import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 
 class ForwardSettingViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "转发设置页"
+    /**
+     * 启用或者禁用某个im转发功能
+     * */
+    fun activeIm(imType: String, active: Boolean = true) {
+        GlobalImSettingPara.updateImSetting(imType) { setting ->
+            setting.enable = active
+        }
+
+        if (active) {
+            GlobalParaUtil.activeIm(imType)
+        } else {
+            IMManager.unregisterIm(imType)
+        }
     }
-    val text: LiveData<String> = _text
 }

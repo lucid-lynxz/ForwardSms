@@ -79,13 +79,15 @@ fun Context.getStringRes(@StringRes strId: Int): String {
 }
 
 fun Fragment.showToast(msg: String?) {
-    if (!msg.isNullOrBlank()) {
+    if (!msg.isNullOrBlank() && activity != null) {
         Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show()
     }
 }
 
 fun Fragment.showToast(msgId: Int) {
-    Toast.makeText(activity, msgId, Toast.LENGTH_SHORT).show()
+    activity?.let {
+        Toast.makeText(it, msgId, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun Fragment.getStringRes(@StringRes strResId: Int): String? {

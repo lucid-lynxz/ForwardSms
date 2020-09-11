@@ -16,8 +16,8 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.GlobalImSettingPara
-import org.lynxz.forwardsms.showToast
 import org.lynxz.forwardsms.ui.BaseFragment
+import org.lynxz.forwardsms.ui.activity.BaseImSettingBindingActivity
 import org.lynxz.forwardsms.ui.activity.DingdingSettingActivity
 import org.lynxz.forwardsms.ui.activity.FeishuSettingActivity
 import org.lynxz.forwardsms.ui.activity.TelegramSettingActivity
@@ -29,7 +29,7 @@ import org.lynxz.forwardsms.ui.widget.AppAdapterStatusItem
  * */
 class ForwardSettingFragment : BaseFragment() {
     private val forwardSettingViewModel by lazy {
-        ViewModelProviders.of(this).get(ForwardSettingViewModel::class.java)
+        ViewModelProviders.of(activity!!).get(ForwardSettingViewModel::class.java)
     }
 
     private val dslAdapter =
@@ -41,10 +41,6 @@ class ForwardSettingFragment : BaseFragment() {
     override fun getLayoutRes() = R.layout.fragment_forward_setting
 
     override fun afterViewCreated(view: View) {
-//        forwardSettingViewModel.text.observe(viewLifecycleOwner, Observer {
-//            text_gallery.text = it
-//        })
-
         rv_config.apply {
             addItemDecoration(DslItemDecoration())
             setHasFixedSize(true)
@@ -52,6 +48,7 @@ class ForwardSettingFragment : BaseFragment() {
             adapter = dslAdapter
         }
 
+        // 显示已添加的平台信息
         GlobalImSettingPara.imSettingMapLiveData().observe(activity!!,
             Observer<MutableMap<String, ImSetting?>> { settingMap ->
                 dslAdapter.resetItem(listOf())
@@ -60,7 +57,7 @@ class ForwardSettingFragment : BaseFragment() {
                     val imType = it.key
                     it.value?.let { setting ->
                         dslAdapter.dslItem(R.layout.item_im_setting_list) {
-                            itemBindOverride = { itemHolder, itemPosition, _, _ ->
+                            itemBindOverride = { itemHolder, _, _, _ ->
 
                                 // 设置平台信息和接收人信息
                                 itemHolder.v<TextView>(R.id.tv_platform_name)?.text = setting.imType
@@ -71,9 +68,7 @@ class ForwardSettingFragment : BaseFragment() {
                                 itemHolder.v<SwitchButton>(R.id.sb_enable_status)?.apply {
                                     isChecked = setting.enable
                                     setOnCheckedChangeListener { _, isChecked ->
-                                        GlobalImSettingPara.updateImSetting(imType) { setting ->
-                                            setting.enable = isChecked
-                                        }
+                                        forwardSettingViewModel.activeIm(imType, isChecked)
                                     }
                                 }
 
@@ -91,14 +86,33 @@ class ForwardSettingFragment : BaseFragment() {
                         }
                     }
                 }
-                showToast("配置发生变化")
             })
 
-        fab_add_config.setOnClickListener {
-//            showFragment(SetupDingdingFragment())
-//            startActivity(Intent(activity, DingdingSettingActivity::class.java))
-            startActivity(Intent(activity, TelegramSettingActivity::class.java))
-//            startActivity(Intent(activity, FeishuSettingActivity::class.java))
+        // 右下角添加按钮列表
+        fab_dingding.setOnClickListener {
+            menu_platform_add.close(true)
+            targetSettingActivityPage = DingdingSettingActivity::class.java
+        }
+        fab_feishu.setOnClickListener {
+            menu_platform_add.close(true)
+            targetSettingActivityPage = FeishuSettingActivity::class.java
+        }
+        fab_telegram.setOnClickListener {
+            menu_platform_add.close(true)
+            targetSettingActivityPage = TelegramSettingActivity::class.java
+        }
+
+        // 动画结束后再跳转到对应的设置二面
+        menu_platform_add.setOnMenuToggleListener { opened ->
+            if (!opened) {
+                targetSettingActivityPage?.let {
+                    startActivity(Intent(activity, it))
+                }
+            }
+            targetSettingActivityPage = null
         }
     }
+
+    // 目标设置页面
+    private var targetSettingActivityPage: Class<out BaseImSettingBindingActivity<*>?>? = null
 }
