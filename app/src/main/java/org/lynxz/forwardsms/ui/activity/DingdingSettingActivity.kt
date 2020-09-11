@@ -27,11 +27,11 @@ class DingdingSettingActivity : BaseImSettingBindingActivity<ActivityDingdingSet
         val targetUserName = getAndCheckInputValid(edt_target_name) ?: return
 
         GlobalImSettingPara.updateImSetting(ImType.DingDing) {
-            val ddSetting = it as ImSetting.DDImSetting
-            ddSetting.corpId = corpId
-            ddSetting.corpSecret = corpSecret
-            ddSetting.agentId = agentId
-            ddSetting.targetUserName = targetUserName
+            val setting = it as ImSetting.DDImSetting
+            setting.corpId = corpId
+            setting.corpSecret = corpSecret
+            setting.agentId = agentId
+            setting.targetUserName = targetUserName
             showToast("保存配置成功")
             finish()
         }

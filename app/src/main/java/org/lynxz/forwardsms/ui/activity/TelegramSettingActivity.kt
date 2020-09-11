@@ -26,9 +26,9 @@ class TelegramSettingActivity : BaseImSettingBindingActivity<ActivityTelegramSet
             getAndCheckInputValid(edt_target_name, "请输入telegram昵称或者userName") ?: return
 
         GlobalImSettingPara.updateImSetting(ImType.TG) {
-            val ddSetting = it as ImSetting.TGImSetting
-            ddSetting.botToken = botToken
-            ddSetting.targetUserName = targetUserName
+            val setting = it as ImSetting.TGImSetting
+            setting.botToken = botToken
+            setting.targetUserName = targetUserName
             showToast("保存配置成功")
             finish()
         }

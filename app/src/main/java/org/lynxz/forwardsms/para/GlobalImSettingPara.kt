@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.lynxz.baseimlib.bean.ImType
+import org.lynxz.forwardsms.BuildConfig
 import org.lynxz.forwardsms.SmsApplication
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.GlobalImSettingPara.initPara
@@ -71,6 +72,23 @@ object GlobalImSettingPara {
         initImSettingBySp(ImType.TG)
         initImSettingBySp(ImType.FeiShu)
 
+        // 兼容旧版,迁移buildConfig中配置的数据
+        updateImSetting(ImType.DingDing) {
+            val setting = it as ImSetting.DDImSetting
+            setting.corpId = BuildConfig.dd_corpid
+            setting.corpSecret = BuildConfig.dd_corpsecret
+            setting.agentId = BuildConfig.dd_agent
+        }
+        updateImSetting(ImType.TG) {
+            val setting = it as ImSetting.TGImSetting
+            setting.botToken = BuildConfig.tg_bottoken
+            setting.targetUserName = BuildConfig.tg_default_userName
+        }
+        updateImSetting(ImType.FeiShu) {
+            val setting = it as ImSetting.FeishuImSetting
+            setting.appId = BuildConfig.feishu_appid
+            setting.appSecret = BuildConfig.feishu_appsecret
+        }
         imSettingMapLiveData.value = imSettingMap
     }
 
@@ -108,6 +126,12 @@ object GlobalImSettingPara {
         imSettingSp.putPreference(getImTypeSpKeyName(imType), imSetting)
         imSettingMapLiveData.value = imSettingMap
     }
+
+    /**
+     * 获取指定imType的配置文件
+     * @param imType 平台类型,参考 [ImType]
+     * */
+    fun getImSetting(imType: String) = imSettingMap[imType]
 }
 
 /**

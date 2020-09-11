@@ -9,10 +9,10 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
-import org.lynxz.forwardsms.network.SmsConstantParas
+import org.lynxz.forwardsms.para.GlobalImSettingPara
 import org.lynxz.forwardsms.util.LoggerUtil
-import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
+import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 
 /**
  * 开启service用于转发消息到IM
@@ -31,26 +31,49 @@ class ForwardService : Service() {
     // 收到新短信息后转发给服务器
     private val smsObserver = Observer<SmsDetail> {
         val body = SendMessageReqBean().apply {
-            name = SmsConstantParas.tgUserNme
             content = it.format()
         }
 
-        // tg发送失败则尝试使用钉钉发送
-        IMManager.sendTextMessage(ImType.TG, body) {
-            LoggerUtil.w(TAG, "sendTextMsg by Tg result: ${convert2Str(it)}")
+        // 遍历所有支持的平台,尝试进行发送数据发送
+        val platformMap = GlobalImSettingPara.imSettingMapLiveData().value
+        platformMap?.forEach {
+            val type = it.key
+            val setting = it.value
+
+            if (setting?.enable == true) {
+                IMManager.sendTextMessage(type, body.duplicate().apply {
+                    name = GlobalImSettingPara.getImSetting(type)?.targetUserName
+                    imType = type
+                }) { result ->
+                    LoggerUtil.w(TAG, "sendTextMsg by $type ,result: ${convert2Str(result)}")
+                }
+
+//                when (type) {
+//                    ImType.TG -> {
+//                        IMManager.sendTextMessage(type, body.duplicate().apply {
+//                            name = GlobalImSettingPara.getImSetting(type)?.targetUserName
+//                            imType = type
+//                        }) {
+//                            LoggerUtil.w(TAG, "sendTextMsg by $type result: ${convert2Str(it)}")
+//                        }
+//                    }
+//                    ImType.FeiShu -> {
+//                        IMManager.sendTextMessage(type, body.duplicate().apply {
+//                            name = GlobalImSettingPara.getImSetting(type)?.targetUserName
+//                            imType = type
+//                        }) {
+//                            LoggerUtil.w(TAG, "sendTextMsg by $type result: ${convert2Str(it)}")
+//                        }
+//                    }
+//                    ImType.DingDing -> {
+//                        sendByDingding(body.duplicate().apply {
+//                            name = GlobalImSettingPara.getImSetting(type)?.targetUserName
+//                            imType = type
+//                        }, 1, 3)
+//                    }
+//                }
+            }
         }
-
-        sendByDingding(body.duplicate().apply {
-            name = SmsConstantParas.ddName
-            imType = ImType.DingDing
-        }, 1, 3)
-
-        IMManager.sendTextMessage(ImType.FeiShu, body.duplicate().apply {
-            name = SmsConstantParas.feishuName
-            imType = ImType.FeiShu
-        })
-
-//        HttpManager.sendMessage(it.format(), SmsConstantParas.tgUserNme)
     }
 
     /**
@@ -68,9 +91,11 @@ class ForwardService : Service() {
         IMManager.sendTextMessage(ImType.DingDing, body) { ddResult ->
             LoggerUtil.w(
                 TAG,
-                "sendTextMsg by dingding(curIndex=$curIndex) result: ${convert2Str(ddResult)}, body:${convert2Str(
-                    body
-                )}"
+                "sendTextMsg by dingding(curIndex=$curIndex) result: ${convert2Str(ddResult)}, body:${
+                    convert2Str(
+                        body
+                    )
+                }"
             )
             if (ddResult.ok) {
                 return@sendTextMessage

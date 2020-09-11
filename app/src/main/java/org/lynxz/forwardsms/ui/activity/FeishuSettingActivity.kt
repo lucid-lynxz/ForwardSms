@@ -28,10 +28,10 @@ class FeishuSettingActivity : BaseImSettingBindingActivity<ActivityFeishuSetting
         val targetUserName = getAndCheckInputValid(edt_target_name, "请输入接收人姓名") ?: return
 
         GlobalImSettingPara.updateImSetting(ImType.FeiShu) {
-            val ddSetting = it as ImSetting.FeishuImSetting
-            ddSetting.appId = appId
-            ddSetting.appSecret = appSecret
-            ddSetting.targetUserName = targetUserName
+            val setting = it as ImSetting.FeishuImSetting
+            setting.appId = appId
+            setting.appSecret = appSecret
+            setting.targetUserName = targetUserName
             showToast("保存配置成功")
             finish()
         }

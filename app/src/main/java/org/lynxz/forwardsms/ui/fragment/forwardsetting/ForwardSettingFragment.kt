@@ -103,6 +103,7 @@ class ForwardSettingFragment : BaseFragment() {
         }
 
         // 动画结束后再跳转到对应的设置二面
+        menu_platform_add.setClosedOnTouchOutside(true) // 点击非按钮区,关闭菜单
         menu_platform_add.setOnMenuToggleListener { opened ->
             if (!opened) {
                 targetSettingActivityPage?.let {
