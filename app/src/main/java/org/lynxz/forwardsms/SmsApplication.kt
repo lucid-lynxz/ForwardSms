@@ -6,14 +6,14 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import org.lynxz.forwardsms.para.GlobalImSettingPara
-import org.lynxz.forwardsms.util.LogPersistenceUtil
-import org.lynxz.forwardsms.util.LoggerUtil
-import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
-import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
+import org.lynxz.forwardsms.para.ImSettingManager
+import org.lynxz.forwardsms.ui.widget.ForwardService
 import org.lynxz.forwardsms.ui.widget.OnePixelActManager
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
-import org.lynxz.forwardsms.ui.widget.ForwardService
+import org.lynxz.forwardsms.util.LogPersistenceUtil
+import org.lynxz.forwardsms.util.LoggerUtil
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
+import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 
 class SmsApplication : Application() {
 
@@ -26,7 +26,7 @@ class SmsApplication : Application() {
             .init(this)
 
         // 初始化IM配置信息
-        GlobalImSettingPara.initPara(this)
+        ImSettingManager.initPara(this)
 
         // 初始化短信监听
         OnePixelActManager.init(this)

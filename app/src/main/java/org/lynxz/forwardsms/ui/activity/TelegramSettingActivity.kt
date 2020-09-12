@@ -5,7 +5,7 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.databinding.ActivityTelegramSettingBinding
-import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.showToast
 
 /**
@@ -16,7 +16,7 @@ class TelegramSettingActivity : BaseImSettingBindingActivity<ActivityTelegramSet
     override fun getPageTitle() = "Telegram"
 
     override fun initImSettingInfo() {
-        val imSetting = GlobalImSettingPara.imSettingMapLiveData().value?.get(ImType.TG)
+        val imSetting = ImSettingManager.imSettingMapLiveData().value?.get(ImType.TG)
         dataBinding.imSetting = imSetting as? ImSetting.TGImSetting
     }
 
@@ -25,7 +25,7 @@ class TelegramSettingActivity : BaseImSettingBindingActivity<ActivityTelegramSet
         val targetUserName =
             getAndCheckInputValid(edt_target_name, "请输入telegram昵称或者userName") ?: return
 
-        GlobalImSettingPara.updateImSetting(ImType.TG) {
+        ImSettingManager.updateImSetting(ImType.TG) {
             val setting = it as ImSetting.TGImSetting
             setting.botToken = botToken
             setting.targetUserName = targetUserName

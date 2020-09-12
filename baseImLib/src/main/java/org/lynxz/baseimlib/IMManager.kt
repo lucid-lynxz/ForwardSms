@@ -2,7 +2,6 @@ package org.lynxz.baseimlib
 
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.CommonResult
-import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 
 /**
@@ -11,13 +10,15 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
  * */
 object IMManager {
 
-    private val imImplMap = mutableMapOf<String, IIMAction>()
+    private data class ImImplStatusBean(var iimAction: IIMAction, var enable: Boolean)
+
+    private val imImplMap = mutableMapOf<String, ImImplStatusBean>()
 
     /**
      * 注册添加当前支持的im
      * */
     fun registerIm(imType: String, impl: IIMAction) {
-        imImplMap[imType] = impl
+        imImplMap[imType] = ImImplStatusBean(impl, true)
     }
 
     /**
@@ -25,6 +26,14 @@ object IMManager {
      * */
     fun unregisterIm(imType: String) {
         imImplMap.remove(imType)
+    }
+
+    /**
+     * 是否允许指定的im平台执行操作
+     * @param enable true-允许执行操作, false-禁止后续操作执行
+     * */
+    fun setEnable(imType: String, enable: Boolean) {
+        imImplMap[imType]?.enable = enable
     }
 
     fun release() {
@@ -35,8 +44,14 @@ object IMManager {
      * 重新加载im配置
      * */
     fun refresh(imType: String, doOnComplete: (CommonResult) -> Unit = {}) {
-        return imImplMap[imType]?.refresh(doOnComplete)
-            ?: doOnComplete(CommonResult(false, "not impl for im type $imType"))
+        val imImplStatusBean = imImplMap[imType]
+        val enable = imImplStatusBean?.enable == true
+        if (enable) {
+            imImplStatusBean?.iimAction?.refresh(doOnComplete)
+                ?: doOnComplete(CommonResult(false, "not impl for im type $imType"))
+        } else {
+            doOnComplete(CommonResult(false, "im $imType disable  or not impl"))
+        }
     }
 
     /**
@@ -49,7 +64,13 @@ object IMManager {
         body: SendMessageReqBean,
         doOnComplete: (CommonResult) -> Unit = {}
     ) {
-        return imImplMap[imType]?.sendTextMessage(body, doOnComplete)
-            ?: doOnComplete(CommonResult(false, "not impl for im type $imType"))
+        val imImplStatusBean = imImplMap[imType]
+        val enable = imImplStatusBean?.enable == true
+        if (enable) {
+            imImplStatusBean?.iimAction?.sendTextMessage(body, doOnComplete)
+                ?: doOnComplete(CommonResult(false, "not impl for im type $imType"))
+        } else {
+            doOnComplete(CommonResult(false, "im $imType disable or not impl"))
+        }
     }
 }

@@ -1,8 +1,11 @@
 package org.lynxz.imdingding
 
-import kotlinx.coroutines.*
-import org.lynxz.baseimlib.actions.IPropertyAction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.lynxz.baseimlib.actions.IIMAction
+import org.lynxz.baseimlib.actions.IPropertyAction
 import org.lynxz.baseimlib.bean.CommonResult
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
@@ -13,15 +16,12 @@ import org.lynxz.imdingding.bean.DepartmentMemberDetailListBean
 import org.lynxz.imdingding.bean.MessageResponseBean
 import org.lynxz.imdingding.network.HttpManager
 import org.lynxz.imdingding.para.ConstantsPara
-import java.lang.IllegalArgumentException
-import java.util.concurrent.TimeUnit
 
 /**
  * 钉钉相关操作
  * todo 异常处理, 超时处理, 错误重试机制等
  * */
 object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
-
 
     private var propertyUtil: IPropertyAction? = null // 数据持久化工具类
 

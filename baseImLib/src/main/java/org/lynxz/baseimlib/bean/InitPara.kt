@@ -20,7 +20,7 @@ sealed class ImInitPara(
 
     data class TGInitPara( // telegram初始化参数
         var botToken: String, // 必填,用于接收消息的tg机器人token,通过 @BotFather 创建和获取
-        var defaultUserName: String = "" // 可选,,调用方若未指定消息接收人,则默认发给本用户
+        var defaultUserName: String = "" // 可选,调用方若未指定消息接收人,则默认发给本用户
     ) : ImInitPara()
 
     data class FeiShuPara( // 飞书初始化参数

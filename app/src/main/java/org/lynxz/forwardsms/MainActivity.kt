@@ -21,7 +21,7 @@ import org.lynxz.baseimlib.msec2date
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.network.SmsConstantParas
-import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity
@@ -67,7 +67,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         LoggerUtil.w(TAG, "ddUserName $ddUserName  ,bEnableDingDing $bEnableDingDing")
-        GlobalImSettingPara.imSettingMapLiveData()
+        ImSettingManager.imSettingMapLiveData()
             .observe(this, Observer {
                 it[ImType.TG]?.let { setting ->
                     edt_user_name_tg.setText(setting.targetUserName)
@@ -91,10 +91,6 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
                 }
             })
 
-        edt_user_name_tg.setText(tgUserName)
-        edt_user_name_dd.setText(ddUserName)
-        edt_user_name_feishu.setText(feiShuUserName)
-
         SmsConstantParas.phoneTag = if (phoneTag.isBlank()) Build.MODEL else phoneTag
         edt_phone_tag.setText(phoneTag)
         tv_info.movementMethod = ScrollingMovementMethod.getInstance()
@@ -106,12 +102,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             edt_user_name_tg.isEnabled = isChecked
             btn_confirm_tg.isEnabled = isChecked
             bEnableTg = isChecked
-            GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.TG, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.enable = isChecked
                 }
             })
-            activeTg(tgUserName, isChecked)
         }
 
         // 是否启用钉钉
@@ -119,12 +114,11 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             edt_user_name_dd.isEnabled = isChecked
             btn_confirm_dd.isEnabled = isChecked
             bEnableDingDing = isChecked
-            GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.enable = isChecked
                 }
             })
-            activeDingding(ddUserName, isChecked)
         }
 
         // 是否启用飞书
@@ -132,22 +126,12 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             edt_user_name_feishu.isEnabled = isChecked
             btn_confirm_feishu.isEnabled = isChecked
             bEnableFeishu = isChecked
-            GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.enable = isChecked
                 }
             })
-            activeFeishu(feiShuUserName, isChecked)
         }
-
-        // 注册im
-//        activeTg(tgUserName)
-//        activeDingding(ddUserName)
-//        activeFeishu(feiShuUserName)
-
-//        cbx_tg.isChecked = bEnableTg
-//        cbx_dingding.isChecked = bEnableDingDing
-//        cbx_feishu.isChecked = bEnableFeishu
 
         // 通知栏消息
         NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
@@ -175,7 +159,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 设置telegram接收用户
         btn_confirm_tg.setOnClickListener {
             tgUserName = edt_user_name_tg.text.toString().trim()
-            GlobalImSettingPara.updateImSetting(ImType.TG, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.TG, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = tgUserName
                 }
@@ -186,7 +170,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 设置钉钉接收用户
         btn_confirm_dd.setOnClickListener {
             ddUserName = edt_user_name_dd.text.toString().trim()
-            GlobalImSettingPara.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = ddUserName
                 }
@@ -197,7 +181,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         // 设置飞书接收用户名
         btn_confirm_feishu.setOnClickListener {
             feiShuUserName = edt_user_name_feishu.text.toString().trim()
-            GlobalImSettingPara.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
+            ImSettingManager.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = feiShuUserName
                 }

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_forward_setting.*
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
-import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.ui.BaseFragment
 import org.lynxz.forwardsms.ui.activity.BaseImSettingBindingActivity
 import org.lynxz.forwardsms.ui.activity.DingdingSettingActivity
@@ -49,7 +49,8 @@ class ForwardSettingFragment : BaseFragment() {
         }
 
         // 显示已添加的平台信息
-        GlobalImSettingPara.imSettingMapLiveData().observe(activity!!,
+        ImSettingManager.imSettingMapLiveData().observe(
+            activity!!,
             Observer<MutableMap<String, ImSetting?>> { settingMap ->
                 dslAdapter.resetItem(listOf())
                 dslAdapter.setAdapterStatus(if (settingMap.isNullOrEmpty()) DslAdapterStatusItem.ADAPTER_STATUS_EMPTY else DslAdapterStatusItem.ADAPTER_STATUS_NONE)

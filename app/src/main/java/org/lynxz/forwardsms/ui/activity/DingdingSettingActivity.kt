@@ -5,7 +5,7 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.databinding.ActivityDingdingSettingBinding
-import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.showToast
 
 /**
@@ -16,7 +16,7 @@ class DingdingSettingActivity : BaseImSettingBindingActivity<ActivityDingdingSet
     override fun getPageTitle() = "钉钉"
 
     override fun initImSettingInfo() {
-        val imSetting = GlobalImSettingPara.imSettingMapLiveData().value?.get(ImType.DingDing)
+        val imSetting = ImSettingManager.imSettingMapLiveData().value?.get(ImType.DingDing)
         dataBinding.imSetting = imSetting as? ImSetting.DDImSetting
     }
 
@@ -26,7 +26,7 @@ class DingdingSettingActivity : BaseImSettingBindingActivity<ActivityDingdingSet
         val agentId = getAndCheckInputValid(edt_agent_id) ?: return
         val targetUserName = getAndCheckInputValid(edt_target_name) ?: return
 
-        GlobalImSettingPara.updateImSetting(ImType.DingDing) {
+        ImSettingManager.updateImSetting(ImType.DingDing) {
             val setting = it as ImSetting.DDImSetting
             setting.corpId = corpId
             setting.corpSecret = corpSecret

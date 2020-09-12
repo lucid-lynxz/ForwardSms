@@ -6,7 +6,7 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.databinding.ActivityFeishuSettingBinding
-import org.lynxz.forwardsms.para.GlobalImSettingPara
+import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.showToast
 
 /**
@@ -17,7 +17,7 @@ class FeishuSettingActivity : BaseImSettingBindingActivity<ActivityFeishuSetting
     override fun getPageTitle() = "飞书"
 
     override fun initImSettingInfo() {
-        val imSetting = GlobalImSettingPara.imSettingMapLiveData().value?.get(ImType.FeiShu)
+        val imSetting = ImSettingManager.imSettingMapLiveData().value?.get(ImType.FeiShu)
         dataBinding.imSetting = imSetting as? ImSetting.FeishuImSetting
     }
 
@@ -27,7 +27,7 @@ class FeishuSettingActivity : BaseImSettingBindingActivity<ActivityFeishuSetting
         val appSecret = getAndCheckInputValid(edt_app_secret, "请输入飞书应用密钥") ?: return
         val targetUserName = getAndCheckInputValid(edt_target_name, "请输入接收人姓名") ?: return
 
-        GlobalImSettingPara.updateImSetting(ImType.FeiShu) {
+        ImSettingManager.updateImSetting(ImType.FeiShu) {
             val setting = it as ImSetting.FeishuImSetting
             setting.appId = appId
             setting.appSecret = appSecret
