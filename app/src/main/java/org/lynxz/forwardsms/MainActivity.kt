@@ -223,6 +223,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             )
         )
 
+        btn_mock_sms_receive.setOnClickListener { GlobalParaUtil.mockSmsReceived() }
+
         btn_sms_list.setOnClickListener {
             requestPermission(Manifest.permission.READ_SMS)
         }

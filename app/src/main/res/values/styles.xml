@@ -37,6 +37,23 @@
         <item name="android:textColor">@color/text_normal</item>
     </style>
 
+    <!-- 5.0 以后Button去除阴影-->
+    <style name="commonRoundButton" parent="commonView">
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="bl_unEnabled_solid_color">@color/gray</item>
+        <item name="bl_enabled_solid_color">@color/colorPrimary</item>
+        <item name="bl_ripple_enable">true</item>
+        <item name="bl_ripple_color">@color/gray_light</item>
+        <item name="bl_corners_radius">80dp</item>
+    </style>
+
+
     <style name="commonView.textinputlayout">
         <!-- 默认状态提示颜色和字体-->
         <item name="android:textColorHint">#8c8c8c</item>
@@ -74,6 +91,5 @@
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">@android:color/transparent</item>
         <item name="fab_colorPressed">#99FFFFFF</item>
-
     </style>
 </resources>

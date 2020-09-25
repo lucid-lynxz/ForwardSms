@@ -7,4 +7,7 @@
     <color name="text_normal">#333</color>
     <color name="text_sub">#666</color>
     <color name="text_tip">#999</color>
+
+    <color name="gray">#80cdcdcd</color>
+    <color name="gray_light">#80dcdcdc</color>
 </resources>

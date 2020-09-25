@@ -15,12 +15,21 @@
         tools:context=".MainActivity">
 
         <Button
+            android:id="@+id/btn_mock_sms_receive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="模拟收到短信"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
             android:id="@+id/btn_temp_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="测试"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_mock_sms_receive" />
+
 
         <Button
             android:id="@+id/btn_send_msg"

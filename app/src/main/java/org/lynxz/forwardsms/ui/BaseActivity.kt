@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.noober.background.BackgroundLibrary
 import kotlinx.android.synthetic.main.activity_base.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.ui.trans.BaseTransFragment
@@ -36,6 +37,7 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        BackgroundLibrary.inject(this)
         beforeSetContentView()
         val layoutRes = getLayoutRes()
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LRTextImageView">
+        <attr name="lrtiv_icon_src" format="reference" />
+        <attr name="lrtiv_icon_size" format="dimension" />
+        <attr name="lrtiv_enable_ripple" format="boolean" />
+
+        <attr name="lrtiv_text" format="string" />
+        <attr name="lrtiv_text_size" format="dimension" />
+        <attr name="lrtiv_text_color" format="color" />
+    </declare-styleable>
+</resources>

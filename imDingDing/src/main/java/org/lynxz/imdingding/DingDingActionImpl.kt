@@ -65,7 +65,7 @@ object DingDingActionImpl : IIMAction, CoroutineScope by requestScope {
             val result = CommonResult()
             try {
                 // 获取accessToken
-                for (i in 0..3) { // 最多重试试三次
+                for (i in 0..3) { // 最多重试次数 [0,3]
                     ConstantsPara.accessToken = refreshToken()
 
                     if (!ConstantsPara.accessToken.isBlank()) {

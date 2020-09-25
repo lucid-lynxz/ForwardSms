@@ -11,8 +11,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 13
-        versionName "1.6.4"
+        versionCode 14
+        versionName "1.6.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -80,6 +80,7 @@ dependencies {
 
     implementation(libs.switchButton)
     implementation(libs.pickerView)
+    implementation(libs.backgroundShape)
     implementation(libs.floatingActionButton)
 
     // recyclerview adapter

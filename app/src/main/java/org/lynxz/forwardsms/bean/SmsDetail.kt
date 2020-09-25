@@ -4,7 +4,9 @@ import android.telephony.SmsMessage
 import org.lynxz.forwardsms.network.SmsConstantParas
 import java.text.SimpleDateFormat
 
-
+/**
+ *  用于转发的数据类,默认
+ * */
 data class SmsDetail(
     var ts: Long = System.currentTimeMillis(),// 收到短信的时间戳
     var from: String? = "",// 原始发信人
@@ -13,7 +15,9 @@ data class SmsDetail(
     var body: String? = "", // 短信内容
     var status: Int = 0, //  短信状态 -1:接收 0:complete 64:pending 128:failed
     var type: Int = 1, // 1:接收的 2:发出的
-    var read: Int = 0 // 0:未读 1:已读
+    var read: Int = 0,// 0:未读 1:已读
+    var srcType: String = MessageSrcType.SMS, // 数据来源,一般设置为包名即可, 如短信: com.android.mms
+    var forward: Boolean = true // 是否需要进行转发,默认为true
 ) {
     val date: String?
         get() {

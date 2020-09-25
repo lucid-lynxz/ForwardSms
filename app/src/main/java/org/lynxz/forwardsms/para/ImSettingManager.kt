@@ -11,6 +11,7 @@ import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
+import org.lynxz.forwardsms.BuildConfig
 import org.lynxz.forwardsms.SmsApplication
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.ImSettingManager.initPara
@@ -84,23 +85,23 @@ object ImSettingManager {
         initImSettingBySp(ImType.TG)
         initImSettingBySp(ImType.FeiShu)
 
-//        // 兼容旧版,迁移buildConfig中配置的数据
-//        updateImSetting(ImType.DingDing) {
-//            val setting = it as ImSetting.DDImSetting
-//            setting.corpId = BuildConfig.dd_corpid
-//            setting.corpSecret = BuildConfig.dd_corpsecret
-//            setting.agentId = BuildConfig.dd_agent
-//        }
-//        updateImSetting(ImType.TG) {
-//            val setting = it as ImSetting.TGImSetting
-//            setting.botToken = BuildConfig.tg_bottoken
-//            setting.targetUserName = BuildConfig.tg_default_userName
-//        }
-//        updateImSetting(ImType.FeiShu) {
-//            val setting = it as ImSetting.FeishuImSetting
-//            setting.appId = BuildConfig.feishu_appid
-//            setting.appSecret = BuildConfig.feishu_appsecret
-//        }
+        // 兼容旧版,迁移buildConfig中配置的数据
+        updateImSetting(ImType.DingDing) {
+            val setting = it as ImSetting.DDImSetting
+            setting.corpId = BuildConfig.dd_corpid
+            setting.corpSecret = BuildConfig.dd_corpsecret
+            setting.agentId = BuildConfig.dd_agent
+        }
+        updateImSetting(ImType.TG) {
+            val setting = it as ImSetting.TGImSetting
+            setting.botToken = BuildConfig.tg_bottoken
+            setting.targetUserName = BuildConfig.tg_default_userName
+        }
+        updateImSetting(ImType.FeiShu) {
+            val setting = it as ImSetting.FeishuImSetting
+            setting.appId = BuildConfig.feishu_appid
+            setting.appSecret = BuildConfig.feishu_appsecret
+        }
         imSettingMapLiveData.value = imSettingMap
     }
 

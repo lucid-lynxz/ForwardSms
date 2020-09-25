@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author lynxz
- * @version 1.0
+ * @version 1.1
  */
 public class ViewUtil {
 
@@ -131,6 +131,17 @@ public class ViewUtil {
             view.setForeground(typedArray.getDrawable(0));
         } else {
             view.setBackground(typedArray.getDrawable(0));
+        }
+    }
+
+    /**
+     * 设置控件的margin距离, 单位:px
+     */
+    public static void setMargins(View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
         }
     }
 }

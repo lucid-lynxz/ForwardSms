@@ -12,13 +12,20 @@ import org.lynxz.forwardsms.ui.widget.OnePixelActManager
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.LogPersistenceUtil
 import org.lynxz.forwardsms.util.LoggerUtil
+import org.lynxz.forwardsms.validation.SrcTypeVerify
+import org.lynxz.forwardsms.validation.TimeVerify
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 
 class SmsApplication : Application() {
 
+    companion object {
+        lateinit var app: SmsApplication
+    }
+
     override fun onCreate() {
         super.onCreate()
+        app = this
 
         // 开启日志持久化
         LogPersistenceUtil.getInstance()
@@ -31,6 +38,9 @@ class SmsApplication : Application() {
         // 初始化短信监听
         OnePixelActManager.init(this)
         GlobalParaUtil.init(this)
+            .addVerifyActionIfAbsent(TimeVerify)
+            .addVerifyActionIfAbsent(SrcTypeVerify)
+
         ScreenStateViewModel.init(this)
 
         // 与application生命周期保持一致

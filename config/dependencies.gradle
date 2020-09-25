@@ -44,7 +44,6 @@ ext {
     toastyVersion = "1.3.0"
 
     zxingVersion = '3.3.0'
-    backgroundShapeVersion = '1.3.2'
 
     // 视频缓存
     videoCacheVersion = '2.7.1'
@@ -179,7 +178,7 @@ ext {
             toasty                        : "com.github.GrenderG:Toasty:${toastyVersion}",
 
             // [替代shape,直接在xml中设置相关属性](https://github.com/JavaNoober/BackgroundLibrary)
-            backgroundShape               : "com.noober.background:core:$backgroundShapeVersion",
+            backgroundShape               : "com.noober.background:core:1.6.5",
             // 滑动删除
             swipeDelMenuLayout            : "com.github.mcxtzhang:SwipeDelMenuLayout:${swipeDelMenuLayoutVersion}",
             // 滑动返回

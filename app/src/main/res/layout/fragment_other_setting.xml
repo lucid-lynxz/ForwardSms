@@ -1,22 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.othersetting.OtherSettingFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/text_slideshow"
+    <data>
+
+        <variable
+            name="vm"
+            type="org.lynxz.forwardsms.ui.fragment.othersetting.OtherSettingViewModel" />
+
+        <variable
+            name="viewActionHandler"
+            type="org.lynxz.forwardsms.observer.IViewActionHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        tools:context=".ui.fragment.othersetting.OtherSettingFragment">
+
+        <!-- 可转发时间设置 -->
+        <CheckBox
+            android:id="@+id/cbx_forward_time"
+            style="@style/commonView"
+            android:checked="@={vm.enableTimeDurationLiveData}"
+            android:text="可转发时间段"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btn_add_forward_time"
+            style="@style/commonRoundButton"
+            android:layout_marginLeft="10dp"
+            android:onClick="@{(view)->viewActionHandler.onClick(view)}"
+            android:text="添加"
+            app:layout_constraintBottom_toBottomOf="@+id/cbx_forward_time"
+            app:layout_constraintLeft_toRightOf="@+id/cbx_forward_time"
+            app:layout_constraintTop_toTopOf="@+id/cbx_forward_time" />
+
+        <org.lynxz.forwardsms.ui.widget.FlowLayout
+            android:id="@+id/fl_forward_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_forward_time" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{(view)->viewActionHandler.onClick(view)}"
+            android:text="选择时间"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_forward_time"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

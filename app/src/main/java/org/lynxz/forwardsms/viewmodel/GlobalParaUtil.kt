@@ -24,7 +24,9 @@ import org.lynxz.baseimlib.IMManager
 import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
+import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.BuildConfig
+import org.lynxz.forwardsms.bean.MessageSrcType
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.isSameAs
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
@@ -35,8 +37,14 @@ import org.lynxz.forwardsms.ui.widget.SmsHandler
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.ConfigUtil
 import org.lynxz.forwardsms.util.LoggerUtil
+import org.lynxz.forwardsms.util.StringUtil
+import org.lynxz.forwardsms.validation.IForwardVerify
+import org.lynxz.forwardsms.validation.TimeDef
+import org.lynxz.forwardsms.validation.VerifyActionManager
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.addVerifyActionIfAbsent
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.getReceivedSms
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.init
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.removeVerifyAction
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
@@ -46,11 +54,22 @@ import org.lynxz.imtg.TGActionImpl
  * 使用:
  * 1.在application中调用初始化方法 [init]
  * 2. 获取上一次接收到的短信信息 [getReceivedSms]
+ * 3. 通过 [addVerifyActionIfAbsent] 和 [removeVerifyAction] 来 添加/移除 转发条件判定
  * */
 object GlobalParaUtil {
     private const val TAG = "SmsViewModel"
     private var app: Application? = null
     private val smsContentUri: Uri = Uri.parse("content://sms/inbox")
+
+    // 用于自测,生成模拟短信信息
+    fun mockSmsReceived() {
+        val info =
+            "{\"body\":\"【测试信息】当前时间:" +
+                    TimeDef.generateByTimeMs().toString() +
+                    "。\",\"displayFrom\":\"1069129206112106575\",\"forward\":true,\"from\":\"1069129206112106575\",\"read\":0,\"srcType\":\"com.android.mms\",\"status\":0,\"to\":\"HM 1SC\",\"ts\":1601124202000,\"type\":1}"
+        val msg = StringUtil.parseJson<SmsDetail>(info, SmsDetail::class.java)
+        iSmsReceiveObserver.onReceiveSms(msg)
+    }
 
     // 最后收到的短信
     private val smsReceivedLiveData by lazy { MutableLiveData<SmsDetail>() }
@@ -65,10 +84,29 @@ object GlobalParaUtil {
     // contentResolver 中读取的最新的短信
     private var lastSmsInDb: SmsDetail? = null
 
+
+    // 添加转发验证条件
+    fun addVerifyActionIfAbsent(action: IForwardVerify): GlobalParaUtil {
+        VerifyActionManager.addVerifyActionIfAbsent(action)
+        return this
+    }
+
+    // 移除转发验证条件
+    fun removeVerifyAction(action: IForwardVerify): GlobalParaUtil {
+        VerifyActionManager.removeVerifyAction(action)
+        return this
+    }
+
+    // 待转发的消息 liveData
+    // 实际转发操作是在 ForwardService 中
     private val iSmsReceiveObserver = object : ISmsReceiveObserver {
         override fun onReceiveSms(smsDetail: SmsDetail?) {
+            LoggerUtil.w(TAG, "onReceiveSms msg  info0: ${convert2Str(smsDetail)}")
             if (!smsDetail?.body.isNullOrBlank() && enableForwardSms) {
-                smsReceivedLiveData.value = smsDetail
+                smsReceivedLiveData.value = smsDetail?.apply {
+                    forward = VerifyActionManager.isValid(this)
+                    LoggerUtil.w(TAG, "onReceiveSms msg final info: ${convert2Str(smsDetail)}")
+                }
             }
         }
     }
@@ -105,6 +143,7 @@ object GlobalParaUtil {
                     smsReceivedLiveData.postValue(SmsDetail().apply {
                         body = it
                         from = "$title(微信)"
+                        srcType = MessageSrcType.WECHAT
                     })
                 }
             }
@@ -331,6 +370,7 @@ object GlobalParaUtil {
      * 通过通知栏获取并转发微信消息
      */
     fun enableForwardWechat(enable: Boolean) {
+        VerifyActionManager.setSrcTypeState(MessageSrcType.WECHAT, enable)
         if (enable) {
             SmsNotificationListenerService.registerAppObserver(wechatNotificationObserver)
         } else {
@@ -346,5 +386,6 @@ object GlobalParaUtil {
      * */
     fun enableForwardSms(enable: Boolean) {
         enableForwardSms = enable
+        VerifyActionManager.setSrcTypeState(MessageSrcType.SMS, enable)
     }
 }

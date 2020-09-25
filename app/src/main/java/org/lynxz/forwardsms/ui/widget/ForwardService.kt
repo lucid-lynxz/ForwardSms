@@ -30,6 +30,10 @@ class ForwardService : Service() {
 
     // 收到新短信息后转发给服务器
     private val smsObserver = Observer<SmsDetail> {
+        if (!it.forward) { // 不符合转发条件,则不做转发操作
+            return@Observer
+        }
+
         val body = SendMessageReqBean().apply {
             content = it.format()
         }
@@ -38,9 +42,9 @@ class ForwardService : Service() {
         val platformMap = ImSettingManager.imSettingMapLiveData().value
         platformMap?.forEach {
             val type = it.key
-            val setting = it.value
+            val imSetting = it.value
 
-            if (setting?.enable == true) {
+            if (imSetting?.enable == true) {
                 IMManager.sendTextMessage(type, body.duplicate().apply {
                     name = ImSettingManager.getImSetting(type)?.targetUserName
                     imType = type

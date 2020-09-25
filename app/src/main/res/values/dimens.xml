@@ -13,4 +13,7 @@
     <dimen name="text_xlarge">20sp</dimen>
 
     <dimen name="normal_setting_line">50dp</dimen>
+    <dimen name="common_margin">16dp</dimen>
+    <dimen name="common_margin_large">20dp</dimen>
+
 </resources>
