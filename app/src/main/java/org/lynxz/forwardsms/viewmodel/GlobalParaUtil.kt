@@ -144,6 +144,7 @@ object GlobalParaUtil {
                         body = it
                         from = "$title(微信)"
                         srcType = MessageSrcType.WECHAT
+                        forward = VerifyActionManager.isValid(this)
                     })
                 }
             }

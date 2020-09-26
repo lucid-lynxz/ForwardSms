@@ -23,10 +23,10 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/btn_temp_test"
+            android:id="@+id/btn_more_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="测试"
+            android:text="更多设置"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_mock_sms_receive" />
 
@@ -36,8 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="发送消息"
-            app:layout_constraintBaseline_toBaselineOf="@+id/btn_temp_test"
-            app:layout_constraintLeft_toRightOf="@+id/btn_temp_test" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn_more_setting"
+            app:layout_constraintLeft_toRightOf="@+id/btn_more_setting" />
 
 
         <Button

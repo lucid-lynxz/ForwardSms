@@ -259,8 +259,12 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             }
         }
 
+        // 自启动设置
         btn_auto_start.setOnClickListener { BrandUtil.goAutoStartSetting(this) }
-        btn_temp_test.setOnClickListener { activeImTest() }
+        btn_more_setting.setOnClickListener { // 跳转新页面,增加更多设置
+            startActivity(Intent(this, Main2Activity::class.java))
+//            activeImTest()
+        }
     }
 
 
