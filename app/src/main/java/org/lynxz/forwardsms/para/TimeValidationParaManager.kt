@@ -1,16 +1,11 @@
 package org.lynxz.forwardsms.para
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import org.lynxz.forwardsms.SmsApplication
 import org.lynxz.forwardsms.para.TimeValidationParaManager.allTimeDurationLiveData
 import org.lynxz.forwardsms.para.TimeValidationParaManager.enableTimeDurationLiveData
 import org.lynxz.forwardsms.para.TimeValidationParaManager.updateAndSavePara
-import org.lynxz.forwardsms.util.StringUtil
 import org.lynxz.forwardsms.validation.TimeDef
 import org.lynxz.forwardsms.validation.TimeDurationBean
-import org.lynxz.securitysp.ISpJsonUtil
-import org.lynxz.securitysp.SecuritySP
 
 /**
  * 时间配置参数,用于持久化
@@ -21,26 +16,13 @@ import org.lynxz.securitysp.SecuritySP
  * todo:
  * 1. 多个时间段去重判断
  * */
-object TimeValidationParaManager {
-    private const val KEY_TIME_PARA = "sp_key_time_para"
-    private const val KEY_SP_NAME = "sp_timeDurationSettings"
-
+object TimeValidationParaManager :
+    AbsSpSettingInfoManager<TimeValidationParaManager.TimeValidationPara>() {
     // 时间段参数设置类,用于存储sp
-    private data class TimeValidationPara(
+    data class TimeValidationPara(
         val dataList: MutableList<TimeDurationBean> = mutableListOf(), // 时间段信息列表
         var enable: Boolean = false // 是否启用
     )
-
-    private val settingSp by lazy {
-        SecuritySP(SmsApplication.app, KEY_SP_NAME, Context.MODE_PRIVATE).apply {
-            spJsonUtil = object : ISpJsonUtil {
-                override fun <T> parseJson(json: String, cls: Class<out T?>?) =
-                    StringUtil.parseJson<T>(json, cls)
-
-                override fun toJson(obj: Any?) = StringUtil.toJson(obj)
-            }
-        }
-    }
 
     // 所有可编辑的时间段信息
     val allTimeDurationLiveData = MutableLiveData(mutableListOf<TimeDurationBean>())
@@ -48,28 +30,27 @@ object TimeValidationParaManager {
     // 是否启用时间段设置
     val enableTimeDurationLiveData = MutableLiveData(false)
 
-    // 存储在sp中的时间段配置参数
-    private var timeValidationPara: TimeValidationPara
-
     init {
-        timeValidationPara =
-            settingSp.getPreference(
-                KEY_TIME_PARA,
-                TimeValidationPara::class.java,
-                TimeValidationPara()
-            )!!.apply {
-                allTimeDurationLiveData.value = dataList
-                enableTimeDurationLiveData.value = enable
-            }
+        paraBean.apply {
+            allTimeDurationLiveData.value = dataList
+            enableTimeDurationLiveData.value = enable
+        }
     }
+
+    override fun getParaFromSp(paraKey: String) =
+        getSecuritySp().getPreference(
+            paraKey,
+            TimeValidationPara::class.java,
+            TimeValidationPara()
+        )!!
 
     /**
      * 更新数据到sp文件中
      * */
-    fun updateAndSavePara(enableSetting: Boolean = enableTimeDurationLiveData.value ?: false) =
-        settingSp.putPreference(KEY_TIME_PARA, timeValidationPara.apply {
-            enable = enableSetting
-        })
+    fun updateAndSavePara(enableSetting: Boolean = enableTimeDurationLiveData.value ?: false) {
+        paraBean.enable = enableSetting
+        savePara()
+    }
 
     /**
      * 判断指定时间是否在用户设置的可转发时间段内
@@ -80,8 +61,8 @@ object TimeValidationParaManager {
         val timeDef = TimeDef.generateByTimeMs(
             targetTimeMs
         )
-        return !timeValidationPara.enable
-                || timeValidationPara.dataList.isNullOrEmpty()
-                || timeValidationPara.dataList.any { it.isInDuration(timeDef) }
+        return !paraBean.enable
+                || paraBean.dataList.isNullOrEmpty()
+                || paraBean.dataList.any { it.isInDuration(timeDef) }
     }
 }

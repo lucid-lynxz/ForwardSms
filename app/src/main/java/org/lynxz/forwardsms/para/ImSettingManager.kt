@@ -1,6 +1,6 @@
 package org.lynxz.forwardsms.para
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,6 @@ import org.lynxz.baseimlib.actions.IIMAction
 import org.lynxz.baseimlib.bean.ImInitPara
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.BuildConfig
-import org.lynxz.forwardsms.SmsApplication
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.ImSettingManager.initPara
 import org.lynxz.forwardsms.para.ImSettingManager.updateImSetting
@@ -22,40 +21,59 @@ import org.lynxz.forwardsms.util.StringUtil
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
-import org.lynxz.securitysp.ISpJsonUtil
-import org.lynxz.securitysp.SecuritySP
 
 /**
  * 全局参数设置
  * 1. 必须先调用 [initPara] 进行初始化
  * 2. 通过 [updateImSetting] 更新配置信息
  * */
-object ImSettingManager {
-    private const val TAG = "ImSettingManager"
-    private const val KEY_PREFIX = "imsetting_"
+object ImSettingManager : AbsSpSettingInfoManager<ImSettingManager.ImSettingBean>() {
+    data class ImSettingBean(
+        var dd: ImSetting.DDImSetting = ImSetting.DDImSetting(),
+        var feishu: ImSetting.FeishuImSetting = ImSetting.FeishuImSetting(),
+        var tg: ImSetting.TGImSetting = ImSetting.TGImSetting()
+    ) {
+        fun getImSetting(imType: String) = when (imType) {
+            ImType.DingDing -> dd
+            ImType.TG -> tg
+            ImType.FeiShu -> feishu
+            else -> null
+        }
 
-    private lateinit var application: SmsApplication
-    private val imSettingSp by lazy {
-        SecuritySP(
-            application,
-            "sp_imSettings",
-            Context.MODE_PRIVATE
-        ).apply {
-            spJsonUtil = object : ISpJsonUtil {
-                override fun <T> parseJson(json: String, cls: Class<out T?>?) =
-                    StringUtil.parseJson<T>(json, cls)
-
-                override fun toJson(obj: Any?) = StringUtil.toJson(obj)
+        fun updateImSetting(imType: String, imSetting: ImSetting) {
+            when (imType) {
+                ImType.DingDing -> if (imSetting is ImSetting.DDImSetting) dd = imSetting
+                ImType.TG -> if (imSetting is ImSetting.TGImSetting) tg = imSetting
+                ImType.FeiShu -> if (imSetting is ImSetting.FeishuImSetting) feishu = imSetting
             }
+            imSettingMap[imType] = imSetting
+        }
+
+        private val imSettingMap = mutableMapOf<String, ImSetting?>()
+
+        fun getImSettingMap(): MutableMap<String, ImSetting?> {
+            if (imSettingMap.isEmpty()) {
+                imSettingMap[ImType.DingDing] = dd
+                imSettingMap[ImType.FeiShu] = feishu
+                imSettingMap[ImType.TG] = tg
+            }
+            return imSettingMap
         }
     }
+
+    override fun getParaFromSp(paraKey: String): ImSettingBean {
+        return getSecuritySp().getPreference(paraKey, ImSettingBean::class.java, ImSettingBean())!!
+    }
+
+    private const val TAG = "ImSettingManager"
+    private lateinit var application: Application
 
     /**
      * 缓存支持的所有IM及对应的设置信息
      * 在 [initPara] 进行初始化
      * */
     private val imSettingMapLiveData = MutableLiveData<MutableMap<String, ImSetting?>>().apply {
-        value = imSettingMap
+        value = paraBean.getImSettingMap()
     }
 
     /**
@@ -64,20 +82,9 @@ object ImSettingManager {
     fun imSettingMapLiveData(): LiveData<MutableMap<String, ImSetting?>> = imSettingMapLiveData
 
     /**
-     * 缓存支持的所有IM及对应的设置信息
-     * 在 [initPara] 进行初始化
-     * */
-    private val imSettingMap = mutableMapOf<String, ImSetting?>()
-
-    /**
-     * 获取指定im在sp唤醒信息的key名
-     * */
-    private fun getImTypeSpKeyName(imType: String) = "${KEY_PREFIX}$imType"
-
-    /**
      * 初始化配置信息
      * */
-    fun initPara(application: SmsApplication) {
+    fun initPara(application: Application) {
         this.application = application
 
         // 遍历支持的平台,并从sp中提取配置信息,并按需刷新token等信息
@@ -102,7 +109,7 @@ object ImSettingManager {
             setting.appId = BuildConfig.feishu_appid
             setting.appSecret = BuildConfig.feishu_appsecret
         }
-        imSettingMapLiveData.value = imSettingMap
+        imSettingMapLiveData.value = paraBean.getImSettingMap()
     }
 
     /**
@@ -110,24 +117,10 @@ object ImSettingManager {
      * 若之前未配置过,则返回null
      * */
     private fun initImSettingBySp(imType: String): ImSetting? {
-        val keyName = getImTypeSpKeyName(imType)
-        val setting =
-            when (imType) {
-                ImType.DingDing ->
-                    imSettingSp.getPreference(keyName, ImSetting.DDImSetting::class.java, null)
-                ImType.TG ->
-                    imSettingSp.getPreference(keyName, ImSetting.TGImSetting::class.java, null)
-                ImType.FeiShu ->
-                    imSettingSp.getPreference(keyName, ImSetting.FeishuImSetting::class.java, null)
-                else -> null
-            }
-
-        setting?.let {
-            imSettingMap[imType] = it
-            activeIm(imType, it.enable)
+        return paraBean.getImSetting(imType)?.apply {
+            paraBean.updateImSetting(imType, this)
+            activeIm(imType, enable)
         }
-
-        return setting
     }
 
     /**
@@ -135,14 +128,13 @@ object ImSettingManager {
      * 按需进行im刷新或者禁用
      * */
     fun updateImSetting(imType: String, recookImSettingPara: RecookImSettingPara) {
-        val imSetting = imSettingMap[imType] ?: ImSetting.generateDefaultImSetting(imType)
+        val imSetting = paraBean.getImSetting(imType) ?: ImSetting.generateDefaultImSetting(imType)
 
         val oriEnable = imSetting.enable
         recookImSettingPara(imSetting)
-
-        imSettingMap[imType] = imSetting
-        imSettingSp.putPreference(getImTypeSpKeyName(imType), imSetting)
-        imSettingMapLiveData.value = imSettingMap
+        paraBean.updateImSetting(imType, imSetting)
+        savePara()
+        imSettingMapLiveData.value = paraBean.getImSettingMap()
 
         // 状态有发生变化时,更新
         if (imSetting.enable != oriEnable) {
@@ -154,7 +146,7 @@ object ImSettingManager {
      * 获取指定imType的配置文件
      * @param imType 平台类型,参考 [ImType]
      * */
-    fun getImSetting(imType: String) = imSettingMap[imType]
+    fun getImSetting(imType: String) = paraBean.getImSetting(imType)
 
     /**
      * 启用/禁用im
@@ -168,7 +160,7 @@ object ImSettingManager {
         }
 
         // 启用im: 重新初始化及刷新token等数据
-        val imSetting = imSettingMap[imType] ?: return false
+        val imSetting = paraBean.getImSetting(imType) ?: return false
         imSetting.enable = active
 
         var impl: IIMAction? = null

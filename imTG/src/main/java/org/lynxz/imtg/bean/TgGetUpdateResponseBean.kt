@@ -8,7 +8,7 @@ package org.lynxz.imtg.bean
  * {
  *     "ok": true,
  *     "result": [{
- *         "update_id": 629414424,
+ *         "update_id": 629414425,
  *         "channel_post": { // 来自于channel
  *             "message_id": 22,
  *             "chat": {
@@ -24,16 +24,16 @@ package org.lynxz.imtg.bean
  *         "message": { // 普通消息,直接通过机器人聊天发送的消息
  *             "message_id": 8,
  *             "from": {
- *                 "id": 417044892, // 发送人 id
+ *                 "id": 417044893, // 发送人 id
  *                 "is_bot": false, // 发送人是否是bot
  *                 "first_name": "\u4f60\u8bf4\u5f97\u5bf9tg", // 发送人昵称
  *                 "username": "us3jxjk8d", // user name
  *                 "language_code": "en"
  *             },
  *             "chat": {
- *                 "id": 417044892,
+ *                 "id": 417044893,
  *                 "first_name": "\u4f60\u8bf4\u5f97\u5bf9tg",
- *                 "username": "us3jxjk8d",
+ *                 "username": "us3jxjk7d",
  *                 "type": "private"
  *             },
  *             "date": 1570239945,
@@ -44,7 +44,7 @@ package org.lynxz.imtg.bean
  *         "message": {
  *             "message_id": 9,
  *             "from": {
- *                 "id": 417044892,
+ *                 "id": 417044893,
  *                 "is_bot": false,
  *                 "first_name": "\u4f60\u8bf4\u5f97\u5bf9tg",
  *                 "username": "us3jxjk8d",

@@ -17,10 +17,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * version: 1.1
+ */
 public class StringUtil {
     private static final String TAG = "StringUtil";
-    private static Gson mGson = new Gson();
-    private static Gson mFormatGson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson mGson = MyGsonObjectTypeAdapter.assign2Gson(new Gson());
+    private static Gson mFormatGson = MyGsonObjectTypeAdapter.assign2Gson(new GsonBuilder().setPrettyPrinting().create());
 
     /**
      * 判断字符串是否为空

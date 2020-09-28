@@ -15,7 +15,7 @@ package org.lynxz.imtg.bean
  *             "username": "lynxzz_message_bot"
  *         },
  *         "chat": { // 接收方信息
- *             "id": 417044892,
+ *             "id": 417044893,
  *             "first_name": "\u4f60\u8bf4\u5f97\u5bf9tg",
  *             "username": "us3jxjk8d",
  *             "type": "private" // 个人聊天,对应的还有 channel, group,supergroup

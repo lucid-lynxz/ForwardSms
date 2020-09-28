@@ -45,6 +45,16 @@ android {
     dataBinding {
         enabled true
     }
+
+    // 自定义生成的apk名称
+    android.applicationVariants.all { variant ->
+        // 指定输出目录
+        // variant.getPackageApplication().outputDirectory = new File(project.rootDir.absolutePath + "/apks")
+        // 指定输入文件名称
+        variant.outputs.all {
+            outputFileName = "ForwardSMS_${flavorName}_${buildType.name}_v${defaultConfig.versionName}.apk"
+        }
+    }
 }
 
 dependencies {

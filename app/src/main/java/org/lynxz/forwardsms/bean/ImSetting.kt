@@ -5,7 +5,7 @@ import org.lynxz.baseimlib.bean.ImType
 /**
  * 各转发平台配置参数信息
  * */
-sealed class ImSetting(
+open class ImSetting(
     val imType: String, // im标志,参考 [ImType]
     var enable: Boolean = false, // 是否允许转发到该IM
     var targetUserName: String = "" // 接收该消息的用户名
