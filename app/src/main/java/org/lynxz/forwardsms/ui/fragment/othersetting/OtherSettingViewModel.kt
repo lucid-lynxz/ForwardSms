@@ -4,6 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.lynxz.forwardsms.no
+import org.lynxz.forwardsms.para.BatteryListenerManager
 import org.lynxz.forwardsms.para.TimeValidationParaManager
 import org.lynxz.forwardsms.validation.TimeDef
 import org.lynxz.forwardsms.validation.TimeDurationBean
@@ -114,4 +115,7 @@ class OtherSettingViewModel : ViewModel() {
             allTimeDurationLiveData.value = list
         }
     }
+
+    // 低电量监控
+    val batteryLiveData = BatteryListenerManager.batterySettingLiveData
 }

@@ -4,16 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.internal.bind.ObjectTypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,27 +31,27 @@ public final class MyGsonObjectTypeAdapter extends TypeAdapter<Object> {
      * 通过反射, 将自定义的 ObjectTypeAdapter 注入到 Gson 对象中,然后返回 Gson
      */
     public static Gson assign2Gson(Gson gson) {
-        try {
-            Field factories = Gson.class.getDeclaredField("factories");
-            factories.setAccessible(true);
-            Object o = factories.get(gson);
-            Class<?>[] declaredClasses = Collections.class.getDeclaredClasses();
-            for (Class<?> c : declaredClasses) {
-                if ("java.util.Collections$UnmodifiableList".equals(c.getName())) {
-                    Field listField = c.getDeclaredField("list");
-                    listField.setAccessible(true);
-                    List<TypeAdapterFactory> list = (List<TypeAdapterFactory>) listField.get(o);
-                    int i = list == null ? -1 : list.indexOf(ObjectTypeAdapter.FACTORY);
-                    if (i >= 0) {
-                        list.set(i, MyGsonObjectTypeAdapter.FACTORY);
-                    }
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
+//        try {
+//            Field factories = Gson.class.getDeclaredField("factories");
+//            factories.setAccessible(true);
+//            Object o = factories.get(gson);
+//            Class<?>[] declaredClasses = Collections.class.getDeclaredClasses();
+//            for (Class<?> c : declaredClasses) {
+//                if ("java.util.Collections$UnmodifiableList".equals(c.getName())) {
+//                    Field listField = c.getDeclaredField("list");
+//                    listField.setAccessible(true);
+//                    List<TypeAdapterFactory> list = (List<TypeAdapterFactory>) listField.get(o);
+//                    int i = list == null ? -1 : list.indexOf(ObjectTypeAdapter.FACTORY);
+//                    if (i >= 0) {
+//                        list.set(i, MyGsonObjectTypeAdapter.FACTORY);
+//                    }
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//        }
         return gson;
     }
 

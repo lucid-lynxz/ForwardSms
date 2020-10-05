@@ -2,6 +2,7 @@ package org.lynxz.forwardsms.bean
 
 import android.telephony.SmsMessage
 import org.lynxz.forwardsms.network.SmsConstantParas
+import org.lynxz.forwardsms.validation.VerifyActionManager
 import java.text.SimpleDateFormat
 
 /**
@@ -19,6 +20,11 @@ data class SmsDetail(
     var srcType: String = MessageSrcType.SMS, // 数据来源,一般设置为包名即可, 如短信: com.android.mms
     var forward: Boolean = true // 是否需要进行转发,默认为true
 ) {
+
+    init {
+        forward = VerifyActionManager.isValid(this)
+    }
+
     val date: String?
         get() {
             return SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ts)

@@ -14,18 +14,16 @@ import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.noober.background.drawable.DrawableCreator
 import kotlinx.android.synthetic.main.fragment_other_setting.*
-import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.*
 import org.lynxz.forwardsms.databinding.FragmentOtherSettingBinding
 import org.lynxz.forwardsms.observer.IViewActionHandler
-import org.lynxz.forwardsms.otherwise
-import org.lynxz.forwardsms.showToast
+import org.lynxz.forwardsms.para.BatteryListenerManager
 import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.widget.LRTextImageView
 import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ResourceUtil
 import org.lynxz.forwardsms.util.ScreenUtil
 import org.lynxz.forwardsms.validation.TimeDurationBean
-import org.lynxz.forwardsms.yes
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -196,6 +194,12 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
             tv_time, btn_add_forward_time -> { // 添加时间段
                 vm.chooseTimeDurationForEditing(-1)
                 timePickView.show(true) // 显示时间选择面板
+            }
+
+            btn_confirm_low_battery_listener -> { // 设置电量监听
+                BatteryListenerManager.updateAndSave()
+                activity?.hideKeyboard()
+                edt_low_battery.clearFocus()
             }
         }
     }

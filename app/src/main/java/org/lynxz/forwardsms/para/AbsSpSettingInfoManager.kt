@@ -57,3 +57,9 @@ abstract class AbsSpSettingInfoManager<T> {
         getSecuritySp().putPreference(getParaKey(), paraBean)
     }
 }
+
+
+/**
+ * 更新现有配置
+ * */
+typealias RecookPara<T> = (para: T) -> Unit

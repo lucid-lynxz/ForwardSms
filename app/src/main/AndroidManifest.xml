@@ -60,6 +60,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.BatteryLevelChangeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".ui.widget.SmsNotificationListenerService"
             android:label="@string/app_name"

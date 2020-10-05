@@ -31,6 +31,7 @@ import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.isSameAs
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
+import org.lynxz.forwardsms.para.BatteryListenerManager
 import org.lynxz.forwardsms.receiver.SmsReceiver
 import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.widget.SmsHandler
@@ -206,6 +207,15 @@ object GlobalParaUtil {
                 // )
             }
         }
+
+        // 低电量监听
+        BatteryListenerManager.batteryInfoLiveData.observeForever {
+            smsReceivedLiveData.value = SmsDetail().apply {
+                from = "低电量监听"// 原始发信人
+                body = "当前电量 ${it.level}%,请及时充电" // 短信内容
+                srcType = MessageSrcType.BATTERY_LISTENER
+            }
+        }
         return this
     }
 
@@ -221,8 +231,6 @@ object GlobalParaUtil {
     fun loadSmsHistory(maxCount: Int = 10) {
         val list = reloadSmsHistory(maxCount)
         smsHistoryLiveData.postValue(list)
-//        if (list.isNotEmpty()) {
-//        }
     }
 
     /**
