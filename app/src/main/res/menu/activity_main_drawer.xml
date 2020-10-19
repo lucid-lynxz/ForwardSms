@@ -5,14 +5,14 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_forward_setting"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_forward_setting" />
-
-        <item
             android:id="@+id/nav_sms"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_sms" />
+
+        <item
+            android:id="@+id/nav_forward_setting"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/menu_forward_setting" />
 
         <item
             android:id="@+id/nav_other_setting"

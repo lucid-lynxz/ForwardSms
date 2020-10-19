@@ -95,6 +95,7 @@ dependencies {
 
     // recyclerview adapter
     implementation 'com.github.angcyo:DslAdapter:2.5.1'
+    implementation(libs.baseRecyclerViewAdapterHelperX)
 }
 
 

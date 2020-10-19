@@ -22,9 +22,9 @@ abstract class BaseRecyclerViewFragment : BaseFragment() {
     var dslAdapter: DslAdapter = DslAdapter().apply {
         dslAdapterStatusItem = AppAdapterStatusItem()
         this.setAdapterStatus(DslAdapterStatusItem.ADAPTER_STATUS_EMPTY)
-        this.dslAdapterStatusItem.onRefresh = {
-            onRefresh()
-        }
+//        this.dslAdapterStatusItem.onRefresh = {
+//            onRefresh()
+//        }
     }
 
     final override fun getLayoutRes() = R.layout.fragment_common_recyclerview
@@ -56,7 +56,7 @@ abstract class BaseRecyclerViewFragment : BaseFragment() {
     /**
      * 刷新
      * */
-    abstract fun onRefresh();
+    abstract fun onRefresh()
 
 
     open fun renderAdapter(render: DslAdapter.() -> Unit) {

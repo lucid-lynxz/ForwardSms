@@ -3,9 +3,7 @@ package org.lynxz.forwardsms.ui.widget
 import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
-import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.util.LoggerUtil
 
 /**
@@ -45,7 +43,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
         private const val TAG = "SmsNotificationListenerService"
 
         // 短信监听
-        private var smsObserver: ISmsReceiveObserver? = null
+//        private var smsObserver: ISmsReceiveObserver? = null
 
         // 普通app通知栏信息监听(包括短信)
         private var appObserver: IAppNotificationObserver? = null
@@ -53,9 +51,9 @@ class SmsNotificationListenerService : NotificationListenerService() {
         /**
          * 注册短信内容回调监听器
          * */
-        fun registerSmsObserver(observer: ISmsReceiveObserver?) {
-            this.smsObserver = observer
-        }
+//        fun registerSmsObserver(observer: ISmsReceiveObserver?) {
+//            this.smsObserver = observer
+//        }
 
         /**
          * 注册普通app通知回调监听器
@@ -77,26 +75,25 @@ class SmsNotificationListenerService : NotificationListenerService() {
 //        sbn.packageName // 应用通知的包名
 
         val pkgName = sbn?.packageName
-        LoggerUtil.d(TAG, "onNotificationPosted $pkgName $appObserver")
         if (pkgName.isNullOrBlank()) {
             return
         }
-
         appObserver?.onReceiveAppNotification(pkgName, sbn, rankingMap)
-        if (pkgName != "com.android.mms") {
-            return
-        }
-        sbn.postTime // 1573881489793
-        LoggerUtil.d(TAG, "$sbn $rankingMap")
-        val notification = sbn.notification
-        notification?.tickerText?.toString()?.let {
-            if (it.isNotBlank()) {
-                LoggerUtil.d(TAG, "tickerText: $it")
-                smsObserver?.onReceiveSms(SmsDetail().apply {
-                    body = it
-                })
-            }
-        }
+
+//        if (pkgName != "com.android.mms") {
+//            return
+//        }
+//        sbn.postTime // 1573881489793
+//        LoggerUtil.d(TAG, "$sbn $rankingMap")
+//        val notification = sbn.notification
+//        notification?.tickerText?.toString()?.let {
+//            if (it.isNotBlank()) {
+//                LoggerUtil.d(TAG, "tickerText: $it")
+//                smsObserver?.onReceiveSms(SmsDetail().apply {
+//                    body = it
+//                })
+//            }
+//        }
 
 
 //        if (content.isNullOrBlank()) {
@@ -154,8 +151,6 @@ class SmsNotificationListenerService : NotificationListenerService() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return resultMap
-
     }
 }

@@ -30,6 +30,7 @@ object BatteryListenerManager :
      * 低电量监听
      * */
     data class BatterySettingBean(
+        var enableFullyChargeNotify: ObservableBoolean = ObservableBoolean(false), // 是否电量充满电时提醒
         var enable: ObservableBoolean = ObservableBoolean(false), // 是否启用低电量监控
         var lowLevelStr: String = "20" // 低电量值,单位:%, 默认为 20%
     ) {
@@ -58,8 +59,14 @@ object BatteryListenerManager :
     private val batteryLevelChangeReceiver =
         BatteryLevelChangeReceiver(object : IOnBatteryLevelChangedObserver {
             override fun onBatteryChanged(batteryInfo: BatteryInfoBean) {
+                // 低电量提醒: 自由启用时才会回调
                 if (!batteryInfo.charging && batteryInfo.level <= paraBean.getLowLevelValue()) {
 //                if (batteryInfo.level <= paraBean.getLowLevelValue()) {
+                    innerBatteryInfoLiveData.value = batteryInfo
+                }
+
+                // 前电量充满时提醒
+                if (paraBean.enableFullyChargeNotify.get() && batteryInfo.charging && batteryInfo.level >= 100) {
                     innerBatteryInfoLiveData.value = batteryInfo
                 }
             }
@@ -71,7 +78,16 @@ object BatteryListenerManager :
         paraBean.enable.addOnPropertyChangedCallback(object :
             Observable.OnPropertyChangedCallback() {
             override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
-                toggleBatterReceiver(paraBean.enable.get())
+                val enable = paraBean.enable.get()
+                toggleBatterReceiver(enable)
+                savePara()
+            }
+        })
+
+        paraBean.enableFullyChargeNotify.addOnPropertyChangedCallback(object :
+            Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+                savePara()
             }
         })
     }

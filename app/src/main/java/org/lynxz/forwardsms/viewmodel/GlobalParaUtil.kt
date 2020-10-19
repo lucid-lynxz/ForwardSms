@@ -29,6 +29,7 @@ import org.lynxz.forwardsms.BuildConfig
 import org.lynxz.forwardsms.bean.MessageSrcType
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.isSameAs
+import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.para.BatteryListenerManager
@@ -76,6 +77,13 @@ object GlobalParaUtil {
     private val smsReceivedLiveData by lazy { MutableLiveData<SmsDetail>() }
 
     fun getReceivedSms(): LiveData<SmsDetail> = smsReceivedLiveData
+
+    /**
+     * 发送新的消息内容
+     * */
+    fun postSmsDetail(smsDetail: SmsDetail) {
+        smsReceivedLiveData.postValue(smsDetail)
+    }
 
     // 短信列表
     private val smsHistoryLiveData by lazy { MutableLiveData<List<SmsDetail>>() }
@@ -211,8 +219,9 @@ object GlobalParaUtil {
         // 低电量监听
         BatteryListenerManager.batteryInfoLiveData.observeForever {
             smsReceivedLiveData.value = SmsDetail().apply {
-                from = "低电量监听"// 原始发信人
-                body = "当前电量 ${it.level}%,请及时充电" // 短信内容
+                from = "手机电量监听"// 原始发信人
+                body =
+                    "${SmsConstantParas.phoneTag} 当前电量: ${it.level}%, ${if (it.level >= 100) "记得拔掉电源" else "请及时充电"}" // 短信内容
                 srcType = MessageSrcType.BATTERY_LISTENER
             }
         }
@@ -229,8 +238,7 @@ object GlobalParaUtil {
         arrayOf("_id", "address", "person", "body", "date", "status", "type", "read")
 
     fun loadSmsHistory(maxCount: Int = 10) {
-        val list = reloadSmsHistory(maxCount)
-        smsHistoryLiveData.postValue(list)
+        smsHistoryLiveData.postValue(reloadSmsHistory(maxCount))
     }
 
     /**

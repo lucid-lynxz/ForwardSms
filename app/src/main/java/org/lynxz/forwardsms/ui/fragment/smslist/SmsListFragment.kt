@@ -9,17 +9,14 @@ import android.provider.Settings
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.angcyo.dsladapter.DslAdapterStatusItem
 import com.angcyo.dsladapter.dslItem
 import kotlinx.android.synthetic.main.fragment_common_recyclerview.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.convertDateFormat
-import org.lynxz.forwardsms.showToast
 import org.lynxz.forwardsms.ui.fragment.BaseRecyclerViewFragment
 import org.lynxz.forwardsms.ui.trans.IPermissionCallback
-import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 
@@ -33,14 +30,40 @@ class SmsListFragment : BaseRecyclerViewFragment() {
         loadSmsHistory()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // 设置页面权限授予后,返回本页面时检查
+        // 仅当权限授予后,再执行后续操作,避免反复弹框
+        if (shouldCheckPermissionAgainWhenOnResume && isPermissionGranted(
+                *arrayOf(
+                    Manifest.permission.RECEIVE_SMS,
+                    Manifest.permission.READ_SMS
+                )
+            )
+        ) {
+            requestSmsPermission()
+        }
+        shouldCheckPermissionAgainWhenOnResume = false
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onAfterInitBaseLayout() {
+        // 抛到主线程队列最后,发起权限申请
+        srf_common.post { requestSmsPermission() }
+    }
+
+    /**
+     * 申请读取短信权限
+     * */
+    private fun requestSmsPermission() {
         checkSmsPermission(
             arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
             "获取短信列表需要以下权限:\n读取短信, 通知类短信\n请到设置页面进行启用"
         ) {
+            showTipInfo(false)
             loadSmsHistory()
-            GlobalParaUtil.getSmsHistory().observe(this,
+            GlobalParaUtil.getSmsHistory().observe(
+                this,
                 Observer<List<SmsDetail>> { data ->
                     val size = data?.size ?: 0
                     val isEmpty = size == 0
@@ -84,8 +107,8 @@ class SmsListFragment : BaseRecyclerViewFragment() {
                 object : IPermissionCallback {
                     override fun onRequestResult(permission: PermissionResultInfo) {
                         val showTipDialog =
-                            !permission.granted && permission.shouldShowRequestPermissionRationale
-                        if (!showTipDialog) {
+                            !permission.granted && !permission.shouldShowRequestPermissionRationale
+                        if (showTipDialog) {
                             showPermissionSettingTipDialog("权限申请", requestPermissionReason)
                         }
                     }
@@ -112,7 +135,11 @@ class SmsListFragment : BaseRecyclerViewFragment() {
         }
     }
 
+    // 权限申请提示dialog是否显示中
     private var isDialogShowing = false
+
+    // 权限申请时若跳转到其他设置页面,返回后需要再次检查权限
+    private var shouldCheckPermissionAgainWhenOnResume = false
 
     /**
      * 跳转到设置页面
@@ -126,6 +153,7 @@ class SmsListFragment : BaseRecyclerViewFragment() {
         }
             .setPositiveButton(android.R.string.yes) { _, which ->
                 try {
+                    shouldCheckPermissionAgainWhenOnResume = true
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     intent.data = Uri.parse("package:${activity!!.packageName}")
                     startActivity(intent)

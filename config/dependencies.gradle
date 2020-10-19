@@ -149,6 +149,7 @@ ext {
                implementation(libs.baseRecyclerViewAdapterHelper)
              */
             baseRecyclerViewAdapterHelper : "com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50",
+            baseRecyclerViewAdapterHelperX: "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4",
 
             recyclerviewfastscroller      : "xyz.danoz:recyclerviewfastscroller:${recyclerviewfastscrollerVersion}",
             searchableSpinner             : "gr.escsoft.michaelprimez.searchablespinner:SearchableSpinner:1.0.9",
