@@ -18,6 +18,7 @@ import org.lynxz.forwardsms.*
 import org.lynxz.forwardsms.databinding.FragmentOtherSettingBinding
 import org.lynxz.forwardsms.observer.IViewActionHandler
 import org.lynxz.forwardsms.para.BatteryListenerManager
+import org.lynxz.forwardsms.para.TimeValidationParaManager
 import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.widget.LRTextImageView
 import org.lynxz.forwardsms.util.LoggerUtil
@@ -30,7 +31,7 @@ import java.util.*
 
 /**
  * 扩展设置项
- * 如: 低电量提醒,来电提醒等
+ * 如: 可转发时间段设置, 低电量提醒,来电提醒等
  * */
 class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
     IViewActionHandler {
@@ -67,6 +68,42 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
         vm.enableAddTimeDurationLiveData.observe(this,
             Observer<Boolean> { enable -> btn_add_forward_time.isEnabled = enable }
         )
+
+        // 状态变化是,保存数据
+        vm.enableDateLiveData.observe(
+            this,
+            Observer { TimeValidationParaManager.updateAndSavePara() }
+        )
+
+        // 是否启用不可转发日期设置
+        vm.allDateLiveData.observe(this, Observer { validateDate ->
+            fl_forward_date.removeAllViews()
+            (1..7).forEach { weekDayIndex ->
+                fl_forward_date.addView(
+                    LRTextImageView(activity!!)
+                        .updateText("周$weekDayIndex".replace("周7", "周日"))
+                        .updateImage(if (TimeValidationParaManager.isInWeekDays(weekDayIndex)) R.drawable.ic_checked_24 else R.drawable.ic_uncheck_24)
+                        .apply {
+                            tag = weekDayIndex
+                            setImageOnClickListener(View.OnClickListener { iv ->
+                                val tagWeekDayIndex: Int = tag as Int
+                                vm.enableDateLiveData.value?.yes {
+                                    vm.allDateLiveData.value?.let {
+                                        if (it.contains(tagWeekDayIndex)) {
+                                            it.remove(tagWeekDayIndex)
+                                        } else {
+                                            it.add(tagWeekDayIndex)
+                                        }
+                                        vm.allDateLiveData.postValue(it)
+                                    }
+                                    TimeValidationParaManager.updateAndSavePara() // 保存数据
+                                }
+                            })
+                        }
+                )
+            }
+        })
+
 
         // 添加所有时间段配置
         vm.allTimeDurationLiveData.observe(this,

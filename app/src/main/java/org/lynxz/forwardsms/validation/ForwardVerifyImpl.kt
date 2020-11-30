@@ -4,10 +4,11 @@ import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.para.TimeValidationParaManager
 
 /**
- * 验证当前是否在可转发的时间段内
+ * 验证当前是否在可转发的时间段和日期内
  * */
 object TimeVerify : IForwardVerify {
-    override fun verify(smsDetail: SmsDetail) = TimeValidationParaManager.isInTimeDuration()
+    override fun verify(smsDetail: SmsDetail) =
+        TimeValidationParaManager.isInTimeDuration() && TimeValidationParaManager.isInWeekDays()
 }
 
 /**

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="vm"
             type="org.lynxz.forwardsms.ui.fragment.othersetting.OtherSettingViewModel" />
@@ -49,14 +51,33 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cbx_forward_time" />
 
+        <!-- 不可转发日期设置 -->
+        <CheckBox
+            android:id="@+id/cbx_forward_date"
+            style="@style/commonView"
+            android:checked="@={vm.enableDateLiveData}"
+            android:text="可转发日期"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fl_forward_time" />
+
+        <org.lynxz.forwardsms.ui.widget.FlowLayout
+            android:id="@+id/fl_forward_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_margin"
+            android:layout_marginRight="@dimen/common_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_forward_date" />
+
         <!--  通知栏消息监听及转发  -->
         <CheckBox
             android:id="@+id/cbx_notification_pkg"
             style="@style/commonView"
             android:checked="@={vm.enableTimeDurationLiveData}"
-            android:text="通知栏消息监听"
+            android:text="通知栏消息监听(未实现)"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fl_forward_time" />
+            app:layout_constraintTop_toBottomOf="@+id/fl_forward_date" />
 
         <TextView
             android:id="@+id/btn_add_notification_pkg"

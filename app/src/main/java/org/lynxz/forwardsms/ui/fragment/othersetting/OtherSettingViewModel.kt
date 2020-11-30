@@ -14,9 +14,12 @@ class OtherSettingViewModel : ViewModel() {
 
     // 所有可编辑的时间段信息
     val allTimeDurationLiveData = TimeValidationParaManager.allTimeDurationLiveData
+    val allDateLiveData = TimeValidationParaManager.allDateLiveData
 
     // 是否启用时间段设置
     val enableTimeDurationLiveData = TimeValidationParaManager.enableTimeDurationLiveData
+    // 是否启用可转发星期几设置
+    val enableDateLiveData = TimeValidationParaManager.enableDateLiveData
 
     // 当前正在编辑的时间段对象序号, -1表示新增的
     private var selectTimeDurationIndex = -1
