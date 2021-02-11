@@ -1,8 +1,8 @@
-// configVersion: 41
-// date: 2020.09.07
-// description: 添加 floatingActionButton
+// configVersion: 43
+// date: 2021.02.11
+// description: 添加 javassist
 ext {
-    gradleToolVersion = '3.3.2'
+    gradleToolVersion = '4.1.1'
 
     // Android
     androidMinSdkVersion = 21
@@ -12,9 +12,9 @@ ext {
     androidSupportVersion = "28.0.0"
 
     // androidX
-    androidSupportVersionX = '1.1.0'
+    androidSupportVersionX = '1.2.0'
     androidLegacyVersionX = '1.0.0'
-    constraintLayoutVersionX = '1.1.3'
+    constraintLayoutVersionX = '2.0.4'
 
     testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 
@@ -29,8 +29,8 @@ ext {
     siyamedShapeIamgeviewVersion = '0.9.3@aar'
     ShimmerRecyclerViewVersion = '1.3'
 
-    kotlinLibVersion = '1.3.61'
-    ktxCoreVersion = '1.2.0'
+    kotlinLibVersion = '1.4.30'
+    ktxCoreVersion = '1.3.2'
     kotlinxCoroutinesVersion = '1.1.1'
 
     glideVersion = "4.9.0"
@@ -103,9 +103,9 @@ ext {
     testRunnerVersion = '1.0.2'
     testRulesVersion = '1.0.2'
 
-    jUnitExtVersionX = '1.1.1'
+    jUnitExtVersionX = '1.1.2'
     testRunnerVersionX = '1.2.0'
-    espressoVersionX = '3.2.0'
+    espressoVersionX = '3.3.0'
 
 
     libs = [
@@ -130,6 +130,7 @@ ext {
             roomCompiler                  : "android.arch.persistence.room:compiler:$roomVersion",
 
             // androidX 库
+            annotationX                   : "androidx.annotation:annotation:1.1.0",
             appcompatX                    : "androidx.appcompat:appcompat:${androidSupportVersionX}",
             supportV4X                    : "androidx.legacy:legacy-support-v4:${androidLegacyVersionX}",
             constraintLayoutX             : "androidx.constraintlayout:constraintlayout:${constraintLayoutVersionX}",
@@ -295,6 +296,7 @@ ext {
 
             lottie                        : "com.airbnb.android:lottie:${lottieVersion}",
 
+            googleMaterial                : "com.google.android.material:material:1.2.1",
             // 水平和圆形进度条:https://github.com/zhanghai/MaterialProgressBar
             materialprogressbar           : "me.zhanghai.android.materialprogressbar:library:${materialprogressbarVersion}",
             // 分步进度条:https://github.com/kofigyan/StateProgressBar
@@ -331,6 +333,7 @@ ext {
             baiduMobStat                  : "com.baidu.mobstat:mtj-sdk-circle:${baiduMobStatVersion}",
             amapLocation                  : "com.amap.api:location:${amapLocationVersion}",
 
+            javassist                     : "org.javassist:javassist:3.27.0-GA",
 
             // 个人库
             /*
