@@ -13,7 +13,8 @@ import org.lynxz.forwardsms.para.BatteryListenerManager.batteryInfoLiveData
 import org.lynxz.forwardsms.para.BatteryListenerManager.batterySettingLiveData
 import org.lynxz.forwardsms.para.BatteryListenerManager.updateAndSave
 import org.lynxz.forwardsms.receiver.BatteryLevelChangeReceiver
-import org.lynxz.forwardsms.util.LoggerUtil
+
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 低电量监听

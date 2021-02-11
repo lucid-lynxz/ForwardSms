@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lynxz.utils.log.LoggerUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ import java.util.List;
  */
 public class StringUtil {
     private static final String TAG = "StringUtil";
-    private static Gson mGson = MyGsonObjectTypeAdapter.assign2Gson(new Gson());
-    private static Gson mFormatGson = MyGsonObjectTypeAdapter.assign2Gson(new GsonBuilder().setPrettyPrinting().create());
+    private static final Gson mGson = MyGsonObjectTypeAdapter.assign2Gson(new Gson());
+    private static final Gson mFormatGson = MyGsonObjectTypeAdapter.assign2Gson(new GsonBuilder().setPrettyPrinting().create());
 
     /**
      * 判断字符串是否为空

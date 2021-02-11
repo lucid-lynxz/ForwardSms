@@ -27,10 +27,10 @@ import org.lynxz.forwardsms.ui.BaseActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.util.BrandUtil
-import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
+import org.lynxz.utils.log.LoggerUtil
 
 
 /**

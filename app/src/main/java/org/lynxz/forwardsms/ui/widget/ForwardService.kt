@@ -10,9 +10,10 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.para.ImSettingManager
-import org.lynxz.forwardsms.util.LoggerUtil
+
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 开启service用于转发消息到IM

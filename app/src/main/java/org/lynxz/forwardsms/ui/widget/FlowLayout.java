@@ -6,7 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import org.lynxz.forwardsms.util.LoggerUtil;
+import org.lynxz.utils.log.LoggerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,11 +98,11 @@ public class FlowLayout extends RelativeLayout {
     /**
      * 存储所有的View，按行记录
      */
-    private List<List<View>> mAllViews = new ArrayList<>();
+    private final List<List<View>> mAllViews = new ArrayList<>();
     /**
      * 记录每一行的最大高度
      */
-    private List<Integer> mLineHeight = new ArrayList<>();
+    private final List<Integer> mLineHeight = new ArrayList<>();
 
     // 存储每一行所有的childView
     List<View> lineViews = new ArrayList<>();

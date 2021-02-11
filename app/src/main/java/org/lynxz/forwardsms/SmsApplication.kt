@@ -10,12 +10,14 @@ import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.ui.widget.ForwardService
 import org.lynxz.forwardsms.ui.widget.OnePixelActManager
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
-import org.lynxz.forwardsms.util.LogPersistenceUtil
-import org.lynxz.forwardsms.util.LoggerUtil
+//
 import org.lynxz.forwardsms.validation.SrcTypeVerify
 import org.lynxz.forwardsms.validation.TimeVerify
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
+import org.lynxz.utils.log.LogLevel
+import org.lynxz.utils.log.LogPersistenceImpl
+import org.lynxz.utils.log.LoggerUtil
 
 class SmsApplication : Application() {
 
@@ -28,9 +30,12 @@ class SmsApplication : Application() {
         app = this
 
         // 开启日志持久化
-        LogPersistenceUtil.getInstance()
-            .setPersistenceLevel(LoggerUtil.LEVEL_WARN)
-            .init(this)
+        LoggerUtil.init(
+            LogLevel.DEBUG, "SmsLog",
+            LogPersistenceImpl("${filesDir.absolutePath}/LogPersistence/")
+                .setLevel(LogLevel.WARN)
+        )
+
 
         // 初始化IM配置信息
         ImSettingManager.initPara(this)

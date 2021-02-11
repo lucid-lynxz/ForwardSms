@@ -14,17 +14,21 @@ import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.noober.background.drawable.DrawableCreator
 import kotlinx.android.synthetic.main.fragment_other_setting.*
-import org.lynxz.forwardsms.*
+import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.databinding.FragmentOtherSettingBinding
+import org.lynxz.forwardsms.hideKeyboard
 import org.lynxz.forwardsms.observer.IViewActionHandler
 import org.lynxz.forwardsms.para.BatteryListenerManager
 import org.lynxz.forwardsms.para.TimeValidationParaManager
+import org.lynxz.forwardsms.showToast
 import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.widget.LRTextImageView
-import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.ResourceUtil
 import org.lynxz.forwardsms.util.ScreenUtil
 import org.lynxz.forwardsms.validation.TimeDurationBean
+import org.lynxz.utils.log.LoggerUtil
+import org.lynxz.utils.otherwise
+import org.lynxz.utils.yes
 import java.text.SimpleDateFormat
 import java.util.*
 

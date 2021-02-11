@@ -38,7 +38,6 @@ import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.widget.SmsHandler
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.ConfigUtil
-import org.lynxz.forwardsms.util.LoggerUtil
 import org.lynxz.forwardsms.util.StringUtil
 import org.lynxz.forwardsms.validation.IForwardVerify
 import org.lynxz.forwardsms.validation.TimeDef
@@ -50,6 +49,7 @@ import org.lynxz.forwardsms.viewmodel.GlobalParaUtil.removeVerifyAction
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * sms接收监听及短信列表读取,并监听通知栏变化(需要自行在手机设置中启用通知栏权限)

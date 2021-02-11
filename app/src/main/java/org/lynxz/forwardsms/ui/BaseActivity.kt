@@ -14,8 +14,9 @@ import org.lynxz.forwardsms.ui.trans.IPermissionCallback
 import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
-import org.lynxz.forwardsms.util.LoggerUtil
+
 import org.lynxz.forwardsms.util.ScreenUtil
+import org.lynxz.utils.log.LoggerUtil
 
 abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
     private val permissionFrag by lazy {

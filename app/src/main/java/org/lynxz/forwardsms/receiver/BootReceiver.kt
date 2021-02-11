@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.lynxz.forwardsms.MainActivity
-import org.lynxz.forwardsms.util.LoggerUtil
+import org.lynxz.utils.log.LoggerUtil
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

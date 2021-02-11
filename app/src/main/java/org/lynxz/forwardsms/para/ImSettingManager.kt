@@ -16,11 +16,12 @@ import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.para.ImSettingManager.initPara
 import org.lynxz.forwardsms.para.ImSettingManager.updateImSetting
 import org.lynxz.forwardsms.util.ConfigUtil
-import org.lynxz.forwardsms.util.LoggerUtil
+
 import org.lynxz.forwardsms.util.StringUtil
 import org.lynxz.imdingding.DingDingActionImpl
 import org.lynxz.imfeishu.FeishuActionImpl
 import org.lynxz.imtg.TGActionImpl
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 全局参数设置

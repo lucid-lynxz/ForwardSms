@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import org.lynxz.utils.log.LoggerUtil;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -117,7 +119,7 @@ import java.util.HashMap;
  * </manifest>
  * </pre>
  */
-public class FileUtils {
+public class SmsFileUtils {
     private static final String TAG = "FileUtils";
     public static final String CACHE = "cache";
     public static final String IMG = "img";
@@ -798,7 +800,7 @@ public class FileUtils {
      */
     @Nullable
     public static byte[] getResDrawableRawBytes(Application application, String imageName, int resID) {
-        String fileExt = FileUtils.getFileExt(imageName);
+        String fileExt = SmsFileUtils.getFileExt(imageName);
         if (!TextUtils.isEmpty(fileExt)) { // 若带有扩展名,则需要先将扩展名去掉
             imageName = imageName.replace("." + fileExt, "");
         }
@@ -838,7 +840,7 @@ public class FileUtils {
     @Nullable
     public static Bitmap getResDrawableBitmap(Application application, String imageName) {
 //        if (imageName.contains(".9")) imageName = imageName.replaceAll(".9", "");
-        String fileExt = FileUtils.getFileExt(imageName);
+        String fileExt = SmsFileUtils.getFileExt(imageName);
         if (!TextUtils.isEmpty(fileExt)) { // 若带有扩展名,则需要先将扩展名去掉
             imageName = imageName.replace("." + fileExt, "");
         }

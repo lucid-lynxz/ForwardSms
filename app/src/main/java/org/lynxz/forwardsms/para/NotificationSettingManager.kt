@@ -16,9 +16,10 @@ import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.emptyimpl.EmptyServiceConnection
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
-import org.lynxz.forwardsms.util.LoggerUtil
+
 import org.lynxz.forwardsms.validation.VerifyActionManager
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 通知提醒设置,包括:

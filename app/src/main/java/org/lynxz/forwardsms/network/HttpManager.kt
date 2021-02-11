@@ -10,7 +10,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.bean.SendMessageReqBean
-import org.lynxz.forwardsms.util.LoggerUtil
+
+import org.lynxz.utils.log.LoggerUtil
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

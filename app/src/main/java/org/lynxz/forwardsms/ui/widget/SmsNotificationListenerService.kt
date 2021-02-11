@@ -4,7 +4,7 @@ import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
-import org.lynxz.forwardsms.util.LoggerUtil
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 通过查看通知栏信息读取短信，但只能读取短信内容，发信人信息无

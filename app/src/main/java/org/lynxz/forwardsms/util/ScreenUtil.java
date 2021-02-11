@@ -25,6 +25,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.lynxz.utils.log.LoggerUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -126,9 +128,9 @@ public class ScreenUtil {
 
     }
 
-    private static ScreenOrientation DEFAULT_ORIENTATION = ScreenOrientation.WIDTH;
-    private static float DEFAULT_DESIGN_WIDTH = 360f;
-    private static float DEFAULT_DESIGN_HEIGHT = 667f;
+    private static final ScreenOrientation DEFAULT_ORIENTATION = ScreenOrientation.WIDTH;
+    private static final float DEFAULT_DESIGN_WIDTH = 360f;
+    private static final float DEFAULT_DESIGN_HEIGHT = 667f;
 
     // 美工设计图的方向及宽高尺寸,单位dp,作为各 activity 的默认适配参数
     private static float designWidth = DEFAULT_DESIGN_WIDTH;

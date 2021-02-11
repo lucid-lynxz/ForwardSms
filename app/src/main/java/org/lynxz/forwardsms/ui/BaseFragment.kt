@@ -12,9 +12,10 @@ import org.lynxz.forwardsms.ui.trans.BaseTransFragment
 import org.lynxz.forwardsms.ui.trans.IPermissionCallback
 import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.trans.permissionCheckerImpl.IgnoreBatteryOptimCheckerImpl
-import org.lynxz.forwardsms.util.LoggerUtil
+
 import org.lynxz.forwardsms.util.ScreenUtil
 import org.lynxz.forwardsms.util.ViewUtil
+import org.lynxz.utils.log.LoggerUtil
 
 abstract class BaseFragment : Fragment() {
 

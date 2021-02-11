@@ -10,7 +10,8 @@ import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.isSdkGE
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
-import org.lynxz.forwardsms.util.LoggerUtil
+
+import org.lynxz.utils.log.LoggerUtil
 
 /**
  * 收到短信提醒receiver
