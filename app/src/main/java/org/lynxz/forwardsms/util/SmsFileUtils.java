@@ -15,19 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import org.lynxz.utils.FileUtil;
 import org.lynxz.utils.log.LoggerUtil;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -212,20 +210,6 @@ public class SmsFileUtils {
         return new FileOutputStream(file, append);
     }
 
-    public static void closeQuietly(InputStream input) {
-        closeQuietly((Closeable) input);
-    }
-
-    public static void closeQuietly(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException ioe) {
-            // ignore
-        }
-    }
-
     /**
      * 安装本机apk文件 注意,请确保: 1. {@link #setFileProviderAuthority(String)} 已经设置过了 2. 在
      * `AndroidManifest.xml` 中添加了权限: `<uses-permission android:name=
@@ -257,10 +241,7 @@ public class SmsFileUtils {
      */
     @Nullable
     public static byte[] File2byte(String filePath) {
-        if (TextUtils.isEmpty(filePath)) {
-            return null;
-        }
-        return File2byte(new File(filePath));
+        return FileUtil.readAllBytes(filePath);
     }
 
     @Nullable
@@ -268,27 +249,7 @@ public class SmsFileUtils {
         if (!file.exists()) {
             return null;
         }
-
-        byte[] buffer = null;
-        FileInputStream fis = null;
-        ByteArrayOutputStream bos = null;
-        try {
-            fis = new FileInputStream(file);
-            bos = new ByteArrayOutputStream();
-            byte[] b = new byte[1024];
-            int n;
-            while ((n = fis.read(b)) != -1) {
-                bos.write(b, 0, n);
-            }
-            buffer = bos.toByteArray();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            safetyClose(fis);
-            safetyClose(bos);
-        }
-        LoggerUtil.d(TAG, "File2byte: path = " + file);
-        return buffer;
+        return FileUtil.readAllBytes(file.getAbsolutePath());
     }
 
     /**
@@ -297,7 +258,7 @@ public class SmsFileUtils {
      * @param filepath 文件绝对路径
      */
     public static boolean checkFileExists(String filepath) {
-        return new File(filepath).exists();
+        return FileUtil.isExist(filepath);
     }
 
     /**
@@ -306,7 +267,7 @@ public class SmsFileUtils {
      * @param dirpath 路径
      */
     public static boolean createDIR(String dirpath) {
-        return createDIR(dirpath, false);
+        return FileUtil.create(dirpath, true, false);
     }
 
     /**
@@ -315,7 +276,7 @@ public class SmsFileUtils {
      * 参考 {@link #createDIR(File, boolean)}
      */
     public static boolean createDIR(String dirpath, boolean forceRecreate) {
-        return createDIR(new File(dirpath), forceRecreate);
+        return FileUtil.create(dirpath, true, forceRecreate);
     }
 
     /**
@@ -330,20 +291,7 @@ public class SmsFileUtils {
         if (targetFile == null) {
             return false;
         }
-
-        if (targetFile.exists()) { // 存在同名文件
-            boolean isDir = targetFile.isDirectory();
-            if (!isDir) { // 非目录,删除以便创建目录
-                boolean result = targetFile.delete();
-                LoggerUtil.d(TAG, "dirPath:" + targetFile.getAbsolutePath() + " is a file, delete it, result=" + result);
-            } else if (forceRecreate) { // 强制删除目录
-                deleteDir(targetFile);
-            } else { // 目录存在
-                return true;
-            }
-        }
-
-        return targetFile.mkdirs();
+        return FileUtil.create(targetFile.getAbsolutePath(), true, forceRecreate);
     }
 
     /**
@@ -354,7 +302,7 @@ public class SmsFileUtils {
      * @return 创建文件结果
      */
     public static boolean createFile(String filepath, boolean forceRecreate) {
-        return createFile(new File(filepath), forceRecreate);
+        return FileUtil.create(filepath, false, forceRecreate);
     }
 
     /**
@@ -364,23 +312,7 @@ public class SmsFileUtils {
      * @param forceRecreate 若目标文件存在,是否要删除然后新建
      */
     public static boolean createFile(@NonNull File file, boolean forceRecreate) {
-        if (file.exists()) {
-            if (forceRecreate) {
-                deleteFile(file);
-            } else {
-                return true;
-            }
-        }
-
-        boolean result = false;
-        try {
-            createDIR(file.getParent());
-            result = file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        LoggerUtil.d(TAG, "createFile " + file.getAbsolutePath() + " , result = " + result);
-        return result;
+        return FileUtil.create(file.getAbsolutePath(), false, forceRecreate);
     }
 
     /**
@@ -397,22 +329,14 @@ public class SmsFileUtils {
      * 删除文件或者目录
      */
     public static boolean deleteFile(@NonNull File file) {
-        if (!file.exists()) {
-            return true;
-        }
-
-        if (file.isFile()) {
-            return file.delete();
-        } else {
-            return deleteDir(file);
-        }
+        return FileUtil.delete(file);
     }
 
     /**
      * 删除目录
      */
     public static boolean deleteDir(String pPath) {
-        return deleteDir(new File(pPath));
+        return FileUtil.delete(pPath);
     }
 
     /**
@@ -420,16 +344,7 @@ public class SmsFileUtils {
      * 若存在同名非目录文件,则不处理
      */
     public static boolean deleteDir(File dir) {
-        if (dir == null || !dir.exists() || !dir.isDirectory())
-            return true;
-        for (File file : dir.listFiles()) {
-            if (file.isFile()) {// 删除所有文件
-                file.delete();
-            } else if (file.isDirectory()) { // 递归删除子目录
-                deleteDir(file);
-            }
-        }
-        return dir.delete();// 删除空目录本身
+        return FileUtil.delete(dir);
     }
 
     /**
@@ -441,27 +356,7 @@ public class SmsFileUtils {
      * @return 是否写入成功
      */
     public static boolean writeToFile(String msg, String targetFilePath, boolean append) {
-        if (TextUtils.isEmpty(targetFilePath)) {
-            return false;
-        }
-
-        createFile(targetFilePath, false);
-        FileWriter fileWriter = null;
-        BufferedWriter bufferedWriter = null;
-        try {
-            File file = new File(targetFilePath);
-            fileWriter = new FileWriter(file, append);
-            bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(msg);
-            bufferedWriter.flush();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            safetyClose(bufferedWriter);
-            safetyClose(fileWriter);
-        }
+        return FileUtil.writeToFile(msg, targetFilePath, append, false);
     }
 
     /**
@@ -473,25 +368,7 @@ public class SmsFileUtils {
      * @return 是否写入成功
      */
     public static boolean writeToFile(@NonNull byte[] byteArr, @NonNull String targetFilePath, boolean append) {
-        if (TextUtils.isEmpty(targetFilePath)) {
-            return false;
-        }
-
-        createFile(targetFilePath, false);
-        DataOutputStream dataOutputStream = null;
-        try {
-            dataOutputStream = new DataOutputStream(new FileOutputStream(targetFilePath, append));
-            for (byte b : byteArr) {
-                dataOutputStream.write(b);
-            }
-            dataOutputStream.flush();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            safetyClose(dataOutputStream);
-        }
+        return FileUtil.writeToFile(byteArr, targetFilePath, append);
     }
 
     /**
