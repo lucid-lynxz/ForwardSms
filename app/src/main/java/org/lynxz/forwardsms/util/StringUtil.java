@@ -7,14 +7,11 @@ import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lynxz.utils.log.LoggerUtil;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +20,6 @@ import java.util.List;
  */
 public class StringUtil {
     private static final String TAG = "StringUtil";
-    private static final Gson mGson = MyGsonObjectTypeAdapter.assign2Gson(new Gson());
-    private static final Gson mFormatGson = MyGsonObjectTypeAdapter.assign2Gson(new GsonBuilder().setPrettyPrinting().create());
 
     /**
      * 判断字符串是否为空
@@ -38,7 +33,8 @@ public class StringUtil {
      */
     @NotNull
     public static String toPrettyJson(Object obj) {
-        return toJsonInternal(mFormatGson, obj);
+        return GsonUtil.INSTANCE.toJson(obj, true);
+//        return toJsonInternal(mFormatGson, obj);
     }
 
     /**
@@ -46,7 +42,12 @@ public class StringUtil {
      */
     @NotNull
     public static String toJson(Object obj) {
-        return toJsonInternal(mGson, obj);
+        return GsonUtil.INSTANCE.toJson(obj, false);
+    }
+
+    @Nullable
+    public static <T> T parseJson(String json) {
+        return GsonUtil.INSTANCE.parseJson(json);
     }
 
     /**
@@ -54,34 +55,7 @@ public class StringUtil {
      */
     @Nullable
     public static <T> T parseJson(String json, Class<? extends T> cls) {
-        if (TextUtils.isEmpty(json)) {
-            return null;
-        }
-
-        try {
-            return mGson.fromJson(json, cls);
-        } catch (Exception e) {
-            LoggerUtil.w(TAG, "parseJson() fail:" + json + "\n" + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
-     * 解析json字符串为指定的对象
-     * 可反序列化map(数字会有小数问题): StringUtil.parseJson("jsonStr", new TypeToken<Map<String, String>>() { }.getType())
-     */
-    @Nullable
-    public static <T> T parseJson(String json, Type typeOfT) {
-        if (TextUtils.isEmpty(json)) {
-            return null;
-        }
-
-        try {
-            return mGson.fromJson(json, typeOfT);
-        } catch (Exception e) {
-            LoggerUtil.w(TAG, "parseJson()2 fail:" + json + "\n" + e.getMessage());
-            return null;
-        }
+        return GsonUtil.INSTANCE.parseJson(json, cls);
     }
 
     /**
@@ -90,10 +64,7 @@ public class StringUtil {
      * 参考: https://juejin.im/post/5cbb3c5af265da03ab23258c
      */
     public static <T> T parseListJson(String json) {
-        Type type = new TypeToken<T>() {
-        }.getType();
-
-        return mGson.fromJson(json, type);
+        return GsonUtil.INSTANCE.parseJson(json);
     }
 
 

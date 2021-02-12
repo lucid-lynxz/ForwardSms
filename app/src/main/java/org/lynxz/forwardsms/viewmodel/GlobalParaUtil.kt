@@ -69,7 +69,7 @@ object GlobalParaUtil {
             "{\"body\":\"【测试信息】当前时间:" +
                     TimeDef.generateByTimeMs().toString() +
                     "。\",\"displayFrom\":\"1069129206112106575\",\"forward\":true,\"from\":\"1069129206112106575\",\"read\":0,\"srcType\":\"com.android.mms\",\"status\":0,\"to\":\"HM 1SC\",\"ts\":1601124202000,\"type\":1}"
-        val msg = StringUtil.parseJson<SmsDetail>(info, SmsDetail::class.java)
+        val msg = StringUtil.parseJson(info, SmsDetail::class.java)
         iSmsReceiveObserver.onReceiveSms(msg)
     }
 

@@ -11,8 +11,8 @@ android {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
-        versionCode 16
-        versionName "1.6.7"
+        versionCode 17
+        versionName "1.7.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -72,7 +72,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
-    implementation 'com.github.lucid-lynxz:utils:0.1.0'
+    implementation 'com.github.lucid-lynxz:utils:0.1.1'
 
     testImplementation(test.junit)
     testImplementation(test.testRunnerX)

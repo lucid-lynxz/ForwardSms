@@ -153,6 +153,73 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cbx_low_battery" />
 
+        <!-- 马赛克处理,敏感内容替换 -->
+        <CheckBox
+            android:id="@+id/cbx_mosaic_condition"
+            style="@style/commonView"
+            android:checked="@={vm.mosaicParaLiveData.enable}"
+            android:text="马赛克"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_battery_fully_charge" />
+
+        <EditText
+            android:id="@+id/edt_mosaic_src"
+            style="@style/commonView.text.small"
+            android:layout_width="0dp"
+            android:layout_marginLeft="2dp"
+            android:enabled="@{vm.mosaicParaLiveData.enable}"
+            android:gravity="center"
+            android:hint="原内容"
+            android:maxLines="2"
+            app:layout_constraintBottom_toBottomOf="@+id/cbx_mosaic_condition"
+            app:layout_constraintLeft_toRightOf="@+id/cbx_mosaic_condition"
+            app:layout_constraintRight_toLeftOf="@+id/btn_add_mosaic_condition_flag"
+            app:layout_constraintTop_toTopOf="@+id/cbx_mosaic_condition" />
+
+
+        <TextView
+            android:id="@+id/btn_add_mosaic_condition_flag"
+            style="@style/commonView.text"
+            android:padding="2dp"
+            android:text="->"
+            app:layout_constraintBottom_toBottomOf="@+id/cbx_mosaic_condition"
+            app:layout_constraintLeft_toRightOf="@+id/edt_mosaic_src"
+            app:layout_constraintRight_toLeftOf="@+id/edt_mosaic_dest"
+            app:layout_constraintTop_toTopOf="@+id/cbx_mosaic_condition" />
+
+        <EditText
+            android:id="@+id/edt_mosaic_dest"
+            style="@style/commonView.text.small"
+            android:layout_width="0dp"
+            android:enabled="@{vm.mosaicParaLiveData.enable}"
+            android:gravity="center"
+            android:hint="替换为"
+            android:maxLines="2"
+            app:layout_constraintBottom_toBottomOf="@+id/cbx_mosaic_condition"
+            app:layout_constraintLeft_toRightOf="@+id/btn_add_mosaic_condition_flag"
+            app:layout_constraintRight_toLeftOf="@+id/btn_add_mosaic_condition"
+            app:layout_constraintTop_toTopOf="@+id/cbx_mosaic_condition" />
+
+        <TextView
+            android:id="@+id/btn_add_mosaic_condition"
+            style="@style/commonRoundButton"
+            android:layout_marginLeft="10dp"
+            android:enabled="@{vm.mosaicParaLiveData.enable}"
+            android:onClick="@{(view)->viewActionHandler.onClick(view)}"
+            android:text="添加"
+            app:layout_constraintBottom_toBottomOf="@+id/cbx_mosaic_condition"
+            app:layout_constraintLeft_toRightOf="@+id/edt_mosaic_dest"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cbx_mosaic_condition" />
+
+        <org.lynxz.forwardsms.ui.widget.FlowLayout
+            android:id="@+id/fl_mosaic_condition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cbx_mosaic_condition" />
+
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="match_parent"

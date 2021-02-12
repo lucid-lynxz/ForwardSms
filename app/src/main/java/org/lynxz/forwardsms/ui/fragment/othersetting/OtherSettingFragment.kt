@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
@@ -19,18 +18,20 @@ import org.lynxz.forwardsms.databinding.FragmentOtherSettingBinding
 import org.lynxz.forwardsms.hideKeyboard
 import org.lynxz.forwardsms.observer.IViewActionHandler
 import org.lynxz.forwardsms.para.BatteryListenerManager
+import org.lynxz.forwardsms.para.MosaicParaManager
 import org.lynxz.forwardsms.para.TimeValidationParaManager
 import org.lynxz.forwardsms.showToast
 import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.widget.LRTextImageView
 import org.lynxz.forwardsms.util.ResourceUtil
 import org.lynxz.forwardsms.util.ScreenUtil
-import org.lynxz.forwardsms.validation.TimeDurationBean
+import org.lynxz.forwardsms.util.ViewUtil
 import org.lynxz.utils.log.LoggerUtil
 import org.lynxz.utils.otherwise
 import org.lynxz.utils.yes
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.lifecycle.Observer as Observer1
 
 
 /**
@@ -49,7 +50,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
             .build()
     }
 
-    private val timeDurationLayoutParams by lazy {
+    private val paraLayoutParam by lazy {
         ViewGroup.MarginLayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -70,17 +71,13 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
 
         // 是否启用时间段设置
         vm.enableAddTimeDurationLiveData.observe(this,
-            Observer<Boolean> { enable -> btn_add_forward_time.isEnabled = enable }
-        )
+            { enable -> btn_add_forward_time.isEnabled = enable })
 
         // 状态变化是,保存数据
-        vm.enableDateLiveData.observe(
-            this,
-            Observer { TimeValidationParaManager.updateAndSavePara() }
-        )
+        vm.enableDateLiveData.observe(this, { TimeValidationParaManager.updateAndSavePara() })
 
         // 是否启用不可转发日期设置
-        vm.allDateLiveData.observe(this, Observer { validateDate ->
+        vm.allDateLiveData.observe(this, Observer1 { validateDate ->
             fl_forward_date.removeAllViews()
             (1..7).forEach { weekDayIndex ->
                 fl_forward_date.addView(
@@ -89,7 +86,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                         .updateImage(if (TimeValidationParaManager.isInWeekDays(weekDayIndex)) R.drawable.ic_checked_24 else R.drawable.ic_uncheck_24)
                         .apply {
                             tag = weekDayIndex
-                            setImageOnClickListener(View.OnClickListener { iv ->
+                            setImageOnClickListener {
                                 val tagWeekDayIndex: Int = tag as Int
                                 vm.enableDateLiveData.value?.yes {
                                     vm.allDateLiveData.value?.let {
@@ -102,7 +99,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                                     }
                                     TimeValidationParaManager.updateAndSavePara() // 保存数据
                                 }
-                            })
+                            }
                         }
                 )
             }
@@ -110,47 +107,89 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
 
 
         // 添加所有时间段配置
-        vm.allTimeDurationLiveData.observe(this,
-            Observer<MutableList<TimeDurationBean>> { list ->
-                fl_forward_time.removeAllViews()
-                list.forEachIndexed { index, timeDurationBean ->
-                    fl_forward_time.addView(
-                        LRTextImageView(activity!!)
-                            .updateText(timeDurationBean.toString())
-                            .updateImage(R.drawable.ic_close_24)
-                            .updateImageSize(ScreenUtil.dp2px(activity, 16))
-                            .apply {
-                                tag = index // 指定tag为其序号
-                                background = timeDurationDrawable // 设置背景
-                                setPadding(10, 10, 10, 10)
-                                setImageOnClickListener(View.OnClickListener { // 点击图标删除该时间段设置
-                                    vm.enableTimeDurationLiveData.value?.yes {
-                                        vm.chooseTimeDurationForEditing(tag as Int, true)
-                                        vm.applyTimeDuration()
-                                    }
-                                })
-                                setOnClickListener { // 显示时间选择面板
-                                    vm.enableTimeDurationLiveData.value?.yes {
-                                        vm.chooseTimeDurationForEditing(tag as Int)
-                                        timePickView.show(true)
-                                    }
+        vm.allTimeDurationLiveData.observe(this, { list ->
+            fl_forward_time.removeAllViews()
+            list.forEachIndexed { index, timeDurationBean ->
+                fl_forward_time.addView(
+                    LRTextImageView(activity!!)
+                        .updateText(timeDurationBean.toString())
+                        .updateImage(R.drawable.ic_close_24)
+                        .updateImageSize(ScreenUtil.dp2px(activity, 16))
+                        .apply {
+                            tag = index // 指定tag为其序号
+                            background = timeDurationDrawable // 设置背景
+                            setPadding(10, 10, 10, 10)
+                            // 点击图标删除该时间段设置
+                            setImageOnClickListener {
+                                vm.enableTimeDurationLiveData.value?.yes {
+                                    vm.chooseTimeDurationForEditing(tag as Int, true)
+                                    vm.applyTimeDuration()
                                 }
-                            }, index, timeDurationLayoutParams
-                    )
-                }
-            })
+                            }
+                            setOnClickListener { // 显示时间选择面板
+                                vm.enableTimeDurationLiveData.value?.yes {
+                                    vm.chooseTimeDurationForEditing(tag as Int)
+                                    timePickView.show(true)
+                                }
+                            }
+                        }, index, paraLayoutParam
+                )
+            }
+        })
 
         // 时间信息变化时,更新UI
-        vm.timeDurationBeanLiveData.observe(
-            this,
-            Observer<TimeDurationBean> { bean ->
-                tvStartTime?.text = bean.startTime.toString()
-                tvEndTime?.text = bean.endTime.toString()
-                timePickView.setDate(bean.curEditingTime.convert2Date())
+        vm.timeDurationBeanLiveData.observe(this, { bean ->
+            tvStartTime?.text = bean.startTime.toString()
+            tvEndTime?.text = bean.endTime.toString()
+            timePickView.setDate(bean.curEditingTime.convert2Date())
 
-                bgStartTime?.isSelected = bean.isEditingStartTime
-                bgEndTime?.isSelected = !bean.isEditingStartTime
-            })
+            bgStartTime?.isSelected = bean.isEditingStartTime
+            bgEndTime?.isSelected = !bean.isEditingStartTime
+        })
+
+        // 添加所有马赛克模糊处理设置
+        vm.mosaicParaLiveData.observe(this, { mosaicPara ->
+            updateMosaicParaViews()
+        })
+    }
+
+    /**
+     * 更新所有马赛克模糊条件view
+     * */
+    private fun updateMosaicParaViews() {
+        fl_mosaic_condition.removeAllViews()
+        var index = 0
+        MosaicParaManager.mosaicParaLiveData.value?.detailMosaicMap?.forEach { condition ->
+            val mosaicView = LRTextImageView(activity!!)
+                .updateText("${condition.key}->${condition.value}")
+                .updateImage(R.drawable.ic_close_24)
+                .updateImageSize(ScreenUtil.dp2px(activity, 16))
+                .apply {
+                    tag = condition.key
+                    background = timeDurationDrawable // 设置背景
+                    setPadding(10, 10, 10, 10)
+                    // 删除图标
+                    setImageOnClickListener {
+                        (tag as? String)?.let {
+                            vm.mosaicParaLiveData.value?.detailMosaicMap?.remove(it)
+                        }
+                    }
+
+                    // 重新编辑
+                    setOnClickListener {
+                        (tag as? String)?.let { key ->
+                            vm.mosaicParaLiveData.value?.detailMosaicMap
+                                ?.getOrDefault(key, null)
+                                ?.let { value ->
+                                    dataBinding.edtMosaicSrc.setText(key)
+                                    dataBinding.edtMosaicDest.setText(value)
+                                }
+                        }
+                    }
+                }
+            fl_mosaic_condition.addView(mosaicView, index, paraLayoutParam)
+            index++
+        }
     }
 
     // 时间选择面板设置
@@ -241,6 +280,28 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                 BatteryListenerManager.updateAndSave()
                 activity?.hideKeyboard()
                 edt_low_battery.clearFocus()
+            }
+            btn_add_mosaic_condition -> { // 添加模糊处理
+                updateMosaicCondition()
+            }
+        }
+    }
+
+    private fun updateMosaicCondition() {
+        val src = dataBinding.edtMosaicSrc.text.toString()
+        val dest = dataBinding.edtMosaicDest.text.toString()
+        if (src.isEmpty()) {
+            showToast("请输入待替换的原内容")
+            dataBinding.edtMosaicSrc.requestFocus()
+        } else {
+            MosaicParaManager.addMapInfo(src, dest)
+            dataBinding.edtMosaicSrc.text = null
+            dataBinding.edtMosaicDest.text = null
+
+            // 清除焦点,关闭键盘
+            activity?.currentFocus?.let {
+                ViewUtil.hideKeyboard(it)
+                it.clearFocus()
             }
         }
     }

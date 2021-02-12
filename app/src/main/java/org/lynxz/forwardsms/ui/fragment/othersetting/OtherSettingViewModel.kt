@@ -4,6 +4,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.lynxz.forwardsms.para.BatteryListenerManager
+import org.lynxz.forwardsms.para.MosaicParaManager
 import org.lynxz.forwardsms.para.TimeValidationParaManager
 import org.lynxz.forwardsms.validation.TimeDef
 import org.lynxz.forwardsms.validation.TimeDurationBean
@@ -121,4 +122,7 @@ class OtherSettingViewModel : ViewModel() {
 
     // 低电量监控
     val batteryLiveData = BatteryListenerManager.batterySettingLiveData
+
+    // 马赛克模糊处理配置参数
+    val mosaicParaLiveData = MosaicParaManager.mosaicParaLiveData
 }

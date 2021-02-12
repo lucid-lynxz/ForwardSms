@@ -6,7 +6,7 @@ import org.lynxz.forwardsms.util.SpJsonUtilImpl
 import org.lynxz.securitysp.SecuritySP
 
 /**
- * 使用sp文件进行存储的抽象父类, 实现sp持久化, 子类所需配置参数均继承自 IValidationDataBean
+ * 使用sp文件进行存储的抽象父类, 实现sp持久化
  * 子类需实现 [getParaFromSp] 来从sp中获取配置信息, 若不存在返回一个默认值, key默认为类名
  * 子类可直接使用 [paraBean] 获取自定义的配置信息
  * 通过 [savePara] 来保存更新后的 paraBean 信息
@@ -21,7 +21,7 @@ abstract class AbsSpSettingInfoManager<T> {
         }
     }
 
-    protected val paraBean by lazy { getParaFromSp(getParaKey()) }
+    val paraBean by lazy { getParaFromSp(getParaKey()) }
 
     /**
      * 持久化的参数数据key,默认使用类名信息, 可重写 [getParaKey] 来设置
@@ -38,11 +38,10 @@ abstract class AbsSpSettingInfoManager<T> {
         return paraBeanKey
     }
 
-
     /**
      * 获取sharePreference对象,默认使用固定的 settingSp,子类可重写切换其他sp对象
      * */
-    protected fun getSecuritySp() = settingSp
+    protected open fun getSecuritySp() = settingSp
 
     /**
      * 子类重写实现从sp中提取数据

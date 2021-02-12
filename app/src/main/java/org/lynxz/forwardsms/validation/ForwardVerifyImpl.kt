@@ -1,6 +1,7 @@
 package org.lynxz.forwardsms.validation
 
 import org.lynxz.forwardsms.bean.SmsDetail
+import org.lynxz.forwardsms.para.MosaicParaManager
 import org.lynxz.forwardsms.para.TimeValidationParaManager
 
 /**
@@ -28,4 +29,26 @@ object SrcTypeVerify : IForwardVerify {
     fun getSrcTypeState() = srcTypeStateMap
 
     override fun verify(smsDetail: SmsDetail) = srcTypeStateMap[smsDetail.srcType] == true
+}
+
+/**
+ * 对短信内容进行马赛克处理(替换敏感字符)
+ * */
+object MosaicVerify : IForwardVerify {
+    private fun recookSms(info: String?): String {
+        var tInfo = info ?: return ""
+        MosaicParaManager.paraBean.detailMosaicMap.forEach {
+            tInfo = tInfo.replace(it.key, it.value)
+        }
+        return tInfo
+    }
+
+    override fun verify(smsDetail: SmsDetail): Boolean {
+        smsDetail.from = recookSms(smsDetail.from)
+        smsDetail.to = recookSms(smsDetail.to)
+        smsDetail.displayFrom = recookSms(smsDetail.displayFrom)
+        smsDetail.body = recookSms(smsDetail.body)
+        return true
+    }
+
 }

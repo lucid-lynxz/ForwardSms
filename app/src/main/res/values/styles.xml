@@ -37,6 +37,10 @@
         <item name="android:textColor">@color/text_normal</item>
     </style>
 
+    <style name="commonView.text.small" parent="commonView.text">
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
+
     <!-- 5.0 以后Button去除阴影-->
     <style name="commonRoundButton" parent="commonView">
         <item name="android:gravity">center</item>

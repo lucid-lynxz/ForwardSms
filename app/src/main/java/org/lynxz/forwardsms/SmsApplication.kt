@@ -10,6 +10,7 @@ import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.ui.widget.ForwardService
 import org.lynxz.forwardsms.ui.widget.OnePixelActManager
 import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
+import org.lynxz.forwardsms.validation.MosaicVerify
 //
 import org.lynxz.forwardsms.validation.SrcTypeVerify
 import org.lynxz.forwardsms.validation.TimeVerify
@@ -30,21 +31,25 @@ class SmsApplication : Application() {
         app = this
 
         // 开启日志持久化
+        val logDirPath = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
         LoggerUtil.init(
             LogLevel.DEBUG, "SmsLog",
-            LogPersistenceImpl("${filesDir.absolutePath}/LogPersistence/")
+            LogPersistenceImpl("$logDirPath/LogPersistence/")
                 .setLevel(LogLevel.WARN)
         )
-
+        LoggerUtil.d("LogPersistence dir path:$logDirPath")
 
         // 初始化IM配置信息
         ImSettingManager.initPara(this)
 
         // 初始化短信监听
         OnePixelActManager.init(this)
+
+        // 短信内容过滤处理
         GlobalParaUtil.init(this)
             .addVerifyActionIfAbsent(TimeVerify)
             .addVerifyActionIfAbsent(SrcTypeVerify)
+            .addVerifyActionIfAbsent(MosaicVerify)
 
         ScreenStateViewModel.init(this)
 
