@@ -5,8 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="4dp"
-    app:bl_corners_radius="4dp"
-    app:bl_stroke_color="@color/gray">
+    android:id="@+id/ctl_container">
 
     <TextView
         android:id="@+id/tv_left"

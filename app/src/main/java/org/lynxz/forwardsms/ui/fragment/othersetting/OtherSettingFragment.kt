@@ -41,14 +41,6 @@ import androidx.lifecycle.Observer as Observer1
 class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
     IViewActionHandler {
     private val vm by lazy { ViewModelProviders.of(this).get(OtherSettingViewModel::class.java) }
-    private val timeDurationDrawable by lazy {
-        DrawableCreator.Builder()
-            .setCornersRadius(ScreenUtil.dp2px(activity!!, 20).toFloat())
-            .setSolidColor(Color.WHITE)
-            .setStrokeColor(ResourceUtil.getColor(R.color.gray))
-            .setStrokeWidth(1f)
-            .build()
-    }
 
     private val paraLayoutParam by lazy {
         ViewGroup.MarginLayoutParams(
@@ -117,7 +109,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                         .updateImageSize(ScreenUtil.dp2px(activity, 16))
                         .apply {
                             tag = index // 指定tag为其序号
-                            background = timeDurationDrawable // 设置背景
+                            background = createItemBgDrawable() // 设置背景
                             setPadding(10, 10, 10, 10)
                             // 点击图标删除该时间段设置
                             setImageOnClickListener {
@@ -166,7 +158,8 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                 .updateImageSize(ScreenUtil.dp2px(activity, 16))
                 .apply {
                     tag = condition.key
-                    background = timeDurationDrawable // 设置背景
+//                    background = timeDurationDrawable.mutate() // 设置背景
+                    background = createItemBgDrawable() // 设置背景
                     setPadding(10, 10, 10, 10)
                     // 删除图标
                     setImageOnClickListener {
@@ -191,6 +184,17 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
             index++
         }
     }
+
+    /**
+     * 创建itemView的背景图片
+     * 两边圆形
+     * */
+    private fun createItemBgDrawable() = DrawableCreator.Builder()
+        .setCornersRadius(ScreenUtil.dp2px(activity!!, 20).toFloat())
+        .setSolidColor(Color.WHITE)
+        .setStrokeColor(ResourceUtil.getColor(R.color.gray))
+        .setStrokeWidth(1f)
+        .build()
 
     // 时间选择面板设置
     private val timePickerCustomLayoutListener by lazy {
