@@ -19,6 +19,7 @@ class OtherSettingViewModel : ViewModel() {
 
     // 是否启用时间段设置
     val enableTimeDurationLiveData = TimeValidationParaManager.enableTimeDurationLiveData
+
     // 是否启用可转发星期几设置
     val enableDateLiveData = TimeValidationParaManager.enableDateLiveData
 
@@ -125,4 +126,10 @@ class OtherSettingViewModel : ViewModel() {
 
     // 马赛克模糊处理配置参数
     val mosaicParaLiveData = MosaicParaManager.mosaicParaLiveData
+
+    /**
+     * 更新马赛克配对
+     */
+    fun updateMosaicPara(key: String, value: String = "", delete: Boolean = true) =
+        MosaicParaManager.updateMosaicPara(key, value, delete)
 }

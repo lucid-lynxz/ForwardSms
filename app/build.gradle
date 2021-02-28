@@ -72,7 +72,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
-    implementation 'com.github.lucid-lynxz:utils:0.1.1'
+    implementation 'com.github.lucid-lynxz:utils:0.1.2'
 
     testImplementation(test.junit)
     testImplementation(test.testRunnerX)
@@ -104,7 +104,7 @@ dependencies {
  * 从指定的配置文件中读取属性值,若存在且类型与默认值匹配,则返回,否则返回默认值
  * @param propertyName 属性名
  * @param defaultValue 默认值
- * @param propertiesFileName 文件名,默认为: local.properteis
+ * @param propertiesFileName 文件名,默认为: local.properties
  */
 def getLocalProperties(String propertyName, Object defaultValue,
                        String propertiesFileName = "local.properties") {

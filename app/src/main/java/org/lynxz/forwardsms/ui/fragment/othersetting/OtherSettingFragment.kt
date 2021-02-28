@@ -171,7 +171,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                     // 删除图标
                     setImageOnClickListener {
                         (tag as? String)?.let {
-                            vm.mosaicParaLiveData.value?.detailMosaicMap?.remove(it)
+                            vm.updateMosaicPara(it, delete = true)
                         }
                     }
 

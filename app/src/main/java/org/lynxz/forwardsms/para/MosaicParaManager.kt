@@ -67,4 +67,24 @@ object MosaicParaManager : AbsSpSettingInfoManager<MosaicParaManager.MosaicParaB
         LoggerUtil.w("xxx", "mosaic getParaFromSp $paraKey,bean=${SpJsonUtilImpl.toJson(bean)}")
         return bean
     }
+
+    /**
+     * 更新马赛克配对信息
+     * @param key String
+     * @param value String 替换值, 若delete为false时有效
+     * @param delete Boolean 是否为删除指定的key内容
+     *                  false-删除指定的key
+     *                  true-添加key-value到map中
+     */
+    fun updateMosaicPara(key: String, value: String = "", delete: Boolean = true) {
+        innerLiveData.value = innerLiveData.value?.apply {
+            detailMosaicMap.let {
+                delete.yes {
+                    it.remove(key)
+                }.otherwise {
+                    it.put(key, value)
+                }
+            }
+        }
+    }
 }
