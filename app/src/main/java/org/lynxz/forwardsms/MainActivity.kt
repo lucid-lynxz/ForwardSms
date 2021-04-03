@@ -134,7 +134,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 通知栏消息
-        NotificationUtils.getInstance(this).sendNotification("短信转发", "正在运行中...", 100)
+        NotificationUtils.getInstance(this).sendNotification("消息转发", "正在运行中...", 100)
 
         // 转发微信消息,默认转发, 需要在手机设置中启用通知栏权限
         cbx_forward_wechat.setOnCheckedChangeListener { buttonView, isChecked ->

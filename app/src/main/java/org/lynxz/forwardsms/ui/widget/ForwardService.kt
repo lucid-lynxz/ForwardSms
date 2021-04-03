@@ -10,7 +10,7 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.para.ImSettingManager
-
+import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 import org.lynxz.forwardsms.viewmodel.ScreenStateViewModel
 import org.lynxz.utils.log.LoggerUtil
@@ -41,9 +41,9 @@ class ForwardService : Service() {
 
         // 遍历所有支持的平台,尝试进行发送数据发送
         val platformMap = ImSettingManager.imSettingMapLiveData().value
-        platformMap?.forEach {
-            val type = it.key
-            val imSetting = it.value
+        platformMap?.forEach { entry ->
+            val type = entry.key
+            val imSetting = entry.value
 
             if (imSetting?.enable == true) {
                 IMManager.sendTextMessage(type, body.duplicate().apply {
@@ -51,6 +51,8 @@ class ForwardService : Service() {
                     imType = type
                 }) { result ->
                     LoggerUtil.w(TAG, "sendTextMsg by $type ,result: ${convert2Str(result)}")
+                    NotificationUtils.getInstance(null)
+                        ?.sendNotification("消息转发", "$type:${result.detail}", 100)
                 }
 
 //                when (type) {

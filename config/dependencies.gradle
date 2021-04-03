@@ -1,6 +1,6 @@
-// configVersion: 43
-// date: 2021.02.11
-// description: 添加 javassist
+// configVersion: 45
+// date: 2021.04.1
+// description: 添加 xutils
 ext {
     gradleToolVersion = '4.1.1'
 
@@ -397,6 +397,12 @@ ext {
             basePayWrapper                : 'org.lynxz.basepaywrapper:basepaywrapper:1.0.5',
             wechatPayWrapper              : 'org.lynxz.wechatpaywrapper:wechatpaywrapper:1.0.5',
             aliPayWrapper                 : 'org.lynxz.alipaywrapper:alipaywrapper:1.0.5',
+
+            /*
+            * 自定义常用工具类,基于androidX: https://github.com/lucid-lynxz/utils
+            * implementation(libs.xUtils)
+            * */
+            xUtils                       : "com.github.lucid-lynxz:utils:0.1.5"
     ]
 
     test = [

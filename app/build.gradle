@@ -12,7 +12,7 @@ android {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
         versionCode 17
-        versionName "1.7.0"
+        versionName "1.7.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -72,7 +72,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
-    implementation 'com.github.lucid-lynxz:utils:0.1.2'
 
     testImplementation(test.junit)
     testImplementation(test.testRunnerX)
@@ -97,6 +96,7 @@ dependencies {
     // recyclerview adapter
     implementation 'com.github.angcyo:DslAdapter:2.5.1'
     implementation(libs.baseRecyclerViewAdapterHelperX)
+    implementation(libs.xUtils)
 }
 
 

@@ -16,26 +16,28 @@ import org.lynxz.forwardsms.R;
 /**
  * 消息管理通知工具类: 8.0的app icon badge参考文档:
  * https://developer.android.com/training/notify-user/badges
- *
- * 使用方法: val notificationId = 100
+ * <p>
+ * 使用方法:
+ * val notificationId = 100
  * val notification = NotificationUtils.getInstance(this).getNotification("title","message")
- * startForeground(NOTICE_ID, notificationId); 或者
- * NotificationUtils.getInstance(this).sendNotification("title","message",notificationId);
+ * startForeground(NOTICE_ID, notificationId);
+ * 或者
+ * NotificationUtils.getInstance(this) // 若已经创建过, 则可以传null
+ * .updateChannelInfo("channelId","channelName") // 更新channel信息,可选
+ * .sendNotification("title","message",notificationId); // 发送消息
  */
 public class NotificationUtils extends ContextWrapper {
 
     // 默认notificationId
     public static final int DEFAULT_NOTIFICATION_ID = 1;
-
+    private static NotificationUtils mNotificationUtils = null;
+    public String channelId = "channel_sms";
+    public String channelName = "channel_name_sms";
     private NotificationManager manager;
-    public static final String id = "channel_sdx";
-    public static final String name = "channel_name_sdx";
 
     public NotificationUtils(Context context) {
         super(context);
     }
-
-    private static NotificationUtils mNotificationUtils = null;
 
     public static NotificationUtils getInstance(Context context) {
         if (mNotificationUtils == null) {
@@ -44,9 +46,18 @@ public class NotificationUtils extends ContextWrapper {
         return mNotificationUtils;
     }
 
+    /**
+     * 更新channel id和name
+     * 在 {@link #sendNotification(String, String, int)} 前触发
+     */
+    public void updateChannelInfo(String channelId, String channelName) {
+        this.channelId = channelId;
+        this.channelName = channelName;
+    }
+
     @TargetApi(Build.VERSION_CODES.O)
     public void createNotificationChannel(boolean showBadge) {
-        NotificationChannel channel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
         channel.setShowBadge(showBadge);
         NotificationManager manager = getManager();
         if (manager != null) {
@@ -63,7 +74,7 @@ public class NotificationUtils extends ContextWrapper {
 
     @TargetApi(Build.VERSION_CODES.O)
     public Notification.Builder getChannelNotification(String title, String content) {
-        return new Notification.Builder(getApplicationContext(), id).setContentTitle(title).setContentText(content)
+        return new Notification.Builder(getApplicationContext(), channelId).setContentTitle(title).setContentText(content)
                 .setSmallIcon(R.mipmap.ic_launcher).setAutoCancel(true);
     }
 
@@ -81,7 +92,7 @@ public class NotificationUtils extends ContextWrapper {
     }
 
     public int sendNotification(String title, String content, PendingIntent pi, boolean showBadge, int messageCount,
-            int notificationId) {
+                                int notificationId) {
         NotificationManager manager = getManager();
         Notification notification = null;
 

@@ -19,7 +19,7 @@ apply from: "../config/sign.gradle"
 android {
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         release {
             initWith(debug)
@@ -36,10 +36,14 @@ android {
 buildscript {
     // 写在闭包中才能引用到,而且可以被各module直接应用
     apply from: "./config/dependencies.gradle"
+    ext.use_androidx = false // false-使用support库
 
     repositories {
-        google()
-        jcenter()
+        // google()
+        // jcenter()
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        maven { url 'https://jitpack.io' }
         mavenCentral()
     }
 
@@ -71,14 +75,25 @@ buildscript {
 
 ```groovy
 // app/build.gradle
-// apply from: "../config/dependencies.gradle"
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+// 导入签名配置
 apply from: "../config/sign.gradle"
 
-android{
+android {
     compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
     defaultConfig {
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
+
+        if (use_androidx) {
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        } else {
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
     }
 
     buildTypes {
@@ -86,30 +101,43 @@ android{
             signingConfig signingConfigs.release
         }
         release {
-            signingConfig signingConfigs.release
+            initWith(debug)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation(test.junit)
-    androidTestImplementation(test.espresso)
-    androidTestImplementation(test.testRunner)
-
-    implementation(libs.appcompat)
-    implementation(libs.supportV4)
-    implementation(libs.constraintLayout)
-    
     implementation(libs.kotlinLib)
-    implementation(libs.ktxCore)
-    implementation(libs.kotlinxCoroutinesCore)
-    implementation(libs.kotlinxCoroutinesAndroid)
 
-    // 依赖就可以改成如此形式了, 在多模块开发时会很方便
-    // rx
-    implementation(libs.rxJava2)
-    implementation(libs.rxAndroid2)
-    implementation(libs.rxPermission2)
+    if (use_androidx) {
+        androidTestImplementation(test.junitExtX)
+        androidTestImplementation(test.espressoX)
+        androidTestImplementation(test.testRunnerX)
+
+        implementation(libs.appcompatX)
+        implementation(libs.supportV4X)
+        implementation(libs.constraintLayoutX)
+
+        implementation(libs.ktxCore)
+        implementation(libs.kotlinxCoroutinesCore)
+        implementation(libs.kotlinxCoroutinesAndroid)
+
+        implementation(libs.xUtils)
+    } else {
+        androidTestImplementation(test.espresso)
+        androidTestImplementation(test.testRunner)
+
+        implementation(libs.appcompat)
+        implementation(libs.supportV4)
+        implementation(libs.constraintLayout)
+
+        // rx依赖
+//        implementation(libs.rxJava2)
+//        implementation(libs.rxAndroid2)
+//        implementation(libs.rxPermission2)
+    }
 }
 ```
