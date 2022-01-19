@@ -11,12 +11,12 @@ import com.angcyo.dsladapter.DslAdapterStatusItem
 import com.angcyo.dsladapter.DslItemDecoration
 import com.angcyo.dsladapter.dslItem
 import com.suke.widget.SwitchButton
-import kotlinx.android.synthetic.main.fragment_forward_setting.*
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
+import org.lynxz.forwardsms.databinding.FragmentForwardSettingBinding
 import org.lynxz.forwardsms.para.ImSettingManager
-import org.lynxz.forwardsms.ui.BaseFragment
+import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.activity.BaseImSettingBindingActivity
 import org.lynxz.forwardsms.ui.activity.DingdingSettingActivity
 import org.lynxz.forwardsms.ui.activity.FeishuSettingActivity
@@ -27,9 +27,9 @@ import org.lynxz.forwardsms.ui.widget.AppAdapterStatusItem
  * 消息转发配置
  * 支持: 邮箱/飞书/钉钉/telegram bot...
  * */
-class ForwardSettingFragment : BaseFragment() {
+class ForwardSettingFragment : BaseBindingFragment<FragmentForwardSettingBinding>() {
     private val forwardSettingViewModel by lazy {
-        ViewModelProviders.of(activity!!).get(ForwardSettingViewModel::class.java)
+        ViewModelProviders.of(requireActivity()).get(ForwardSettingViewModel::class.java)
     }
 
     private val dslAdapter =
@@ -41,7 +41,7 @@ class ForwardSettingFragment : BaseFragment() {
     override fun getLayoutRes() = R.layout.fragment_forward_setting
 
     override fun afterViewCreated(view: View) {
-        rv_config.apply {
+        dataBinding.rvConfig.apply {
             addItemDecoration(DslItemDecoration())
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(activity)
@@ -50,7 +50,7 @@ class ForwardSettingFragment : BaseFragment() {
 
         // 显示已添加的平台信息
         ImSettingManager.imSettingMapLiveData().observe(
-            activity!!,
+            requireActivity(),
             Observer<MutableMap<String, ImSetting?>> { settingMap ->
                 dslAdapter.resetItem(listOf())
                 dslAdapter.setAdapterStatus(if (settingMap.isNullOrEmpty()) DslAdapterStatusItem.ADAPTER_STATUS_EMPTY else DslAdapterStatusItem.ADAPTER_STATUS_NONE)
@@ -90,22 +90,22 @@ class ForwardSettingFragment : BaseFragment() {
             })
 
         // 右下角添加按钮列表
-        fab_dingding.setOnClickListener {
-            menu_platform_add.close(true)
+        dataBinding.fabDingding.setOnClickListener {
+            dataBinding.menuPlatformAdd.close(true)
             targetSettingActivityPage = DingdingSettingActivity::class.java
         }
-        fab_feishu.setOnClickListener {
-            menu_platform_add.close(true)
+        dataBinding.fabFeishu.setOnClickListener {
+            dataBinding.menuPlatformAdd.close(true)
             targetSettingActivityPage = FeishuSettingActivity::class.java
         }
-        fab_telegram.setOnClickListener {
-            menu_platform_add.close(true)
+        dataBinding.fabTelegram.setOnClickListener {
+            dataBinding.menuPlatformAdd.close(true)
             targetSettingActivityPage = TelegramSettingActivity::class.java
         }
 
         // 动画结束后再跳转到对应的设置二面
-        menu_platform_add.setClosedOnTouchOutside(true) // 点击非按钮区,关闭菜单
-        menu_platform_add.setOnMenuToggleListener { opened ->
+        dataBinding.menuPlatformAdd.setClosedOnTouchOutside(true) // 点击非按钮区,关闭菜单
+        dataBinding.menuPlatformAdd.setOnMenuToggleListener { opened ->
             if (!opened) {
                 targetSettingActivityPage?.let {
                     startActivity(Intent(activity, it))

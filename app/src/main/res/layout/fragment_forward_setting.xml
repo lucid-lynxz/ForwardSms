@@ -1,59 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.forwardsetting.ForwardSettingFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_config"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <data>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_config"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+    </data>
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu_platform_add"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu_fab_size="normal"
-        fab:menu_backgroundColor="#ccffffff"
-        fab:menu_labels_ellipsize="end"
-        fab:menu_labels_singleLine="true">
+        tools:context=".ui.fragment.forwardsetting.ForwardSettingFragment">
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_telegram"
-            style="@style/fab_menu"
-            android:src="@mipmap/im_telegram_normal"
-            fab:fab_label="Telegram" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_config"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_feishu"
-            style="@style/fab_menu"
-            android:src="@mipmap/im_feishu_normal"
-            fab:fab_label="飞书" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add_config"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/ic_input_add" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_dingding"
-            style="@style/fab_menu"
-            android:src="@mipmap/im_dingding_normal"
-            fab:fab_label="钉钉" />
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/menu_platform_add"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:menu_fab_size="normal"
+            fab:menu_backgroundColor="#ccffffff"
+            fab:menu_labels_ellipsize="end"
+            fab:menu_labels_singleLine="true">
 
-    </com.github.clans.fab.FloatingActionMenu>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_telegram"
+                style="@style/fab_menu"
+                android:src="@mipmap/im_telegram_normal"
+                fab:fab_label="Telegram" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_feishu"
+                style="@style/fab_menu"
+                android:src="@mipmap/im_feishu_normal"
+                fab:fab_label="飞书" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab_dingding"
+                style="@style/fab_menu"
+                android:src="@mipmap/im_dingding_normal"
+                fab:fab_label="钉钉" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

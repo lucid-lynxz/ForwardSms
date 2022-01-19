@@ -1,6 +1,5 @@
 package org.lynxz.forwardsms.ui.activity
 
-import kotlinx.android.synthetic.main.activity_telegram_setting.*
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
@@ -21,9 +20,9 @@ class TelegramSettingActivity : BaseImSettingBindingActivity<ActivityTelegramSet
     }
 
     override fun saveImSetting() {
-        val botToken = getAndCheckInputValid(edt_bot_token, "请输入电报机器人token") ?: return
+        val botToken = getAndCheckInputValid(dataBinding.edtBotToken, "请输入电报机器人token") ?: return
         val targetUserName =
-            getAndCheckInputValid(edt_target_name, "请输入telegram昵称或者userName") ?: return
+            getAndCheckInputValid(dataBinding.edtTargetName, "请输入telegram昵称或者userName") ?: return
 
         ImSettingManager.updateImSetting(ImType.TG) {
             val setting = it as ImSetting.TGImSetting

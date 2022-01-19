@@ -5,10 +5,11 @@ import android.os.Handler
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.noober.background.BackgroundLibrary
-import kotlinx.android.synthetic.main.activity_base.*
 import org.lynxz.forwardsms.R
+import org.lynxz.forwardsms.databinding.ActivityBaseBinding
 import org.lynxz.forwardsms.ui.trans.BaseTransFragment
 import org.lynxz.forwardsms.ui.trans.IPermissionCallback
 import org.lynxz.forwardsms.ui.trans.PermissionFragment
@@ -25,13 +26,11 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
         })
     }
 
-    protected fun requestPermission(permission: String) {
+    protected fun requestPermission(permission: String) =
         permissionFrag?.requestPermission(permission, this)
-    }
 
-    protected fun requestPermissions(permissions: Array<String>) {
+    protected fun requestPermissions(permissions: Array<String>) =
         permissionFrag?.requestPermissions(permissions, this)
-    }
 
     override fun onRequestResult(permission: PermissionResultInfo) {
     }
@@ -44,10 +43,12 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
 
         // 可自定义布局或者通过fragment替换
         if (layoutRes == 0) {
+            val binding =
+                DataBindingUtil.setContentView<ActivityBaseBinding>(this, R.layout.activity_base)
             setContentView(R.layout.activity_base)
 
             getContentFragment()?.let {
-                rl_base_container.visibility = View.VISIBLE
+                binding.rlBaseContainer.visibility = View.VISIBLE
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.rl_base_container, it)
@@ -77,7 +78,6 @@ abstract class BaseActivity : AppCompatActivity(), IPermissionCallback {
     open fun onGetLayoutResSuccessful(@LayoutRes layoutRes: Int) {
         setContentView(layoutRes)
     }
-
 
     /**
      * 在 android.R.id.content 中追加一个fragment

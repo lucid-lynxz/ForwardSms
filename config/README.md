@@ -66,7 +66,6 @@ buildscript {
 //         apply plugin: 'com.android.library'
 //     }
 //     apply plugin: 'kotlin-android'
-//     apply plugin: 'kotlin-android-extensions'
 //     apply plugin: 'kotlin-kapt'
 // }
 ```
@@ -77,7 +76,6 @@ buildscript {
 // app/build.gradle
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 // 导入签名配置
 apply from: "../config/sign.gradle"

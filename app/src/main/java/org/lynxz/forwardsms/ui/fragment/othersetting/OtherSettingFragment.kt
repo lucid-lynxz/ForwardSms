@@ -12,7 +12,6 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.listener.CustomListener
 import com.bigkoo.pickerview.view.TimePickerView
 import com.noober.background.drawable.DrawableCreator
-import kotlinx.android.synthetic.main.fragment_other_setting.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.databinding.FragmentOtherSettingBinding
 import org.lynxz.forwardsms.hideKeyboard
@@ -63,17 +62,17 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
 
         // 是否启用时间段设置
         vm.enableAddTimeDurationLiveData.observe(this,
-            { enable -> btn_add_forward_time.isEnabled = enable })
+            { enable -> dataBinding.btnAddForwardTime.isEnabled = enable })
 
         // 状态变化是,保存数据
         vm.enableDateLiveData.observe(this, { TimeValidationParaManager.updateAndSavePara() })
 
         // 是否启用不可转发日期设置
         vm.allDateLiveData.observe(this, Observer1 { validateDate ->
-            fl_forward_date.removeAllViews()
+            dataBinding.flForwardDate.removeAllViews()
             (1..7).forEach { weekDayIndex ->
-                fl_forward_date.addView(
-                    LRTextImageView(activity!!)
+                dataBinding.flForwardDate.addView(
+                    LRTextImageView(requireActivity())
                         .updateText("周$weekDayIndex".replace("周7", "周日"))
                         .updateImage(if (TimeValidationParaManager.isInWeekDays(weekDayIndex)) R.drawable.ic_checked_24 else R.drawable.ic_uncheck_24)
                         .apply {
@@ -100,10 +99,10 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
 
         // 添加所有时间段配置
         vm.allTimeDurationLiveData.observe(this, { list ->
-            fl_forward_time.removeAllViews()
+            dataBinding.flForwardTime.removeAllViews()
             list.forEachIndexed { index, timeDurationBean ->
-                fl_forward_time.addView(
-                    LRTextImageView(activity!!)
+                dataBinding.flForwardTime.addView(
+                    LRTextImageView(requireActivity())
                         .updateText(timeDurationBean.toString())
                         .updateImage(R.drawable.ic_close_24)
                         .updateImageSize(ScreenUtil.dp2px(activity, 16))
@@ -149,10 +148,10 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
      * 更新所有马赛克模糊条件view
      * */
     private fun updateMosaicParaViews() {
-        fl_mosaic_condition.removeAllViews()
+        dataBinding.flMosaicCondition.removeAllViews()
         var index = 0
         MosaicParaManager.mosaicParaLiveData.value?.detailMosaicMap?.forEach { condition ->
-            val mosaicView = LRTextImageView(activity!!)
+            val mosaicView = LRTextImageView(requireActivity())
                 .updateText("${condition.key}->${condition.value}")
                 .updateImage(R.drawable.ic_close_24)
                 .updateImageSize(ScreenUtil.dp2px(activity, 16))
@@ -180,7 +179,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
                         }
                     }
                 }
-            fl_mosaic_condition.addView(mosaicView, index, paraLayoutParam)
+            dataBinding.flMosaicCondition.addView(mosaicView, index, paraLayoutParam)
             index++
         }
     }
@@ -190,7 +189,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
      * 两边圆形
      * */
     private fun createItemBgDrawable() = DrawableCreator.Builder()
-        .setCornersRadius(ScreenUtil.dp2px(activity!!, 20).toFloat())
+        .setCornersRadius(ScreenUtil.dp2px(requireActivity(), 20).toFloat())
         .setSolidColor(Color.WHITE)
         .setStrokeColor(ResourceUtil.getColor(R.color.gray))
         .setStrokeWidth(1f)
@@ -237,7 +236,7 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
         TimePickerBuilder(activity) { date, _ ->
             // 保存时间配置
             LoggerUtil.d("pvTime", "onTimeSelect")
-            tv_time.text = "选择时间 ${SimpleDateFormat("HH:mm", Locale.CHINA).format(date)}"
+            dataBinding.tvTime.text = "选择时间 ${SimpleDateFormat("HH:mm", Locale.CHINA).format(date)}"
         }
             .setType(booleanArrayOf(false, false, false, true, true, false))
             .setTimeSelectChangeListener { vm.updateEditingTime(it) }
@@ -275,17 +274,17 @@ class OtherSettingFragment : BaseBindingFragment<FragmentOtherSettingBinding>(),
 
     override fun onClick(v: View?) {
         when (v) {
-            tv_time, btn_add_forward_time -> { // 添加时间段
+            dataBinding.tvTime, dataBinding.btnAddForwardTime -> { // 添加时间段
                 vm.chooseTimeDurationForEditing(-1)
                 timePickView.show(true) // 显示时间选择面板
             }
 
-            btn_confirm_low_battery_listener -> { // 设置电量监听
+            dataBinding.btnConfirmLowBatteryListener -> { // 设置电量监听
                 BatteryListenerManager.updateAndSave()
                 activity?.hideKeyboard()
-                edt_low_battery.clearFocus()
+                dataBinding.edtLowBattery.clearFocus()
             }
-            btn_add_mosaic_condition -> { // 添加模糊处理
+            dataBinding.btnAddMosaicCondition -> { // 添加模糊处理
                 updateMosaicCondition()
             }
         }

@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.angcyo.dsladapter.DslAdapterStatusItem
 import com.angcyo.dsladapter.dslItem
-import kotlinx.android.synthetic.main.fragment_common_recyclerview.*
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.convertDateFormat
@@ -49,7 +48,7 @@ class SmsListFragment : BaseRecyclerViewFragment() {
     @SuppressLint("SetTextI18n")
     override fun onAfterInitBaseLayout() {
         // 抛到主线程队列最后,发起权限申请
-        srf_common.post { requestSmsPermission() }
+        dataBinding.srfCommon.post { requestSmsPermission() }
     }
 
     /**
@@ -67,7 +66,7 @@ class SmsListFragment : BaseRecyclerViewFragment() {
                 Observer<List<SmsDetail>> { data ->
                     val size = data?.size ?: 0
                     val isEmpty = size == 0
-                    srf_common.isRefreshing = false
+                    dataBinding.srfCommon.isRefreshing = false
                     dslAdapter.setAdapterStatus(if (isEmpty) DslAdapterStatusItem.ADAPTER_STATUS_EMPTY else DslAdapterStatusItem.ADAPTER_STATUS_NONE)
                     if (!isEmpty) {
                         data.forEach {
@@ -147,7 +146,7 @@ class SmsListFragment : BaseRecyclerViewFragment() {
     private fun showPermissionSettingTipDialog(title: String, content: String) {
         if (isDialogShowing) return
         isDialogShowing = true
-        AlertDialog.Builder(activity!!).apply {
+        AlertDialog.Builder(requireActivity()).apply {
             setMessage(content)
             setTitle(title)
         }
@@ -155,7 +154,7 @@ class SmsListFragment : BaseRecyclerViewFragment() {
                 try {
                     shouldCheckPermissionAgainWhenOnResume = true
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    intent.data = Uri.parse("package:${activity!!.packageName}")
+                    intent.data = Uri.parse("package:${requireActivity().packageName}")
                     startActivity(intent)
                 } catch (e: Exception) {
                     e.printStackTrace()

@@ -6,12 +6,12 @@ import com.angcyo.dsladapter.DslAdapter
 import com.angcyo.dsladapter.DslAdapterStatusItem
 import com.angcyo.dsladapter.DslItemDecoration
 import com.angcyo.dsladapter.HoverItemDecoration
-import kotlinx.android.synthetic.main.fragment_common_recyclerview.*
 import org.lynxz.forwardsms.R
-import org.lynxz.forwardsms.ui.BaseFragment
+import org.lynxz.forwardsms.databinding.FragmentCommonRecyclerviewBinding
+import org.lynxz.forwardsms.ui.BaseBindingFragment
 import org.lynxz.forwardsms.ui.widget.AppAdapterStatusItem
 
-abstract class BaseRecyclerViewFragment : BaseFragment() {
+abstract class BaseRecyclerViewFragment : BaseBindingFragment<FragmentCommonRecyclerviewBinding>() {
 
     /**提供悬停功能*/
     var hoverItemDecoration = HoverItemDecoration()
@@ -30,7 +30,7 @@ abstract class BaseRecyclerViewFragment : BaseFragment() {
     final override fun getLayoutRes() = R.layout.fragment_common_recyclerview
 
     final override fun afterViewCreated(view: View) {
-        rv_common.apply {
+        dataBinding.rvCommon.apply {
             addItemDecoration(baseDslItemDecoration)
             hoverItemDecoration.attachToRecyclerView(this)
 
@@ -43,8 +43,8 @@ abstract class BaseRecyclerViewFragment : BaseFragment() {
             adapter = dslAdapter
         }
 
-        srf_common.setColorSchemeResources(R.color.colorPrimary)
-        srf_common.setOnRefreshListener { onRefresh() }
+        dataBinding.srfCommon.setColorSchemeResources(R.color.colorPrimary)
+        dataBinding.srfCommon.setOnRefreshListener { onRefresh() }
         onAfterInitBaseLayout()
     }
 
@@ -66,18 +66,18 @@ abstract class BaseRecyclerViewFragment : BaseFragment() {
     /**
      * 错误提示背景
      * */
-    protected fun getTipTextView() = tv_tip
+    protected fun getTipTextView() = dataBinding.tvTip
 
     /**
      * 显隐提示语
      * */
     protected fun showTipInfo(show: Boolean = true) {
-        tv_tip.visibility = if (show) View.VISIBLE else View.GONE
-        srf_common.visibility = if (show) View.GONE else View.VISIBLE
+        dataBinding.tvTip.visibility = if (show) View.VISIBLE else View.GONE
+        dataBinding.srfCommon.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     protected fun updateTipInfo(msg: CharSequence?, clickListener: View.OnClickListener? = null) {
-        tv_tip.text = msg
-        tv_tip.setOnClickListener(clickListener)
+        dataBinding.tvTip.text = msg
+        dataBinding.tvTip.setOnClickListener(clickListener)
     }
 }

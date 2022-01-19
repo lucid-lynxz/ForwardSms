@@ -3,20 +3,16 @@ package org.lynxz.forwardsms.ui.activity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.showKeyBoard
 import org.lynxz.forwardsms.showToast
-import org.lynxz.forwardsms.ui.BaseActivity
+import org.lynxz.forwardsms.ui.BaseBindingActivity
 
 /**
  * 钉钉参数配置
  * */
-abstract class BaseImSettingBindingActivity<B : ViewDataBinding> : BaseActivity() {
-    lateinit var dataBinding: B
-
-
+abstract class BaseImSettingBindingActivity<B : ViewDataBinding> : BaseBindingActivity<B>() {
     /**
      * 从sp中提取配置参数,并设置到布局 dataBinding中
      * */
@@ -33,10 +29,6 @@ abstract class BaseImSettingBindingActivity<B : ViewDataBinding> : BaseActivity(
     abstract fun getPageTitle(): String
 
     final override fun getContentFragment() = null
-
-    override fun onGetLayoutResSuccessful(layoutRes: Int) {
-        dataBinding = DataBindingUtil.setContentView(this, layoutRes)
-    }
 
     override fun afterViewCreated() {
         supportActionBar?.apply {

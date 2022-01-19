@@ -1,6 +1,5 @@
 package org.lynxz.forwardsms.ui.activity
 
-import kotlinx.android.synthetic.main.activity_dingding_setting.*
 import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.forwardsms.R
 import org.lynxz.forwardsms.bean.ImSetting
@@ -21,10 +20,10 @@ class DingdingSettingActivity : BaseImSettingBindingActivity<ActivityDingdingSet
     }
 
     override fun saveImSetting() {
-        val corpId = getAndCheckInputValid(edt_corpid) ?: return
-        val corpSecret = getAndCheckInputValid(edt_corp_secret) ?: return
-        val agentId = getAndCheckInputValid(edt_agent_id) ?: return
-        val targetUserName = getAndCheckInputValid(edt_target_name) ?: return
+        val corpId = getAndCheckInputValid(dataBinding.edtCorpid) ?: return
+        val corpSecret = getAndCheckInputValid(dataBinding.edtCorpSecret) ?: return
+        val agentId = getAndCheckInputValid(dataBinding.edtAgentId) ?: return
+        val targetUserName = getAndCheckInputValid(dataBinding.edtTargetName) ?: return
 
         ImSettingManager.updateImSetting(ImType.DingDing) {
             val setting = it as ImSetting.DDImSetting

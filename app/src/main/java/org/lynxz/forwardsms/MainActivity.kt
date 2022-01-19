@@ -9,7 +9,6 @@ import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.MainScope
@@ -20,10 +19,11 @@ import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.msec2date
 import org.lynxz.forwardsms.bean.ImSetting
 import org.lynxz.forwardsms.bean.SmsDetail
+import org.lynxz.forwardsms.databinding.ActivityMainBinding
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.para.RecookImSettingPara
-import org.lynxz.forwardsms.ui.BaseActivity
+import org.lynxz.forwardsms.ui.BaseBindingActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
 import org.lynxz.forwardsms.util.BrandUtil
@@ -37,7 +37,7 @@ import org.lynxz.utils.log.LoggerUtil
  * 测试及设置页面
  * */
 @ExperimentalCoroutinesApi
-class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope by MainScope() {
     companion object {
         const val TAG = "MainActivity"
         private const val delayActionTagRefreshDingDing = 0x001L // 刷新钉钉token
@@ -70,37 +70,37 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         ImSettingManager.imSettingMapLiveData()
             .observe(this, Observer {
                 it[ImType.TG]?.let { setting ->
-                    edt_user_name_tg.setText(setting.targetUserName)
-                    cbx_tg.isChecked = setting.enable
-                    edt_user_name_tg.isEnabled = setting.enable
-                    btn_confirm_tg.isEnabled = setting.enable
+                    dataBinding.edtUserNameTg.setText(setting.targetUserName)
+                    dataBinding.cbxTg.isChecked = setting.enable
+                    dataBinding.edtUserNameTg.isEnabled = setting.enable
+                    dataBinding.btnConfirmTg.isEnabled = setting.enable
                 }
 
                 it[ImType.DingDing]?.let { setting ->
-                    edt_user_name_dd.setText(setting.targetUserName)
-                    cbx_dingding.isChecked = setting.enable
-                    edt_user_name_dd.isEnabled = setting.enable
-                    btn_confirm_dd.isEnabled = setting.enable
+                    dataBinding.edtUserNameDd.setText(setting.targetUserName)
+                    dataBinding.cbxDingding.isChecked = setting.enable
+                    dataBinding.edtUserNameDd.isEnabled = setting.enable
+                    dataBinding.btnConfirmDd.isEnabled = setting.enable
                 }
 
                 it[ImType.FeiShu]?.let { setting ->
-                    edt_user_name_feishu.setText(setting.targetUserName)
-                    cbx_feishu.isChecked = setting.enable
-                    edt_user_name_feishu.isEnabled = setting.enable
-                    btn_confirm_feishu.isEnabled = setting.enable
+                    dataBinding.edtUserNameFeishu.setText(setting.targetUserName)
+                    dataBinding.cbxFeishu.isChecked = setting.enable
+                    dataBinding.edtUserNameFeishu.isEnabled = setting.enable
+                    dataBinding.btnConfirmFeishu.isEnabled = setting.enable
                 }
             })
 
         SmsConstantParas.phoneTag = if (phoneTag.isBlank()) Build.MODEL else phoneTag
-        edt_phone_tag.setText(phoneTag)
-        tv_info.movementMethod = ScrollingMovementMethod.getInstance()
+        dataBinding.edtPhoneTag.setText(phoneTag)
+        dataBinding.tvInfo.movementMethod = ScrollingMovementMethod.getInstance()
 
 //        requestPermission(Manifest.permission.READ_SMS)
 
         // 是否启用telegram
-        cbx_tg.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_tg.isEnabled = isChecked
-            btn_confirm_tg.isEnabled = isChecked
+        dataBinding.cbxTg.setOnCheckedChangeListener { _, isChecked ->
+            dataBinding.edtUserNameTg.isEnabled = isChecked
+            dataBinding.btnConfirmTg.isEnabled = isChecked
             bEnableTg = isChecked
             ImSettingManager.updateImSetting(ImType.TG, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
@@ -110,9 +110,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 是否启用钉钉
-        cbx_dingding.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_dd.isEnabled = isChecked
-            btn_confirm_dd.isEnabled = isChecked
+        dataBinding.cbxDingding.setOnCheckedChangeListener { _, isChecked ->
+            dataBinding.edtUserNameDd.isEnabled = isChecked
+            dataBinding.btnConfirmDd.isEnabled = isChecked
             bEnableDingDing = isChecked
             ImSettingManager.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
@@ -122,9 +122,9 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 是否启用飞书
-        cbx_feishu.setOnCheckedChangeListener { _, isChecked ->
-            edt_user_name_feishu.isEnabled = isChecked
-            btn_confirm_feishu.isEnabled = isChecked
+        dataBinding.cbxFeishu.setOnCheckedChangeListener { _, isChecked ->
+            dataBinding.edtUserNameFeishu.isEnabled = isChecked
+            dataBinding.btnConfirmFeishu.isEnabled = isChecked
             bEnableFeishu = isChecked
             ImSettingManager.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
@@ -137,7 +137,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         NotificationUtils.getInstance(this).sendNotification("消息转发", "正在运行中...", 100)
 
         // 转发微信消息,默认转发, 需要在手机设置中启用通知栏权限
-        cbx_forward_wechat.setOnCheckedChangeListener { buttonView, isChecked ->
+        dataBinding.cbxForwardWechat.setOnCheckedChangeListener { buttonView, isChecked ->
             bForwardWechat = isChecked
             if (isChecked) {
                 enableMonitorNotification()
@@ -146,19 +146,19 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
         enableMonitorNotification()
         GlobalParaUtil.enableForwardWechat(true)
-        cbx_forward_wechat.isChecked = bForwardWechat
+        dataBinding.cbxForwardWechat.isChecked = bForwardWechat
 
         // 是否启用短信转发,默认启用
-        cbx_forward_sms.setOnCheckedChangeListener { buttonView, isChecked ->
+        dataBinding.cbxForwardSms.setOnCheckedChangeListener { buttonView, isChecked ->
             bForwardSms = isChecked
             GlobalParaUtil.enableForwardSms(isChecked)
         }
-        cbx_forward_sms.isChecked = bForwardSms
+        dataBinding.cbxForwardSms.isChecked = bForwardSms
         GlobalParaUtil.enableForwardSms(bForwardSms)
 
         // 设置telegram接收用户
-        btn_confirm_tg.setOnClickListener {
-            tgUserName = edt_user_name_tg.text.toString().trim()
+        dataBinding.btnConfirmTg.setOnClickListener {
+            tgUserName = dataBinding.edtUserNameTg.text.toString().trim()
             ImSettingManager.updateImSetting(ImType.TG, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = tgUserName
@@ -168,8 +168,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 设置钉钉接收用户
-        btn_confirm_dd.setOnClickListener {
-            ddUserName = edt_user_name_dd.text.toString().trim()
+        dataBinding.btnConfirmDd.setOnClickListener {
+            ddUserName = dataBinding.edtUserNameDd.text.toString().trim()
             ImSettingManager.updateImSetting(ImType.DingDing, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = ddUserName
@@ -179,8 +179,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 设置飞书接收用户名
-        btn_confirm_feishu.setOnClickListener {
-            feiShuUserName = edt_user_name_feishu.text.toString().trim()
+        dataBinding.btnConfirmFeishu.setOnClickListener {
+            feiShuUserName = dataBinding.edtUserNameFeishu.text.toString().trim()
             ImSettingManager.updateImSetting(ImType.FeiShu, object : RecookImSettingPara {
                 override fun invoke(p1: ImSetting) {
                     p1.targetUserName = feiShuUserName
@@ -190,8 +190,8 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         }
 
         // 设置本机识别名
-        btn_confirm_phone_tag.setOnClickListener {
-            phoneTag = edt_phone_tag.text.toString().trim()
+        dataBinding.btnConfirmPhoneTag.setOnClickListener {
+            phoneTag = dataBinding.edtPhoneTag.text.toString().trim()
             SmsConstantParas.phoneTag = phoneTag
         }
 
@@ -199,7 +199,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
 //            init(application)
 //        }
         GlobalParaUtil.getReceivedSms().observe(this, Observer<SmsDetail> {
-            tv_info.text = it.toString()
+            dataBinding.tvInfo.text = it.toString()
         })
 
         GlobalParaUtil.getSmsHistory().observe(this, Observer {
@@ -213,7 +213,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             it.forEach { sms ->
                 his.append("\n").append(sms.toString())
             }
-            tv_info.text = his.toString()
+            dataBinding.tvInfo.text = his.toString()
         })
 
         requestPermissions(
@@ -223,45 +223,44 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             )
         )
 
-        btn_mock_sms_receive.setOnClickListener { GlobalParaUtil.mockSmsReceived() }
+        dataBinding.btnMockSmsReceive.setOnClickListener { GlobalParaUtil.mockSmsReceived() }
 
-        btn_sms_list.setOnClickListener {
+        dataBinding.btnSmsList.setOnClickListener {
             requestPermission(Manifest.permission.READ_SMS)
         }
 
-        btn_send_msg.setOnClickListener {
-
+        dataBinding.btnSendMsg.setOnClickListener {
             val body = SendMessageReqBean().apply {
                 content = "$lastSms\n测试:${msec2date()}"
             }
 
             // tg发送失败则尝试使用钉钉发送
-            tv_info.text = "发送消息到各im..."
+            dataBinding.tvInfo.text = "发送消息到各im..."
             IMManager.sendTextMessage(ImType.TG, body.duplicate().apply {
                 name = SmsConstantParas.tgUserNme
             }) {
-                tv_info.append("\nsend msg from tg result ${it.ok}\n${it.detail}")
+                dataBinding.tvInfo.append("\nsend msg from tg result ${it.ok}\n${it.detail}")
                 println("send msg from tg result ${it.ok}")
             }
 
             IMManager.sendTextMessage(ImType.DingDing, body.duplicate().apply {
                 name = SmsConstantParas.ddName
             }) {
-                tv_info.append("\nsend msg from dingding result ${it.ok}\n${it.detail}")
+                dataBinding.tvInfo.append("\nsend msg from dingding result ${it.ok}\n${it.detail}")
                 println("send msg from dingding result ${it.ok}")
             }
 
             IMManager.sendTextMessage(ImType.FeiShu, body.duplicate().apply {
                 name = SmsConstantParas.feishuName
             }) {
-                tv_info.append("\nsend msg from feishu result ${it.ok}\n${it.detail}")
+                dataBinding.tvInfo.append("\nsend msg from feishu result ${it.ok}\n${it.detail}")
                 println("send msg from feishu result ${it.ok}")
             }
         }
 
         // 自启动设置
-        btn_auto_start.setOnClickListener { BrandUtil.goAutoStartSetting(this) }
-        btn_more_setting.setOnClickListener { // 跳转新页面,增加更多设置
+        dataBinding.btnAutoStart.setOnClickListener { BrandUtil.goAutoStartSetting(this) }
+        dataBinding.btnMoreSetting.setOnClickListener { // 跳转新页面,增加更多设置
             startActivity(Intent(this, Main2Activity::class.java))
 //            activeImTest()
         }
@@ -278,7 +277,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
         val msg =
             "授权结果\n权限名=${permission.name},是否授权=${permission.granted},是否可再弹出系统权限框=${permission.shouldShowRequestPermissionRationale}"
         LoggerUtil.d(TAG, msg)
-        tv_info.text = msg
+        dataBinding.tvInfo.text = msg
 
         if (permission.name == Manifest.permission.READ_SMS) {
             if (permission.granted) {
@@ -381,7 +380,7 @@ class MainActivity : BaseActivity(), CoroutineScope by MainScope() {
             startActivity(intent)
         } catch (e: Exception) {
             e.printStackTrace()
-            tv_info.text = e.message
+            dataBinding.tvInfo.text = e.message
         }
     }
 }
