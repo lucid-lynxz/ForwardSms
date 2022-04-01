@@ -93,7 +93,7 @@ dependencies {
     implementation(libs.floatingActionButton)
 
     // recyclerview adapter
-    implementation 'com.github.angcyo:DslAdapter:2.5.1'
+    implementation 'com.github.angcyo:DslAdapter:2.6.3'
     implementation(libs.baseRecyclerViewAdapterHelperX)
     implementation(libs.xUtils)
 }
