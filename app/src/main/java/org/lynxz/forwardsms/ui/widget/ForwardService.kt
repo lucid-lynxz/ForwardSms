@@ -50,7 +50,10 @@ class ForwardService : Service() {
                     name = ImSettingManager.getImSetting(type)?.targetUserName
                     imType = type
                 }) { result ->
-                    LoggerUtil.w(TAG, "sendTextMsg by $type ,result: ${convert2Str(result)}")
+                    LoggerUtil.w(
+                        TAG,
+                        "sendTextMsg by $type ,result: ${convert2Str(result)}, ${it.body}"
+                    )
                     NotificationUtils.getInstance(null)
                         ?.sendNotification("消息转发", "$type:${result.detail}", 100)
                 }

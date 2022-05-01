@@ -127,7 +127,7 @@ object GlobalParaUtil {
             sbn: StatusBarNotification?,
             rankingMap: NotificationListenerService.RankingMap?
         ) {
-            LoggerUtil.w(TAG, "获取到notification包名: $pkgName")
+            LoggerUtil.d(TAG, "获取到notification包名: $pkgName")
             if (pkgName == "com.tencent.mm") { // 微信
                 val notification = sbn!!.notification
 

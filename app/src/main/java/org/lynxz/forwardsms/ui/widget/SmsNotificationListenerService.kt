@@ -65,7 +65,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
 
     override fun onListenerConnected() {
         super.onListenerConnected()
-        LoggerUtil.d(TAG, "onListenerConnected")
+        LoggerUtil.w(TAG, "onListenerConnected")
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {

@@ -24,6 +24,7 @@ class SmsApplication : Application() {
 
     companion object {
         lateinit var app: SmsApplication
+        private const val TAG = "SmsLog"
     }
 
     override fun onCreate() {
@@ -33,11 +34,11 @@ class SmsApplication : Application() {
         // 开启日志持久化
         val logDirPath = getExternalFilesDir(null)?.absolutePath ?: filesDir.absolutePath
         LoggerUtil.init(
-            LogLevel.DEBUG, "SmsLog",
+            LogLevel.DEBUG, TAG,
             LogPersistenceImpl("$logDirPath/LogPersistence/")
                 .setLevel(LogLevel.WARN)
         )
-        LoggerUtil.d("LogPersistence dir path:$logDirPath")
+        LoggerUtil.w(TAG, "LogPersistence inited, dir path:$logDirPath")
 
         // 初始化IM配置信息
         ImSettingManager.initPara(this)
@@ -70,20 +71,22 @@ class SmsApplication : Application() {
 
     private val smsServiceConn = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            LoggerUtil.i("smsApplication smsServiceConn onServiceDisconnected $name")
+            LoggerUtil.w(TAG, "smsApplication smsServiceConn onServiceDisconnected $name")
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            LoggerUtil.w(TAG, "smsApplication smsServiceConn onServiceConnected $name")
         }
     }
 
 
     private val notificationServiceConn = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
-            LoggerUtil.i("smsApplication notificationServiceConn onServiceDisconnected $name")
+            LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceDisconnected $name")
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceConnected $name")
         }
     }
 }

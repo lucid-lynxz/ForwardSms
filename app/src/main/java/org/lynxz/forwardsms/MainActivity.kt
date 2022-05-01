@@ -1,9 +1,12 @@
 package org.lynxz.forwardsms
 
 import android.Manifest
+import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Build
+import android.os.IBinder
 import android.provider.Settings
 import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 import android.text.TextUtils
@@ -26,6 +29,8 @@ import org.lynxz.forwardsms.para.RecookImSettingPara
 import org.lynxz.forwardsms.ui.BaseBindingActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
+import org.lynxz.forwardsms.ui.widget.ForwardService
+import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
@@ -240,21 +245,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
                 name = SmsConstantParas.tgUserNme
             }) {
                 dataBinding.tvInfo.append("\nsend msg from tg result ${it.ok}\n${it.detail}")
-                println("send msg from tg result ${it.ok}")
+                println("send msg to tg result ${it.ok}")
             }
 
             IMManager.sendTextMessage(ImType.DingDing, body.duplicate().apply {
                 name = SmsConstantParas.ddName
             }) {
                 dataBinding.tvInfo.append("\nsend msg from dingding result ${it.ok}\n${it.detail}")
-                println("send msg from dingding result ${it.ok}")
+                println("send msg to dingding result ${it.ok}")
             }
 
             IMManager.sendTextMessage(ImType.FeiShu, body.duplicate().apply {
                 name = SmsConstantParas.feishuName
             }) {
                 dataBinding.tvInfo.append("\nsend msg from feishu result ${it.ok}\n${it.detail}")
-                println("send msg from feishu result ${it.ok}")
+                println("send msg to feishu result ${it.ok}")
             }
         }
 
@@ -263,6 +268,41 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
         dataBinding.btnMoreSetting.setOnClickListener { // 跳转新页面,增加更多设置
             startActivity(Intent(this, Main2Activity::class.java))
 //            activeImTest()
+        }
+
+        // 与application生命周期保持一致
+        bindService(
+            Intent(this, ForwardService::class.java),
+            smsServiceConn,
+            Service.BIND_AUTO_CREATE
+        )
+
+        // 通知栏监听
+        bindService(
+            Intent(this, SmsNotificationListenerService::class.java),
+            notificationServiceConn,
+            Service.BIND_AUTO_CREATE
+        )
+    }
+
+    private val smsServiceConn = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            LoggerUtil.w(TAG, "smsApplication smsServiceConn onServiceDisconnected $name")
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            LoggerUtil.w(TAG, "smsApplication smsServiceConn onServiceConnected $name")
+        }
+    }
+
+
+    private val notificationServiceConn = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceDisconnected $name")
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceConnected $name")
         }
     }
 
