@@ -1,10 +1,15 @@
 package org.lynxz.forwardsms.ui.widget
 
+import android.annotation.SuppressLint
 import android.app.Notification
+import android.content.ComponentName
+import android.content.Context
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.utils.log.LoggerUtil
+import java.lang.reflect.Method
+
 
 /**
  * 通过查看通知栏信息读取短信，但只能读取短信内容，发信人信息无
@@ -63,11 +68,19 @@ class SmsNotificationListenerService : NotificationListenerService() {
         }
     }
 
+    // 是可用的并且和通知管理器连接成功时回调
     override fun onListenerConnected() {
         super.onListenerConnected()
         LoggerUtil.w(TAG, "onListenerConnected")
     }
 
+    override fun onListenerDisconnected() {
+        super.onListenerDisconnected()
+        LoggerUtil.w(TAG, "onListenerDisconnected")
+    }
+
+
+    // 有新通知来临时回调
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {
         super.onNotificationPosted(sbn, rankingMap)
 //        微信 com.tencent.mm
@@ -75,6 +88,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
 //        sbn.packageName // 应用通知的包名
 
         val pkgName = sbn?.packageName
+        LoggerUtil.w(TAG, "onNotificationPosted pkgName=$pkgName")
         if (pkgName.isNullOrBlank()) {
             return
         }
@@ -152,5 +166,41 @@ class SmsNotificationListenerService : NotificationListenerService() {
             e.printStackTrace()
         }
         return resultMap
+    }
+
+
+    @SuppressLint("DiscouragedPrivateApi")
+    public fun registerNotify() {
+        try {
+            val clazz = NotificationListenerService::class.java
+            val registerAsSystemService: Method = clazz.getDeclaredMethod(
+                "registerAsSystemService",
+                Context::class.java, ComponentName::class.java, Int::class.javaPrimitiveType
+            )
+
+            registerAsSystemService.invoke(
+                this,
+                this,
+                ComponentName(packageName, javaClass.canonicalName!!),
+                -1
+            )
+            LoggerUtil.w(TAG, "registerNotify success")
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            LoggerUtil.w(TAG, "registerNotify fail1")
+        }
+    }
+
+    private fun unregisterNotify() {
+        try {
+            val clsGlobal =
+                Class.forName("android.service.notification.NotificationListenerService")
+            val methodGetString: Method = clsGlobal.getDeclaredMethod("jxUnregisterAsSystemService")
+            methodGetString.isAccessible = true
+            methodGetString.invoke(null)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            LoggerUtil.w(TAG, "unregisterNotify fail")
+        }
     }
 }

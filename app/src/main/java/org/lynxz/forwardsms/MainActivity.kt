@@ -299,10 +299,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
     private val notificationServiceConn = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceDisconnected $name")
+            showToast("notificationServiceConn断开")
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             LoggerUtil.w(TAG, "smsApplication notificationServiceConn onServiceConnected $name")
+            showToast("notificationServiceConn连接成功")
         }
     }
 

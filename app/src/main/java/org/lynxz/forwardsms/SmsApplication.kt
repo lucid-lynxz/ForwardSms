@@ -54,19 +54,19 @@ class SmsApplication : Application() {
 
         ScreenStateViewModel.init(this)
 
-        // 与application生命周期保持一致
-        bindService(
-            Intent(this, ForwardService::class.java),
-            smsServiceConn,
-            Service.BIND_AUTO_CREATE
-        )
-
-        // 通知栏监听
-        bindService(
-            Intent(this, SmsNotificationListenerService::class.java),
-            notificationServiceConn,
-            Service.BIND_AUTO_CREATE
-        )
+//        // 与application生命周期保持一致
+//        bindService(
+//            Intent(this, ForwardService::class.java),
+//            smsServiceConn,
+//            Service.BIND_AUTO_CREATE
+//        )
+//
+//        // 通知栏监听
+//        bindService(
+//            Intent(this, SmsNotificationListenerService::class.java),
+//            notificationServiceConn,
+//            Service.BIND_AUTO_CREATE
+//        )
     }
 
     private val smsServiceConn = object : ServiceConnection {
