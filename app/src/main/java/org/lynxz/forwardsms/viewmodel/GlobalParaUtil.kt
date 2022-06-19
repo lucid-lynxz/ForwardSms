@@ -34,9 +34,9 @@ import org.lynxz.forwardsms.observer.IAppNotificationObserver
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
 import org.lynxz.forwardsms.para.BatteryListenerManager
 import org.lynxz.forwardsms.receiver.SmsReceiver
+import org.lynxz.forwardsms.service.SmsNotificationListenerService
 import org.lynxz.forwardsms.ui.trans.PermissionFragment
 import org.lynxz.forwardsms.ui.widget.SmsHandler
-import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.ConfigUtil
 import org.lynxz.forwardsms.util.StringUtil
 import org.lynxz.forwardsms.validation.IForwardVerify
@@ -72,6 +72,9 @@ object GlobalParaUtil {
         val msg = StringUtil.parseJson(info, SmsDetail::class.java)
         iSmsReceiveObserver.onReceiveSms(msg)
     }
+
+    // notificationListenerService是否连接成功
+    val notificationListenerConnectedStatus by lazy { MutableLiveData<Boolean>() }
 
     // 最后收到的短信
     private val smsReceivedLiveData by lazy { MutableLiveData<SmsDetail>() }

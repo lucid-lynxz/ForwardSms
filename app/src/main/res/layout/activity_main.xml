@@ -179,6 +179,14 @@
                 app:layout_constraintLeft_toRightOf="@+id/edt_user_name_feishu" />
 
             <TextView
+                android:id="@+id/tv_notification_listener_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_confirm_feishu" />
+
+            <TextView
                 android:id="@+id/tv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,7 +194,7 @@
                 android:scrollbars="vertical"
                 android:text="Hello World!"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edt_user_name_feishu" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_notification_listener_status" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

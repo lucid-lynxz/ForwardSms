@@ -1,4 +1,4 @@
-package org.lynxz.forwardsms.ui.widget
+package org.lynxz.forwardsms.service
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -7,6 +7,7 @@ import android.content.Context
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
+import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
 import org.lynxz.utils.log.LoggerUtil
 import java.lang.reflect.Method
 
@@ -64,7 +65,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
          * 注册普通app通知回调监听器
          * */
         fun registerAppObserver(observer: IAppNotificationObserver?) {
-            this.appObserver = observer
+            appObserver = observer
         }
     }
 
@@ -72,13 +73,14 @@ class SmsNotificationListenerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         LoggerUtil.w(TAG, "onListenerConnected")
+        GlobalParaUtil.notificationListenerConnectedStatus.value = true
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
         LoggerUtil.w(TAG, "onListenerDisconnected")
+        GlobalParaUtil.notificationListenerConnectedStatus.value = false
     }
-
 
     // 有新通知来临时回调
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {
@@ -170,7 +172,7 @@ class SmsNotificationListenerService : NotificationListenerService() {
 
 
     @SuppressLint("DiscouragedPrivateApi")
-    public fun registerNotify() {
+    fun registerNotify() {
         try {
             val clazz = NotificationListenerService::class.java
             val registerAsSystemService: Method = clazz.getDeclaredMethod(

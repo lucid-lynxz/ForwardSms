@@ -46,7 +46,7 @@
         <activity android:name=".ui.activity.FeishuSettingActivity" />
         <activity android:name=".ui.activity.TelegramSettingActivity" />
 
-        <service android:name=".ui.widget.ForwardService" />
+        <service android:name=".service.ForwardService" />
 
         <receiver
             android:name=".receiver.BootReceiver"
@@ -68,7 +68,7 @@
         </receiver>
 
         <service
-            android:name=".ui.widget.SmsNotificationListenerService"
+            android:name=".service.SmsNotificationListenerService"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

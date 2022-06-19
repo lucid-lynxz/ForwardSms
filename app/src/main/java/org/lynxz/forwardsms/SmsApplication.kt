@@ -1,15 +1,11 @@
 package org.lynxz.forwardsms
 
 import android.app.Application
-import android.app.Service
 import android.content.ComponentName
-import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import org.lynxz.forwardsms.para.ImSettingManager
-import org.lynxz.forwardsms.ui.widget.ForwardService
 import org.lynxz.forwardsms.ui.widget.OnePixelActManager
-import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.validation.MosaicVerify
 //
 import org.lynxz.forwardsms.validation.SrcTypeVerify

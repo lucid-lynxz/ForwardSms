@@ -21,16 +21,15 @@ import org.lynxz.baseimlib.bean.ImType
 import org.lynxz.baseimlib.bean.SendMessageReqBean
 import org.lynxz.baseimlib.msec2date
 import org.lynxz.forwardsms.bean.ImSetting
-import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.databinding.ActivityMainBinding
 import org.lynxz.forwardsms.network.SmsConstantParas
 import org.lynxz.forwardsms.para.ImSettingManager
 import org.lynxz.forwardsms.para.RecookImSettingPara
+import org.lynxz.forwardsms.service.ForwardService
+import org.lynxz.forwardsms.service.SmsNotificationListenerService
 import org.lynxz.forwardsms.ui.BaseBindingActivity
 import org.lynxz.forwardsms.ui.activity.Main2Activity
 import org.lynxz.forwardsms.ui.trans.PermissionResultInfo
-import org.lynxz.forwardsms.ui.widget.ForwardService
-import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
 import org.lynxz.forwardsms.util.BrandUtil
 import org.lynxz.forwardsms.util.NotificationUtils
 import org.lynxz.forwardsms.util.SpDelegateUtil
@@ -200,14 +199,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
             SmsConstantParas.phoneTag = phoneTag
         }
 
-//        smsModel = ViewModelProviders.of(this).get(SmsViewModel::class.java).apply {
-//            init(application)
-//        }
-        GlobalParaUtil.getReceivedSms().observe(this, Observer<SmsDetail> {
+        // 获取到新短信后, 显示到底部信息栏
+        GlobalParaUtil.getReceivedSms().observe(this, {
             dataBinding.tvInfo.text = it.toString()
         })
 
-        GlobalParaUtil.getSmsHistory().observe(this, Observer {
+        // 获取到短信列表后, 更新底部信息栏
+        GlobalParaUtil.getSmsHistory().observe(this, {
             val his = StringBuilder(100)
             his.append("版本:").append(BuildConfig.VERSION_NAME)
                 .append("\n共获取短信 ").append(it.size).append("条:")
@@ -221,6 +219,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
             dataBinding.tvInfo.text = his.toString()
         })
 
+        // 更新 NotificationListenerService的连接状态
+        GlobalParaUtil.notificationListenerConnectedStatus.observe(this) {
+            dataBinding.tvNotificationListenerStatus.text =
+                "NotificationListener connected status=${it}"
+        }
+
+        // 请求读写短信权限
         requestPermissions(
             arrayOf(
                 Manifest.permission.RECEIVE_SMS,
@@ -228,12 +233,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), CoroutineScope 
             )
         )
 
+        // '模拟收到短信' 按钮
         dataBinding.btnMockSmsReceive.setOnClickListener { GlobalParaUtil.mockSmsReceived() }
 
+        // '获取短信列表' 按钮
         dataBinding.btnSmsList.setOnClickListener {
             requestPermission(Manifest.permission.READ_SMS)
         }
 
+        // '发送消息' 按钮
         dataBinding.btnSendMsg.setOnClickListener {
             val body = SendMessageReqBean().apply {
                 content = "$lastSms\n测试:${msec2date()}"

@@ -15,7 +15,7 @@ import androidx.lifecycle.MutableLiveData
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.bean.emptyimpl.EmptyServiceConnection
 import org.lynxz.forwardsms.observer.IAppNotificationObserver
-import org.lynxz.forwardsms.ui.widget.SmsNotificationListenerService
+import org.lynxz.forwardsms.service.SmsNotificationListenerService
 
 import org.lynxz.forwardsms.validation.VerifyActionManager
 import org.lynxz.forwardsms.viewmodel.GlobalParaUtil
