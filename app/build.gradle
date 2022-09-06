@@ -5,7 +5,6 @@ apply from: "../config/sign.gradle"
 
 android {
     compileSdkVersion androidCompileSdkVersion
-    buildToolsVersion androidBuildToolsVersion
     defaultConfig {
         applicationId "org.lynxz.forwardsms"
         minSdkVersion androidMinSdkVersion

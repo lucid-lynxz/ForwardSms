@@ -1,23 +1,23 @@
 apply plugin: 'java-library'
-apply plugin: 'com.novoda.bintray-release'
-
-publish {
-    // 读取配置的信息
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-    bintrayUser = properties.getProperty('user') // 用户名
-    bintrayKey = properties.getProperty('apikey') // bintray 的 apikey ,可以在通过账户信息的 edit profile 中查询得到
-    dryRun = false
-
-    userOrg = 'lucid-lynxz'
-    groupId = 'org.lynxz.imdingding' // 填包名就好
-    artifactId = 'imlib-dingding'  // bintray中对应的packagename,大小写敏感
-    uploadName = 'imlib-dingding' // bintray中对应的maven product名称,默认为artifactId, 大小写敏感
-    publishVersion =  properties.getProperty('publishVersion') // 发布版本号
-    desc =  properties.getProperty('publishDesc')
-    website = 'https://github.com/lucid-lynxz/ForwardSms.git'
-}
+//apply plugin: 'com.novoda.bintray-release'
+//
+//publish {
+//    // 读取配置的信息
+//    Properties properties = new Properties()
+//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//
+//    bintrayUser = properties.getProperty('user') // 用户名
+//    bintrayKey = properties.getProperty('apikey') // bintray 的 apikey ,可以在通过账户信息的 edit profile 中查询得到
+//    dryRun = false
+//
+//    userOrg = 'lucid-lynxz'
+//    groupId = 'org.lynxz.imdingding' // 填包名就好
+//    artifactId = 'imlib-dingding'  // bintray中对应的packagename,大小写敏感
+//    uploadName = 'imlib-dingding' // bintray中对应的maven product名称,默认为artifactId, 大小写敏感
+//    publishVersion =  properties.getProperty('publishVersion') // 发布版本号
+//    desc =  properties.getProperty('publishDesc')
+//    website = 'https://github.com/lucid-lynxz/ForwardSms.git'
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
