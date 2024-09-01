@@ -1,6 +1,7 @@
 package org.lynxz.forwardsms.util;
 
 import com.google.gson.Gson;
+import com.google.gson.ToNumberPolicy;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.LinkedTreeMap;
@@ -49,7 +50,7 @@ public final class MyObjTypeAdapter extends TypeAdapter<Object> {
                     Field listField = c.getDeclaredField("list");
                     listField.setAccessible(true);
                     List<TypeAdapterFactory> list = (List<TypeAdapterFactory>) listField.get(o);
-                    int i = list.indexOf(ObjectTypeAdapter.FACTORY);
+                    int i = list.indexOf(ObjectTypeAdapter.getFactory(ToNumberPolicy.DOUBLE));
                     list.set(i, MyObjTypeAdapter.FACTORY);
                     break;
                 }

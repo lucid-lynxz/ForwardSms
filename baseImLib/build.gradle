@@ -22,13 +22,13 @@ apply plugin: 'java-library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api(libs.kotlinLib)
-    api(libs.kotlinxCoroutinesCore)
+    api(Libs.kotlinStdLib)
+    api(Libs.kotlinCoroutinesCore)
 
-    api(libs.retrofit2)
-    api(libs.retrofit2Gson)
-    api(libs.retrofit2KtxAdapter)
+    api(Libs.retrofit2)
+    api(Libs.retrofit2Gson)
+    api(Libs.retrofit2KtxAdapter)
 
-    api(libs.okHttp)
-    api(libs.okHttpLogging)
+    api(Libs.okHttp)
+    api(Libs.okHttpLogging)
 }

@@ -4,10 +4,10 @@ apply from: "../config/sign.gradle"
 
 android {
 
-    compileSdkVersion androidCompileSdkVersion
+    compileSdkVersion BuildConfigInfo.compileSdkVersion
     defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargetSdkVersion
+        minSdkVersion BuildConfigInfo.minSdkVersion
+        targetSdkVersion BuildConfigInfo.targetSdkVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
@@ -26,14 +26,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation(test.junit)
+    testImplementation(Testing.jUnit)
 //    androidTestImplementation(test.junitExtX)
 //    androidTestImplementation(test.espressoX)
 
 //    implementation(libs.appcompatX)
 //    implementation(libs.constraintLayoutX)
 
-    compileOnly(libs.kotlinLib)
+    compileOnly(Libs.kotlinStdLib)
 //    implementation(libs.ktxCore)
 //    implementation(libs.kotlinxCoroutinesAndroid)
 }

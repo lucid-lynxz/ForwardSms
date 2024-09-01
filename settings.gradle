@@ -1,4 +1,6 @@
+//include ':DslAdapter:Adapter'
+includeBuild('version')
 include ':imFeishu'
 include ':app', ':baseImLib', ':imDingDing', ':imTG'
-rootProject.name='ForwardSms'
+rootProject.name = 'ForwardSms'
 include ':SecuritySP'

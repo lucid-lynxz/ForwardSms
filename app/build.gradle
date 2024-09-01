@@ -4,27 +4,27 @@ apply plugin: 'kotlin-kapt'
 apply from: "../config/sign.gradle"
 
 android {
-    compileSdkVersion androidCompileSdkVersion
+    compileSdkVersion 34
     defaultConfig {
         applicationId "org.lynxz.forwardsms"
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargetSdkVersion
-        versionCode 18
-        versionName "1.7.3"
+        minSdkVersion BuildConfigInfo.minSdkVersion
+        targetSdkVersion BuildConfigInfo.targetSdkVersion
+        versionCode BuildConfigInfo.versionCode
+        versionName BuildConfigInfo.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            buildConfigField("String", "dd_corpid", getLocalProperties("dd_corpid", ""))
-            buildConfigField("String", "dd_corpsecret", getLocalProperties("dd_corpsecret", ""))
-            buildConfigField("String", "dd_agent", getLocalProperties("dd_agent", ""))
+            buildConfigField("String", "dd_corpid", getLocalProperties("dd_corpid", "\"\""))
+            buildConfigField("String", "dd_corpsecret", getLocalProperties("dd_corpsecret", "\"\""))
+            buildConfigField("String", "dd_agent", getLocalProperties("dd_agent", "\"\""))
 
-            buildConfigField("String", "tg_bottoken", getLocalProperties("tg_bottoken", ""))
-            buildConfigField("String", "tg_default_userName", getLocalProperties("tg_default_userName", ""))
+            buildConfigField("String", "tg_bottoken", getLocalProperties("tg_bottoken", "\"\""))
+            buildConfigField("String", "tg_default_userName", getLocalProperties("tg_default_userName", "\"\""))
 
-            buildConfigField("String", "feishu_appid", getLocalProperties("feishu_appid", ""))
-            buildConfigField("String", "feishu_appsecret", getLocalProperties("feishu_appsecret", ""))
+            buildConfigField("String", "feishu_appid", getLocalProperties("feishu_appid", "\"\""))
+            buildConfigField("String", "feishu_appsecret", getLocalProperties("feishu_appsecret", "\"\""))
         }
         release {
             initWith(debug)
@@ -36,12 +36,15 @@ android {
         jvmTarget = "1.8"
     }
     compileOptions {
-        targetCompatibility = 1.8
-        sourceCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    dataBinding {
-        enabled true
+//    dataBinding {
+//        enabled = true
+//    }
+    buildFeatures {
+        dataBinding = true
     }
 
     // 自定义生成的apk名称
@@ -71,30 +74,30 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
 //    api 'org.lynxz.securitysp:SecuritySp:1.0.3'
 
-    testImplementation(test.junit)
-    testImplementation(test.testRunnerX)
-    androidTestImplementation(test.espressoX)
+    testImplementation(Testing.jUnit)
+    testImplementation(Testing.runnerX)
+    androidTestImplementation(Testing.espressoCoreX)
 
-    implementation(libs.appcompatX)
-    implementation(libs.constraintLayoutX)
+    implementation(Libs.appcompatX)
+    implementation(Libs.constraintLayoutX)
 
-    implementation(libs.ktxCore)
-    implementation(libs.gson)
-    implementation(libs.kotlinxCoroutinesAndroid)
+    implementation(Libs.kotlinCoreKtx)
+    implementation(Libs.gson)
+    implementation(Libs.kotlinCoroutinesAndroid)
 
-//    implementation(libs.lifeCycleViewModelX)
-    implementation(libs.lifeCycleViewModelKtxX)
-    implementation(libs.lifeCycleExtensionX)
+//    implementation(Libs.lifeCycleViewModelX)
+    implementation(Libs.lifecycleViewModelExt)
+    implementation(Libs.lifecycleExt)
 
-    implementation(libs.switchButton)
-    implementation(libs.pickerView)
-    implementation(libs.backgroundShape)
-    implementation(libs.floatingActionButton)
+    implementation(Libs.switchButton)
+    implementation(Libs.pickerView)
+    implementation(Libs.backgroundShape)
+    implementation(Libs.floatingActionButton)
 
     // recyclerview adapter
-    implementation 'com.github.angcyo:DslAdapter:2.6.3'
-    implementation(libs.baseRecyclerViewAdapterHelperX)
-    implementation(libs.xUtils)
+    implementation Libs.dslAdapterX
+    implementation(Libs.baseRecyclerViewAdapterHelperX)
+    implementation(Libs.lynxzUtils)
 }
 
 

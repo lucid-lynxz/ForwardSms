@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+//        maven { url 'https://maven.aliyun.com/repository/google' }
+//        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+//        maven { url 'https://maven.aliyun.com/repoitory/public' }
+        maven { url 'https://jitpack.io' }
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'java-gradle-plugin'
+
+repositories {
+//    maven { url 'https://maven.aliyun.com/repository/google' }
+//    maven { url 'https://maven.aliyun.com/repository/jcenter' }
+    maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+//    maven { url 'https://maven.aliyun.com/repoitory/public' }
+    maven { url 'https://jitpack.io' }
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+    implementation "com.android.tools.build:gradle:7.1.2"
+    implementation "com.google.code.gson:gson:2.8.9"
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+gradlePlugin {
+    plugins {
+        version {
+            id = 'org.lynxz.version'
+            implementationClass = 'org.lynxz.version.DependencyVersionPlugin'
+        }
+    }
+}

@@ -2,12 +2,12 @@
 // date: 2021.04.1
 // description: 添加 xutils
 ext {
-    gradleToolVersion = '4.1.1'
+    gradleToolVersion = '4.2.2'
 
     // Android
-    androidMinSdkVersion = 21
-    androidTargetSdkVersion = 29
-    androidCompileSdkVersion = 29
+    androidMinSdkVersion = 24
+    androidTargetSdkVersion = 30
+    androidCompileSdkVersion = 30
     androidBuildToolsVersion = "29.0.3"
     androidSupportVersion = "28.0.0"
 
@@ -29,7 +29,7 @@ ext {
     siyamedShapeIamgeviewVersion = '0.9.3@aar'
     ShimmerRecyclerViewVersion = '1.3'
 
-    kotlinLibVersion = '1.6.10'
+    kotlinLibVersion = '1.9.0'
     ktxCoreVersion = '1.3.2'
     kotlinxCoroutinesVersion = '1.1.1'
 
@@ -231,7 +231,7 @@ ext {
             // 骨架图
             shimmerRecyclerView           : "com.github.sharish:ShimmerRecyclerView:v${ShimmerRecyclerViewVersion}",
 
-            kotlinLib                     : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinLibVersion}",
+            kotlinLib                     : "org.jetbrains.kotlin:kotlin-stdlib:${kotlinLibVersion}",
             ktxCore                       : "androidx.core:core-ktx:$ktxCoreVersion",
             kotlinxCoroutinesCore         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${kotlinxCoroutinesVersion}",
             kotlinxCoroutinesAndroid      : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kotlinxCoroutinesVersion}",

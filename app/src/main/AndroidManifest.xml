@@ -31,6 +31,7 @@
         <activity
             android:name=".MainActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,7 +60,9 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.BatteryLevelChangeReceiver">
+        <receiver
+            android:name=".receiver.BatteryLevelChangeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
                 <action android:name="android.intent.action.BATTERY_OKAY" />
@@ -69,6 +72,7 @@
 
         <service
             android:name=".service.SmsNotificationListenerService"
+            android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

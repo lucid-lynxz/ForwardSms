@@ -3,14 +3,11 @@ package org.lynxz.forwardsms.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.telephony.SmsMessage
-import androidx.annotation.RequiresApi
 import org.lynxz.baseimlib.convert2Str
 import org.lynxz.forwardsms.bean.SmsDetail
 import org.lynxz.forwardsms.isSdkGE
 import org.lynxz.forwardsms.observer.ISmsReceiveObserver
-
 import org.lynxz.utils.log.LoggerUtil
 
 /**
@@ -21,7 +18,6 @@ class SmsReceiver(private val observer: ISmsReceiveObserver? = null) : Broadcast
         private const val TAG = "SmsReceiver"
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context?, intent: Intent?) {
         intent?.let {
             val format = it.getStringExtra("format")
