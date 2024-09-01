@@ -41,8 +41,10 @@ buildscript {
     repositories {
         // google()
         // jcenter()
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repoitory/public' }
         maven { url 'https://jitpack.io' }
         mavenCentral()
     }

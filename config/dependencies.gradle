@@ -1,6 +1,6 @@
-// configVersion: 45
-// date: 2021.04.1
-// description: 添加 xutils
+// configVersion: 48
+// date: 2024.09.01
+// description: 更新 xutils 版本
 ext {
     gradleToolVersion = '4.1.1'
 
@@ -402,7 +402,7 @@ ext {
             * 自定义常用工具类,基于androidX: https://github.com/lucid-lynxz/utils
             * implementation(libs.xUtils)
             * */
-            xUtils                       : "com.github.lucid-lynxz:utils:0.1.5"
+            xUtils                       : "com.github.lucid-lynxz:utils:0.1.25"
     ]
 
     test = [

@@ -10,6 +10,14 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="30"
+        tools:ignore="ExpiredTargetSdkVersion,GradleOverrides"
+        tools:overrideLibrary="androidx.recyclerview:recyclerview:1.3.2" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
     <application
         android:name=".SmsApplication"
         android:allowBackup="true"
@@ -19,6 +27,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".ui.activity.Main2Activity"
             android:label="@string/title_activity_main2"
@@ -31,6 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

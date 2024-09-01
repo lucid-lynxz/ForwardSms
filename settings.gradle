@@ -1,3 +1,4 @@
+includeBuild("version")
 include ':imFeishu'
 include ':app', ':baseImLib', ':imDingDing', ':imTG'
 rootProject.name='ForwardSms'
